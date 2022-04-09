@@ -1,31 +1,36 @@
-/********************************************************
-* MapReduce.cpp - standalone command-line program that
-*                 can run a word count MapReduce workflow
-* CSE687 SP22
-* Stephanie Eordanidis & JT Washington
-*********************************************************/
+///////////////////////////////////////////////////////////////////
+//  MapReduce.cpp -  - standalone command-line program that      //
+//                    can run a word count MapReduce workflow    //
+//                                                               //
+//  Language:     Visual C++ 2022, ver 17.1.3                    //
+//  Application:  Project1, CSE687 SP22 - Object Oriented Design //
+//  Authors:      Stephanie Eordanidis                           //
+//                JT Washington                                  //
+//                Syracuse University                            //
+//                {sleordan,}@syr.edu                            //
+///////////////////////////////////////////////////////////////////
 
 #pragma once
 #include <iostream>
 #include "FileManagement.h"
+
 /*
-* Function to print usage statement
+* Print usage statement
 */
 void usage()
 {
-	cout << "This application is a standalone tool that will run a word count \n on text files in the user provided directory path.\n\n";
+	string title = "**************************************************    Map Reduce   ************************************************";
+	string hl = "*******************************************************************************************************************";
+	string usg = "This application is a standalone tool that will run a word count on text files in the user provided directory path.";
+	cout << title << endl << usg << endl << hl << endl;
 }
-
 /*
-* Main function to drive program workflow
+* initialize input request and assignement
 */
-int main()
+void init_input()
 {
-	usage(); // print usage statement
-
-	string ui;
 	FileManagement fm;
-
+	string ui;
 	cout << "Please enter input file(s) directory path: ";
 	getline(cin, ui);
 
@@ -38,17 +43,30 @@ int main()
 	//validate & set output directory path
 	fm.set_output_dir_path(ui);
 
-	cout << "Please enter output file directory path: ";
+	cout << "Please enter temp file directory path: ";
 	getline(cin, ui);
 
 	//validate & set temp directory path
 	fm.set_temp_dir_path(ui);
+}
 
-	cout << "MapReduce program has completed successfull. Now exiting. Goodbye!";
-
+/*
+* Exit the appliaction
+*/
+void finish() {
+	cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
 	// EXIT_SUCCESS
 	exit(0);
+}
 
+/*
+* Main function to drive program workflow
+*/
+int main()
+{
+	usage();		// print usage statement
+	init_input();	// request user input and set values
+	finish();		// end the program
 }
 
 /*

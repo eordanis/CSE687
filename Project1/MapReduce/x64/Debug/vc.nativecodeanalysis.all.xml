@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\system\detail\</FILEPATH>
+      <FILENAME>system_category_message_win32.hpp</FILENAME>
+      <LINE>190</LINE>
+      <COLUMN>31</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>boost::system::detail::system_category_message_win32</FUNCTION>
+    <DECORATED>?system_category_message_win32@detail@system@boost@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z</DECORATED>
+    <FUNCLINE>146</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\system\detail\</FILEPATH>
+      <FILENAME>system_category_message_win32.hpp</FILENAME>
+      <LINE>190</LINE>
+      <COLUMN>56</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>boost::system::detail::system_category_message_win32</FUNCTION>
+    <DECORATED>?system_category_message_win32@detail@system@boost@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z</DECORATED>
+    <FUNCLINE>146</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\system\detail\</FILEPATH>
+      <FILENAME>system_category_message_win32.hpp</FILENAME>
+      <LINE>195</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>boost::system::detail::system_category_message_win32</FUNCTION>
+    <DECORATED>?system_category_message_win32@detail@system@boost@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z</DECORATED>
+    <FUNCLINE>146</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\system\detail\</FILEPATH>
+      <FILENAME>error_code.hpp</FILENAME>
+      <LINE>96</LINE>
+      <COLUMN>28</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>boost::system::error_code::{ctor}</FUNCTION>
+    <DECORATED>??0error_code@system@boost@@QEAA@HAEBVerror_category@12@@Z</DECORATED>
+    <FUNCLINE>95</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\system\</FILEPATH>
+      <FILENAME>errc.hpp</FILENAME>
+      <LINE>33</LINE>
+      <COLUMN>41</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::system::errc::errc_t' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::system::errc::make_error_code</FUNCTION>
+    <DECORATED>?make_error_code@errc@system@boost@@YA?AVerror_code@23@W4errc_t@123@@Z</DECORATED>
+    <FUNCLINE>33</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\filesystem\</FILEPATH>
+      <FILENAME>file_status.hpp</FILENAME>
+      <LINE>113</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::filesystem::perms' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::filesystem::|</FUNCTION>
+    <DECORATED>??Ufilesystem@boost@@YA?AW4perms@01@W4201@0@Z</DECORATED>
+    <FUNCLINE>113</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\filesystem\</FILEPATH>
+      <FILENAME>file_status.hpp</FILENAME>
+      <LINE>123</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::filesystem::file_type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::filesystem::file_status::{ctor}</FUNCTION>
+    <DECORATED>??0file_status@filesystem@boost@@QEAA@XZ</DECORATED>
+    <FUNCLINE>122</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>local_counted_base.hpp</FILENAME>
+      <LINE>45</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::detail::local_counted_base::count_type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::detail::local_counted_base::{ctor}</FUNCTION>
+    <DECORATED>??0local_counted_base@detail@boost@@QEAA@XZ</DECORATED>
+    <FUNCLINE>45</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\mpl\aux_\</FILEPATH>
+      <FILENAME>integral_wrapper.hpp</FILENAME>
+      <LINE>45</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::log::v2s_mt_nt6::lock_access_mode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::mpl::integral_c&lt;enum boost::log::v2s_mt_nt6::lock_access_mode,0&gt;::value</FUNCTION>
+    <DECORATED>?value@?$integral_c@W4lock_access_mode@v2s_mt_nt6@log@boost@@$0A@@mpl@boost@@2W4lock_access_mode@v2s_mt_nt6@log@3@B</DECORATED>
+    <FUNCLINE>45</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\seord_000\Downloads\boost_1_78_0\boost\log\</FILEPATH>
+      <FILENAME>trivial.hpp</FILENAME>
+      <LINE>57</LINE>
+      <COLUMN>19</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::log::v2s_mt_nt6::trivial::severity_level' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::log::v2s_mt_nt6::trivial::to_string</FUNCTION>
+    <DECORATED>?to_string@trivial@v2s_mt_nt6@log@boost@@YAPEBDW4severity_level@1234@@Z</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT></DEFECTS>
