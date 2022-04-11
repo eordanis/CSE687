@@ -3,7 +3,8 @@
 //                    can run a word count MapReduce workflow    //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
-//  Application:  Project1, CSE687 SP22 - Object Oriented Design //
+//  Application:  MapReduce Project 1                            //
+//  Course:		  CSE687 SP22 - Object Oriented Design           //
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
@@ -19,10 +20,10 @@
 */
 void usage()
 {
-	string title = "**************************************************    Map Reduce   ************************************************";
-	string hl = "*******************************************************************************************************************";
-	string usg = "This application is a standalone tool that will run a word count on text files in the user provided directory path.";
-	cout << title << endl << usg << endl << hl << endl;
+	std::string title = "**************************************************    Map Reduce   ************************************************";
+	std::string hl = "*******************************************************************************************************************";
+	std::string usg = "This application is a standalone tool that will run a word count on text files in the user provided directory path.";
+	std::cout << title << std::endl << usg << std::endl << hl << std::endl;
 }
 /*
 * initialize input request and assignement
@@ -30,31 +31,37 @@ void usage()
 void init_input()
 {
 	FileManagement fm;
-	string ui;
-	cout << "Please enter input file(s) directory path: ";
-	getline(cin, ui);
+	std::string ui;
+	std::cout << "Please enter input file(s) directory path: ";
+	std::getline(std::cin, ui);
 
 	//validate & set input directory path
 	fm.set_input_dir_path(ui);
 
-	cout << "Please enter output file directory path: ";
-	getline(cin, ui);
+	std::cout << "Please enter output file directory path: ";
+	std::getline(std::cin, ui);
 
 	//validate & set output directory path
 	fm.set_output_dir_path(ui);
 
-	cout << "Please enter temp file directory path: ";
-	getline(cin, ui);
+	std::cout << "Please enter temp file directory path: ";
+	std::getline(std::cin, ui);
 
 	//validate & set temp directory path
 	fm.set_temp_dir_path(ui);
+
+	//check & get all valid files at given input path
+	fm.get_all(fm.get_input_dir_path(), ".txt");
+
+	//begin MapReduce on collected file paths
+	fm.execute_file_paths_iteration();
 }
 
 /*
 * Exit the appliaction
 */
 void finish() {
-	cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
+	std::cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
 	// EXIT_SUCCESS
 	exit(0);
 }

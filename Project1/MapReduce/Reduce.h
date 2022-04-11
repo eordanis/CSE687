@@ -5,7 +5,8 @@
 //  Reduce.h    -  header file for Reduce class                  //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
-//  Application:  Project1, CSE687 SP22 - Object Oriented Design //
+//  Application:  MapReduce Project 1                            //
+//  Course:		  CSE687 SP22 - Object Oriented Design           //
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
@@ -16,12 +17,12 @@
 #include<string>  
 #include<iterator>
 #include<vector>
-using namespace std;
 
 class Reduce
 {
-public: void reduce(string key, vector<int>::iterator counts);
-public: void exporter(string key, int count);
+public: 
+	void reduce(std::string key, std::vector<int>::iterator counts);
+	void exportz(std::string key, int count);
 };
 #endif
 

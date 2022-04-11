@@ -2,7 +2,8 @@
 //  Map.cpp -  Map Class                                         //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
-//  Application:  Project1, CSE687 SP22 - Object Oriented Design //
+//  Application:  MapReduce Project 1                            //
+//  Course:		  CSE687 SP22 - Object Oriented Design           //
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
@@ -10,12 +11,39 @@
 ///////////////////////////////////////////////////////////////////
 
 #include "Map.h"
+#include <string.h>
+#include <boost/log/trivial.hpp>
+#include <boost/algorithm/string.hpp>
 
-void Map::map()
+void Map::map(std::string key, std::string value)
 {
+    // trim
+    boost::trim(value);
+
+    // remove all special characters from value string
+    std::remove_if(value.begin(), value.end(), ispunct);
+
+    //if line is not empty
+    if (value.size() > 0)
+    {
+        //convert to lowercase
+        boost::algorithm::to_lower(value); // modifies str
+
+        //prepate value to be tokenized
+        char* value_c = new char[value.size() + 1];
+        strcpy_s(value_c, strlen(value_c) * sizeof(char), value.c_str());
+        char* token;
+        char* rest = value_c;
+        //iterate over tokens
+        while ((token = strtok_s(rest, " ", &rest)))
+        {
+            BOOST_LOG_TRIVIAL(debug) << "Token: \t\"" << token << "\"" << std::endl; //debug
+
+        }
+    }
 }
 
-void Map::exporter()
+void Map::exportz()
 {
 }
 
