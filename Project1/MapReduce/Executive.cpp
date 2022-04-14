@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  MapReduce.cpp -  - standalone command-line program that      //
+//  Executive.cpp -  - standalone command-line program that      //
 //                    can run a word count MapReduce workflow    //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
@@ -13,7 +13,10 @@
 
 #pragma once
 #include <iostream>
-#include "FileManagement.h"
+#include "Workflow.h"
+
+//init strings to store user provided paths
+std::string in, out, temp;
 
 /*
 * Print usage statement
@@ -26,35 +29,18 @@ void usage()
 	std::cout << title << std::endl << usg << std::endl << hl << std::endl;
 }
 /*
-* initialize input request and assignement
+* initialize input request and store locally
 */
 void init_input()
 {
-	FileManagement fm;
-	std::string ui;
 	std::cout << "Please enter input file(s) directory path: ";
-	std::getline(std::cin, ui);
-
-	//validate & set input directory path
-	fm.set_input_dir_path(ui);
+	std::getline(std::cin, in);
 
 	std::cout << "Please enter output file directory path: ";
-	std::getline(std::cin, ui);
-
-	//validate & set output directory path
-	fm.set_output_dir_path(ui);
+	std::getline(std::cin, out);
 
 	std::cout << "Please enter temp file directory path: ";
-	std::getline(std::cin, ui);
-
-	//validate & set temp directory path
-	fm.set_temp_dir_path(ui);
-
-	//check & get all valid files at given input path
-	fm.get_all(fm.get_input_dir_path(), ".txt");
-
-	//begin MapReduce on collected file paths
-	fm.execute_file_paths_iteration();
+	std::getline(std::cin, temp);
 }
 
 /*
@@ -72,7 +58,12 @@ void finish() {
 int main()
 {
 	usage();		// print usage statement
-	init_input();	// request user input and set values
+	init_input();	// request user input
+	Workflow w;
+	//set the file paths provided
+	w.set_file_paths(in, out, temp);
+	//start map reduce workflow
+	w.execute_workflow();
 	finish();		// end the program
 }
 
