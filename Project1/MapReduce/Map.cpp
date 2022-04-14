@@ -17,11 +17,17 @@
 
 void Map::map(std::string key, std::string value)
 {
+    std::string chars = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
+
     // trim
     boost::trim(value);
 
     // remove all special characters from value string
-    std::remove_if(value.begin(), value.end(), ispunct);
+    value.erase(std::remove_if(value.begin(), value.end(),
+        [&chars](const char& c) {
+            return chars.find(c) != std::string::npos;
+        }),
+        value.end());
 
     //if line is not empty
     if (value.size() > 0)
