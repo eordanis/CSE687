@@ -7,17 +7,45 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,}@syr.edu                            //
+//                sleordan@syr.edu                               //
+//                jwashi05@syr.edu                               //
 ///////////////////////////////////////////////////////////////////
 
 #include "FileManagement.h"
 #include "Map.h"
 #include <boost/log/trivial.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-std::string inDirPath, outDirPath, tempDirPath;
+#include <vector>
+#include <boost/filesystem/fstream.hpp>
+
 std::vector<boost::filesystem::path> paths;
 
+// Get + Set Methods for File Management Class
+void FileManagement::setInputDirectory(std::string inputDir) {
+    _inputDir = inputDir;
+}
+std::string FileManagement::getInputDirectory() {
+    return _inputDir;
 
+}
+
+void FileManagement::setOutputDirectory(std::string outputDir) {
+    _outputDir = outputDir;
+}
+std::string FileManagement::getOutputDirectory() {
+    return _outputDir;
+
+}
+
+void FileManagement::setTempDirectory(std::string tempDir) {
+    _tempDir = tempDir;
+}
+std::string FileManagement::getTempDirectory() {
+    return _tempDir;
+
+}
+
+// Files Management Methods
 bool FileManagement::validate_dir_path(std::string path)
 {
     if (path.empty()) {
@@ -43,42 +71,6 @@ bool FileManagement::validate_dir_path(std::string path)
     }
 }
 
-void FileManagement::set_input_dir_path(std::string path)
-{
-    if (validate_dir_path(path)) {
-        inDirPath = path;
-    }
-}
-
-void FileManagement::set_output_dir_path(std::string path)
-{
-    if (validate_dir_path(path)) {
-        outDirPath = path;
-    }
-}
-
-void FileManagement::set_temp_dir_path(std::string path)
-{
-    if (validate_dir_path(path)) {
-        tempDirPath = path;
-    }
-}
-
-std::string FileManagement::get_input_dir_path()
-{
-    return inDirPath;
-}
-
-std::string FileManagement::get_output_dir_path()
-{
-    return outDirPath;
-}
-
-std::string FileManagement::get_temp_dir_path()
-{
-    return tempDirPath;
-}
-
 void FileManagement::get_all(boost::filesystem::path const& path, std::string const& ext)
 {
     if (path.size() == 0) {
@@ -99,10 +91,10 @@ void FileManagement::get_all(boost::filesystem::path const& path, std::string co
                 paths.emplace_back(entry.path());
                 BOOST_LOG_TRIVIAL(debug) << entry.path().filename() << std::endl; //debug
             }
-                
+
         }
     }
-    else 
+    else
     {
         BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << path << "\" is not a valid directory.";
         exit(1);
@@ -119,7 +111,7 @@ void FileManagement::execute_file_paths_iteration()
 
     }
     Map m;
-    for (boost::filesystem::path entry : paths) {
+    /*for (boost::filesystem::path entry : paths) {
         boost::filesystem::ifstream fileHandler(entry);
         std::string line;
         BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename() << "\"" << std::endl; //debug
@@ -128,5 +120,5 @@ void FileManagement::execute_file_paths_iteration()
             //pass file name and line to >> Map.map(filename, line)
             m.map(entry.filename().string(), line);
         }
-    }
+    }*/
 }

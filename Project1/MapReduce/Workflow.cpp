@@ -20,13 +20,13 @@ void Workflow::set_file_paths(std::string inputDirPath, std::string outputDirPat
 	FileManagement fm;
 
 	//validate & set input directory path
-	fm.set_input_dir_path(inputDirPath);
+	fm.setInputDirectory(inputDirPath);
 
 	//validate & set output directory path
-	fm.set_output_dir_path(outputDirPath);
+	fm.setOutputDirectory(outputDirPath);
 
 	//validate & set temp directory path
-	fm.set_temp_dir_path(tempDirPath);
+	fm.setTempDirectory(tempDirPath);
 
 }
 
@@ -35,7 +35,7 @@ void Workflow::execute_workflow()
 	FileManagement fm;
 
 	// get all valid files from passed input directory
-	fm.get_all(fm.get_input_dir_path(), ".txt");
+	fm.get_all(fm.getInputDirectory(), ".txt");
 
 	// start mapping of files found
 	fm.execute_file_paths_iteration();
