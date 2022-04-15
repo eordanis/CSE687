@@ -10,16 +10,33 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,}@syr.edu                            //
+//                {sleordan,jwashi05}@syr.edu                    //
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
 #include <string>
 class Map
 {
-public: 
-	void map(std::string key, std::string value);
-	void exportz();
+	/**
+	* Takes the passed value line of text and tokenizes into distinct words
+	*
+	* @param key - string key for filename.
+	* @param value - string value for file line of text.
+	*/
+public: void map(std::string key, std::string value);
+
+	  /**
+	  * Takes the passed token and key filename and writes to memory buffer, periodically writting to a temporary file.
+	  *
+	  * @param key - string key for filename.
+	  * @param value - string value for file line of text.
+	  */
+private: void exportz(std::string key, char* token);
+
+//punctuation and special characters to remove
+private: std::string punctuationAndSpecials = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
+
+
 };
 
 #endif

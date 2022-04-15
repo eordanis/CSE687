@@ -7,9 +7,10 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,}@syr.edu                            //
+//                {sleordan,jwashi05}@syr.edu                    //
 ///////////////////////////////////////////////////////////////////
 
+#pragma once
 #include "Map.h"
 #include <string.h>
 #include <boost/log/trivial.hpp>
@@ -17,15 +18,16 @@
 
 void Map::map(std::string key, std::string value)
 {
-    std::string chars = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
+    //punctuation and special characters to remove
+    std::string regex = Map::punctuationAndSpecials;
 
     // trim
     boost::trim(value);
 
     // remove all special characters from value string
     value.erase(std::remove_if(value.begin(), value.end(),
-        [&chars](const char& c) {
-            return chars.find(c) != std::string::npos;
+        [&regex](const char& c) {
+            return regex.find(c) != std::string::npos;
         }),
         value.end());
 
@@ -44,13 +46,15 @@ void Map::map(std::string key, std::string value)
         while ((token = strtok_s(rest, " ", &rest)))
         {
             BOOST_LOG_TRIVIAL(debug) << "Token: \t\"" << token << "\"" << std::endl; //debug
+            exportz(key, token);
 
         }
     }
 }
 
-void Map::exportz()
+void Map::exportz(std::string key, char* token)
 {
+
 }
 
 /* The map class will contain a public method map(), that accepts a key and value.
