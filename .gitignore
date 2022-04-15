@@ -4,3 +4,5 @@ Project1/MapReduce/x64/*
 Project1/MapReduce/x64/**/
 Project1/x64/*
 Project1/x64/**/*
+Project1/MapReduce/MapReduce.vcxproj.filters
+Project1/MapReduce/MapReduce.vcxproj.user
