@@ -89,12 +89,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Boost\include\boost-1_79</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\seord_000\Downloads\boost_1_78_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Boost\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\seord_000\Downloads\boost_1_78_0\stage\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,14 +105,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Boost\include\boost-1_79</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\seord_000\Downloads\boost_1_78_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Boost\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\seord_000\Downloads\boost_1_78_0\stage\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -121,13 +121,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Boost\include\boost-1_79</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\seord_000\Downloads\boost_1_78_0</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Boost\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\seord_000\Downloads\boost_1_78_0\stage\lib</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -139,14 +139,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Boost\include\boost-1_79</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\seord_000\Downloads\boost_1_78_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Boost\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\seord_000\Downloads\boost_1_78_0\stage\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -162,7 +162,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Reduce.h" />
     <ClInclude Include="Sorter.h" />
-    <ClInclude Include="test.h" />
+    <ClInclude Include="Test.h" />
     <ClInclude Include="Workflow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

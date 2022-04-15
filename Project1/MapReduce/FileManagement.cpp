@@ -7,10 +7,10 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                sleordan@syr.edu                               //
-//                jwashi05@syr.edu                               //
+//                {sleordan,jwashi05}@syr.edu                    //
 ///////////////////////////////////////////////////////////////////
 
+#pragma once
 #include "FileManagement.h"
 #include "Map.h"
 #include <boost/log/trivial.hpp>

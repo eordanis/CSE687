@@ -7,9 +7,10 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,}@syr.edu                            //
+//                {sleordan,jwashi05}@syr.edu                    //
 ///////////////////////////////////////////////////////////////////
 
+#pragma once
 #include "Reduce.h"
 
 void Reduce::reduce(std::string key, std::vector<int>::iterator counts)
