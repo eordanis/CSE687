@@ -8,63 +8,74 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,}@syr.edu                            //
+//                sleordan.@syr.edu                              //
+//                jwashi05.@syr.edu                              //
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
 #include <iostream>
 #include "Workflow.h"
+#include "Executive.h"
+using std::cout;
+using std::cin;
+using std::string;
 
-//init strings to store user provided paths
-std::string in, out, temp;
-
-/*
-* Print usage statement
-*/
-void usage()
+int main(int argc, char* argv[])
 {
-	std::string title = "**************************************************    Map Reduce   ************************************************";
-	std::string hl = "*******************************************************************************************************************";
-	std::string usg = "This application is a standalone tool that will run a word count on text files in the user provided directory path.";
-	std::cout << title << std::endl << usg << std::endl << hl << std::endl;
+	Workflow workflow;
+
+	if (argc < 7) {
+
+		workflow.MapException("There are less than the required arguments for this command. Please update and try again");
+	}
+	else if (argc > 7) {
+		workflow.MapException("There are more than the required arguments for this command. Please update and try again");
+	}
+	else {
+		for (int counter = 1; counter < argc; counter++)
+		{
+			if (counter + 1 != argc)
+			{
+				if (strcmp(argv[counter], "-input") == 0) {
+
+					workflow.SetInputFilePath(argv[counter + 1]);
+				}
+				else if (strcmp(argv[counter], "-output") == 0)
+				{
+					workflow.SetOutputFilePath(argv[counter + 1]);
+				}
+				else if (strcmp(argv[counter], "-temp") == 0)
+				{
+					workflow.SetTempFilePath(argv[counter + 1]);
+				}
+			}
+		}
+	}
+
+	// Print the opening message to the user
+	Introduction();
+
+	//start map reduce workflow
+	workflow.execute_workflow();
+
+	// end the program
+	ExitProgram();
 }
-/*
-* initialize input request and store locally
-*/
-void init_input()
+
+// Print Message
+void Introduction()
 {
-	std::cout << "Please enter input file(s) directory path: ";
-	std::getline(std::cin, in);
-
-	std::cout << "Please enter output file directory path: ";
-	std::getline(std::cin, out);
-
-	std::cout << "Please enter temp file directory path: ";
-	std::getline(std::cin, temp);
+	cout << "**************************************************    Map Reduce   ************************************************\n";
+	cout << "*******************************************************************************************************************\n";
+	cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path.\n";
 }
 
-/*
-* Exit the appliaction
-*/
-void finish() {
-	std::cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
+// Exit the appliaction
+void ExitProgram() {
+	cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
+
 	// EXIT_SUCCESS
 	exit(0);
-}
-
-/*
-* Main function to drive program workflow
-*/
-int main()
-{
-	usage();		// print usage statement
-	init_input();	// request user input
-	Workflow w;
-	//set the file paths provided
-	w.set_file_paths(in, out, temp);
-	//start map reduce workflow
-	w.execute_workflow();
-	finish();		// end the program
 }
 
 /*
