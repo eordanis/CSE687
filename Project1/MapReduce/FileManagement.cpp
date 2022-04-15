@@ -17,11 +17,16 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <vector>
 #include <boost/filesystem/fstream.hpp>
+#include <iostream>
+using std::cout;
+using std::cin;
+using std::string;
+using std::vector;
 
-std::vector<boost::filesystem::path> paths;
+vector<boost::filesystem::path> paths;
 
 // Get + Set Methods for File Management Class
-void FileManagement::setInputDirectory(std::string inputDir) {
+void FileManagement::setInputDirectory(string inputDir) {
     _inputDir = inputDir;
 }
 std::string FileManagement::getInputDirectory() {
@@ -29,7 +34,7 @@ std::string FileManagement::getInputDirectory() {
 
 }
 
-void FileManagement::setOutputDirectory(std::string outputDir) {
+void FileManagement::setOutputDirectory(string outputDir) {
     _outputDir = outputDir;
 }
 std::string FileManagement::getOutputDirectory() {
@@ -37,7 +42,7 @@ std::string FileManagement::getOutputDirectory() {
 
 }
 
-void FileManagement::setTempDirectory(std::string tempDir) {
+void FileManagement::setTempDirectory(string tempDir) {
     _tempDir = tempDir;
 }
 std::string FileManagement::getTempDirectory() {
@@ -46,7 +51,7 @@ std::string FileManagement::getTempDirectory() {
 }
 
 // Files Management Methods
-bool FileManagement::validate_dir_path(std::string path)
+bool FileManagement::validate_dir_path(string path)
 {
     if (path.empty()) {
         BOOST_LOG_TRIVIAL(error) << "Path must not be empty";
@@ -71,7 +76,7 @@ bool FileManagement::validate_dir_path(std::string path)
     }
 }
 
-void FileManagement::get_all(boost::filesystem::path const& path, std::string const& ext)
+void FileManagement::get_all(boost::filesystem::path const& path, string const& ext)
 {
     if (path.size() == 0) {
         BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided cannot be empty.";
