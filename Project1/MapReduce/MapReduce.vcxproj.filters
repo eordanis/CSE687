@@ -50,7 +50,7 @@
     <ClInclude Include="Workflow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="test.h">
+    <ClInclude Include="Executive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -111,7 +111,7 @@ void FileManagement::execute_file_paths_iteration()
 
     }
     Map m;
-    /*for (boost::filesystem::path entry : paths) {
+    for (boost::filesystem::path entry : paths) {
         boost::filesystem::ifstream fileHandler(entry);
         std::string line;
         BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename() << "\"" << std::endl; //debug
@@ -120,5 +120,5 @@ void FileManagement::execute_file_paths_iteration()
             //pass file name and line to >> Map.map(filename, line)
             m.map(entry.filename().string(), line);
         }
-    }*/
+    }
 }

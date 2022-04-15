@@ -158,11 +158,11 @@
     <ClCompile Include="Workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Executive.h" />
     <ClInclude Include="FileManagement.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Reduce.h" />
     <ClInclude Include="Sorter.h" />
-    <ClInclude Include="test.h" />
     <ClInclude Include="Workflow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

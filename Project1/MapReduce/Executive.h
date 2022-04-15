@@ -1,9 +1,8 @@
-
-#ifndef __WORKFLOW_H_INCLUDED__
-#define __WORKFLOW_H_INCLUDED__
+#ifndef __EXECUTIVE_H_INCLUDED__
+#define __EXECUTIVE_H_INCLUDED__
 
 ///////////////////////////////////////////////////////////////////
-//  Workflow.h    -  header file for Workflow class			     //
+//  Executive.h    -  header file for Main Program  //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -11,27 +10,11 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,}@syr.edu                            //
+//                jwashi05@syr.edu                               //
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
-using std::string;
 
-class Workflow
-{
-public: 
-
-	Workflow();
-
-	void SetInputFilePath(string);
-
-	void SetOutputFilePath(string);
-
-	void SetTempFilePath(string);
-
-	void execute_workflow();
-
-	void MapException(string);
-};
+void GetParameters(), Introduction(), ExitProgram();
 
 #endif

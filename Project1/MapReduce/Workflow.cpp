@@ -12,32 +12,51 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <iostream>
 #include "Workflow.h"
 #include "FileManagement.h"
+using std::cout;
+using std::cin;
+using std::string;
 
-void Workflow::set_file_paths(std::string inputDirPath, std::string outputDirPath, std::string tempDirPath)
+FileManagement fm;
+
+//default Constructor
+Workflow::Workflow() {
+	
+}
+
+void Workflow::SetInputFilePath(string inputDirPath)
 {
-	FileManagement fm;
-
 	//validate & set input directory path
 	fm.setInputDirectory(inputDirPath);
+}
 
+void Workflow::SetOutputFilePath(string outputDirPath)
+{
 	//validate & set output directory path
 	fm.setOutputDirectory(outputDirPath);
 
+}
+
+void Workflow::SetTempFilePath(string tempDirPath)
+{
 	//validate & set temp directory path
 	fm.setTempDirectory(tempDirPath);
-
 }
 
 void Workflow::execute_workflow()
 {
-	FileManagement fm;
-
 	// get all valid files from passed input directory
 	fm.get_all(fm.getInputDirectory(), ".txt");
 
 	// start mapping of files found
 	fm.execute_file_paths_iteration();
+
+}
+
+void Workflow::MapException(string exception) {
+
+	cout << exception + "\n";
 
 }
