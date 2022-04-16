@@ -19,9 +19,12 @@ A C++ standalone command-line program that can run a word count MapReduce workfl
 
 ### Arguments
 Expected arguments are as follows:
-	* -input 	<input path>: 		This is the path where the text files reside.
-	* -output <output path>: 		This is the path where the MapReduced result files will be placed.
-	* -temp 	<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
+
+	 -input 	<input path>: 		This is the path where the text files reside.
+	 
+	 -output 	<output path>: 		This is the path where the MapReduced result files will be placed.
+	 
+	 -temp 		<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
 	
 ### Phase 1: 
 The program runs as a single process that will take an input directory where text files are stored and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
