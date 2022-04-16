@@ -32,9 +32,6 @@ int main(int argc, char* argv[])
 		workflow.mapException("There are more than the required arguments for this command. Please verify arguments and try again");
 	}
 
-	//init local vars to hold user provided input
-    std::string in, out, tmp = "";
-
 	if (!CheckFlag("-input", argc, argv)) {
 		workflow.mapException("-input parameter cannot be found. Please verify arguments and try again");
 	}
@@ -49,38 +46,20 @@ int main(int argc, char* argv[])
 	{
 		if (counter + 1 != argc)
 		{
-			if (strcmp(argv[counter], "-input") == 0) {
-
-				in = argv[counter + 1];
+			if (strcmp(argv[counter], "-input") == 0) 
+			{
+				workflow.setInputDirectory(argv[counter + 1]);
 			}
 			else if (strcmp(argv[counter], "-output") == 0)
 			{
-				out = argv[counter + 1];
+				workflow.setOutputDirectory(argv[counter + 1]);
 			}
 			else if (strcmp(argv[counter], "-temp") == 0)
 			{
-				tmp = argv[counter + 1];
+				workflow.setTempDirectory(argv[counter + 1]);
 			}
 		}
 	}
-	if (in == "") {
-		workflow.mapException("Could not determine input directory path. Please verify arguments and try again.");
-	}
-	if (out == "") {
-		workflow.mapException("Could not determine input directory path. Please verify arguments and try again.");
-	}
-	if (tmp == "") {
-		workflow.mapException("Could not determine input directory path. Please verify arguments and try again.");
-	}
-
-	//set input directory path
-	workflow.setInputDirectory(in);
-
-	//set output directory path
-	workflow.setOutputDirectory(out);
-
-	//set temp directory path
-	workflow.setTempDirectory(tmp);
 
 	//start map reduce workflow
 	workflow.execute_workflow();

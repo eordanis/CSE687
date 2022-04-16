@@ -77,7 +77,6 @@ void Map::exportz(std::string key, std::string token, std::string tempFileName)
     FileManagement fm;
     std::string value = "(" + token + ",1)\n";
     BOOST_LOG_TRIVIAL(debug) << "Value to export: \t\"" << value << "\"" << std::endl; //debug
-    //TODO store value in buffer of size and write to file when buffer is full.
     fm.writeToFile(tempFileName, value);
 }
 

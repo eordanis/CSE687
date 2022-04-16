@@ -51,25 +51,6 @@ private:
 	*/
 	std::vector<boost::filesystem::path> _inputPaths;
 
-	/*
-	* Create a file for passed file name if not already exists
-	* @param string filename
-	*/
-	void createFile(std::string);
-
-	/*
-	* Write passed string to file with file name if exists
-	* @param string filename
-	* @param string text value
-	*/
-	void writeToFile(std::string, std::string);
-
-	/*
-	* Remove file for passed file name if exists
-	* @param string filename
-	*/
-	void removeFile(std::string tempFileName);
-
 public:
 
 	/*
@@ -117,6 +98,25 @@ public:
 	* Execute MapReduce process on each input file retrieved
 	*/
 	void executeFileMapping();
+
+	/*
+	* Create a file for passed file name if not already exists
+	* @param string filename
+	*/
+	void createFile(std::string);
+
+	/*
+	* Write passed string to file with file name if exists
+	* @param string filename
+	* @param string text value
+	*/
+	void writeToFile(std::string, std::string);
+
+	/*
+	* Remove file for passed file name if exists
+	* @param string filename
+	*/
+	void removeFile(std::string tempFileName);
 };
 
 #endif

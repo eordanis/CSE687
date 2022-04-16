@@ -24,8 +24,9 @@ class Map
 	*
 	* @param key - string key for filename.
 	* @param value - string value for file line of text.
+	* @param tempFilePath - string value for temporary file path
 	*/
-public: void map(std::string key, std::string value);
+public: void map(std::string, std::string, std::string);
 
 
 private:
@@ -35,8 +36,9 @@ private:
 	  *
 	  * @param key - string key for filename.
 	  * @param value - string value for file line of text.
+	  * @param tempFilePath - string value for temporary file path
 	  */
-	void exportz(std::string key, std::string token);
+	void exportz(std::string, std::string, std::string);
 
 	/**
 	  * String special characters and punctations
