@@ -15,8 +15,7 @@
 #include <iostream>
 #include "Workflow.h"
 #include "FileManagement.h"
-using std::cout;
-using std::cin;
+#include <boost/log/trivial.hpp>
 using std::string;
 
 FileManagement fm;
@@ -57,6 +56,6 @@ void Workflow::execute_workflow()
 
 void Workflow::MapException(string exception) {
 
-	cout << exception + "\n";
-
+	BOOST_LOG_TRIVIAL(error) << "Workflow:  " << exception;
+	exit(1);
 }

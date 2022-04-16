@@ -22,10 +22,12 @@ using std::string;
 
 int main(int argc, char* argv[])
 {
+	// Print the opening message to the user
+	Introduction();
+
 	Workflow workflow;
 
 	if (argc < 7) {
-
 		workflow.MapException("There are less than the required arguments for this command. Please update and try again");
 	}
 	else if (argc > 7) {
@@ -52,9 +54,6 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	// Print the opening message to the user
-	Introduction();
-
 	//start map reduce workflow
 	workflow.execute_workflow();
 
@@ -65,9 +64,14 @@ int main(int argc, char* argv[])
 // Print Message
 void Introduction()
 {
-	cout << "**************************************************    Map Reduce   ************************************************\n";
-	cout << "*******************************************************************************************************************\n";
-	cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path.\n";
+	cout << "**************************************************    Map Reduce   ************************************************" << std::endl;
+	cout << "*******************************************************************************************************************" << std::endl;
+	cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
+	cout << "Arguments Expected:" << std::endl;
+	cout << "\t-input <input path>\t\t: This is the path where the text files reside." << std::endl;
+	cout << "\t-output <output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
+	cout << "\t-temp <temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
+	cout << std::endl;
 }
 
 // Exit the appliaction
