@@ -44,14 +44,14 @@ The program runs as a single process that will take an input directory where tex
 This section describes the application structure.
 
 ### Classes
-	 Workflow			- Executes the main business logic for the MapReduce application.
+	 Workflow				- Executes the main business logic for the MapReduce application.
 	 
-	 Executive			- Contains the main function and any additional utility functions/data required.
+	 Executive				- Contains the main function and any additional utility functions/data required.
 	 
-	 FileManagement		- Handles all filesystem related functionallity.
+	 FileManagement			- Handles all filesystem related functionallity.
 	 
-	 Map				- Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
+	 Map					- Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
 	 
-	 Sorter				- Sorts temporary file data prior to reduce call.
+	 Sorter					- Sorts temporary file data prior to reduce call.
 	 
-	 Reduce				- Is given sorted data from the intermediate file and reduces the results by aggregating the values.
+	 Reduce					- Is given sorted data from the intermediate file and reduces the results by aggregating the values.
