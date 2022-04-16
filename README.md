@@ -1,5 +1,6 @@
 <h1><img src="https://fastly.cdn.syracuse.edu/logos/syr_eng-comp-science_full.svg"></h1>
 
+
 ## Authors
 Stephanie Eordanidis - sleordan@syr.edu
 
@@ -31,13 +32,13 @@ Expected arguments are as follows:
 The program runs as a single process that will take an input directory where text files are stored and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
 
 ### Phase 2:
-TBD
+	TBD
 
 ### Phase 3:
-TBD
+	TBD
 
 ### Phase 4:
-TBD
+	TBD
 
 ## Application Structure
 This section describes the application structure.

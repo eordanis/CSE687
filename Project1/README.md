@@ -1,5 +1,6 @@
 <h1><img src="https://fastly.cdn.syracuse.edu/logos/syr_eng-comp-science_full.svg"></h1>
 
+
 ## Authors
 Stephanie Eordanidis - sleordan@syr.edu
 
