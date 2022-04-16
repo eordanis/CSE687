@@ -26,6 +26,15 @@ Expected arguments are as follows:
 ### Phase 1: 
 The program runs as a single process that will take an input directory where text files are stored and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
 
+### Phase 2:
+TBD
+
+### Phase 3:
+TBD
+
+### Phase 4:
+TBD
+
 ## Application Structure
 This section describes the application structure.
 
