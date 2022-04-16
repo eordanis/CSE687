@@ -19,9 +19,13 @@ A C++ standalone command-line program that can run a word count MapReduce workfl
 
 ### Arguments
 Expected arguments are as follows:
-	* -input 	<input path>: 		This is the path where the text files reside.
-	* -output <output path>: 		This is the path where the MapReduced result files will be placed.
-	* -temp 	<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
+
+	 -input 	<input path>: 		This is the path where the text files reside.
+	 
+	 -output 	<output path>: 		This is the path where the MapReduced result files will be placed.
+	 
+	 -temp 		<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
+	
 	
 ### Phase 1: 
 The program runs as a single process that will take an input directory where text files are stored and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
@@ -39,9 +43,14 @@ TBD
 This section describes the application structure.
 
 ### Classes
-	* Workflow
-	* Executive
-	* FileManagement
-	* Map
-	* Sorter
-	* Reduce
+	 Workflow			- Executes the main business logic for the MapReduce application.
+	 
+	 Executive			- Contains the main function and any additional utility functions/data required.
+	 
+	 FileManagement		- Handles all filesystem related functionallity.
+	 
+	 Map				- Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
+	 
+	 Sorter				- Sorts temporary file data prior to reduce call.
+	 
+	 Reduce				- Is given sorted data from the intermediate file and reduces the results by aggregating the values.
