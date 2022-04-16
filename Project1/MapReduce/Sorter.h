@@ -1,5 +1,5 @@
-#ifndef __TEST_H_INCLUDED__
-#define __TEST_H_INCLUDED__
+#ifndef __SORTER_H_INCLUDED__
+#define __SORTER_H_INCLUDED__
 ///////////////////////////////////////////////////////////////////
 //  Sorter.h    -  header file for Sorter class		     	     //
 //                                                               //
