@@ -44,17 +44,12 @@ private:
 	/*
 	* Extension supported
 	*/
-	std::string _ext;
+	std::string _ext=".txt";
 
 	/*
 	* input file paths
 	*/
 	std::vector<boost::filesystem::path> _inputPaths;
-
-	/*
-	* temporary file paths
-	*/
-	std::vector<boost::filesystem::path> _tempPaths;
 
 	/*
 	* Create a temporary file for passed file name
@@ -63,16 +58,6 @@ private:
 	void createTmpFile(std::string);
 
 public:
-
-	/*
-	* Default Constructor for FileManagement
-	*/
-	FileManagement();   // This is the default constructor declaration
-
-	/*
-	* Default Deconstructor for FileManagement
-	*/
-	~FileManagement();
 
 	/*
 	* Set the input directory to the passed string path

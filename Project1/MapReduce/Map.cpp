@@ -12,14 +12,17 @@
 
 #pragma once
 #include "Map.h"
-#include <string.h>
+#include <iostream>
+#include <regex>
+#include <string>
+#include <vector>
 #include <boost/log/trivial.hpp>
 #include <boost/algorithm/string.hpp>
 
 void Map::map(std::string key, std::string value)
 {
     //punctuation and special characters to remove
-    std::string regex = Map::punctuationAndSpecials;
+    std::string regex = _punctuationAndSpecials;
 
     // trim
     boost::trim(value);
@@ -37,22 +40,38 @@ void Map::map(std::string key, std::string value)
         //convert to lowercase
         boost::algorithm::to_lower(value); // modifies str
 
-        //prepate value to be tokenized
-        char* value_c = new char[value.size() + 1];
-        strcpy_s(value_c, strlen(value_c) * sizeof(char), value.c_str());
-        char* token;
-        char* rest = value_c;
-        //iterate over tokens
-        while ((token = strtok_s(rest, " ", &rest)))
-        {
+        const std::regex re(R"([\s]+)");
+
+        // Function Call
+        const std::vector<std::string> tokenized =
+            tokenize(value, re);
+
+        for (std::string token : tokenized) {
             BOOST_LOG_TRIVIAL(debug) << "Token: \t\"" << token << "\"" << std::endl; //debug
             exportz(key, token);
-
         }
     }
 }
 
-void Map::exportz(std::string key, char* token)
+std::vector<std::string> Map::tokenize(const std::string str, const std::regex re)
+{
+    std::sregex_token_iterator it{ str.begin(),
+                            str.end(), re, -1 };
+    std::vector<std::string> tokenized{ it, {} };
+
+    // Additional check to remove empty strings
+    tokenized.erase(
+        std::remove_if(tokenized.begin(),
+            tokenized.end(),
+            [](std::string const& s) {
+                return s.size() == 0;
+            }),
+        tokenized.end());
+
+    return tokenized;
+}
+
+void Map::exportz(std::string key, std::string token)
 {
 
 }

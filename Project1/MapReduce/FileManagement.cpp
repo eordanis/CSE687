@@ -22,21 +22,6 @@
 #include <map>
 #include <fstream>
 
-
-FileManagement::FileManagement()
-{
-    _inputDir;
-    _outputDir;
-    _tempDir;
-    _inputPaths;
-    _tempPaths;
-    _ext = ".txt";
-}
-
-FileManagement::~FileManagement()
-{
-}
-
 // Get + Set Methods for File Management Class
 void FileManagement::setInputDirectory(std::string inputDir) {
     _inputDir = inputDir;
@@ -115,17 +100,14 @@ void FileManagement::retrieveInputFiles()
 
 void FileManagement::executeFileMapping()
 {
-    if (_inputPaths.size() == 0) {
-
-    }
     Map m;
     for (boost::filesystem::path entry : _inputPaths) {
+        
         boost::filesystem::ifstream fileHandler(entry);
-        std::string line;
-        BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename() << "\"" << std::endl; //debug
+        std::string line, fileName;
+        BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename().string() << "\"" << std::endl; //debug
         //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-        boost::filesystem::path temp = boost::filesystem::unique_path(_tempDir);
-        const std::string tempstr = temp.filename().string();  // optional
+        createTmpFile(entry.stem().string());
         while (getline(fileHandler, line)) {
             BOOST_LOG_TRIVIAL(debug) << "Line: >>" << line << std::endl; //debug
             //pass file name and line to >> Map.map(filename, line)
@@ -136,8 +118,10 @@ void FileManagement::executeFileMapping()
 
 void FileManagement::createTmpFile(std::string tempFileName)
 {
+    std::string tmpFileName;
     if (tempFileName.size() > 0) {
-        std::fstream tf("mytemp.dat");
+        tmpFileName =  _tempDir.append("\\").append(tempFileName).append(".dat");
+        BOOST_LOG_TRIVIAL(debug) << "Temp file Name: >>" << tmpFileName << std::endl; //debug
     }
     
 }

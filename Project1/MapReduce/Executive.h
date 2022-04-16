@@ -16,14 +16,9 @@
 #pragma once
 
 /*
-* Argument retrieval method
-*/
-void getParameters(),
-
-/*
 * Print introduction statement on start
 */
-void introduction(),
+void introduction();
 
 /*
 * Exits the application

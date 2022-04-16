@@ -15,6 +15,8 @@
 
 #pragma once
 #include <string>
+#include <regex>
+
 class Map
 {
 	/**
@@ -25,17 +27,31 @@ class Map
 	*/
 public: void map(std::string key, std::string value);
 
-	  /**
+
+private:
+
+	/**
 	  * Takes the passed token and key filename and writes to memory buffer, periodically writting to a temporary file.
 	  *
 	  * @param key - string key for filename.
 	  * @param value - string value for file line of text.
 	  */
-private: void exportz(std::string key, char* token);
+	void exportz(std::string key, std::string token);
 
-//punctuation and special characters to remove
-private: std::string punctuationAndSpecials = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
+	/**
+	  * String special characters and punctations
+	  */
+	std::string _punctuationAndSpecials = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
 
+	/**
+	 * @brief Tokenize the given vector according to the regex
+	 * and remove the empty tokens.
+	 *
+	 * @param string line to tokenize
+	 * @param regex
+	 * @return std::vector<std::string> of tokens
+	 */
+	std::vector<std::string> tokenize(const std::string, const std::regex);
 
 };
 
