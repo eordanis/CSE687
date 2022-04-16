@@ -25,20 +25,25 @@ Workflow::Workflow() {
 	
 }
 
-void Workflow::SetInputFilePath(string inputDirPath)
+//default Deconstructor
+Workflow::~Workflow() {
+
+}
+
+void Workflow::setInputDirectory(string inputDirPath)
 {
 	//validate & set input directory path
 	fm.setInputDirectory(inputDirPath);
 }
 
-void Workflow::SetOutputFilePath(string outputDirPath)
+void Workflow::setOutputDirectory(string outputDirPath)
 {
 	//validate & set output directory path
 	fm.setOutputDirectory(outputDirPath);
 
 }
 
-void Workflow::SetTempFilePath(string tempDirPath)
+void Workflow::setTempDirectory(string tempDirPath)
 {
 	//validate & set temp directory path
 	fm.setTempDirectory(tempDirPath);
@@ -47,14 +52,14 @@ void Workflow::SetTempFilePath(string tempDirPath)
 void Workflow::execute_workflow()
 {
 	// get all valid files from passed input directory
-	fm.get_all(fm.getInputDirectory(), ".txt");
+	fm.retrieveInputFiles();
 
 	// start mapping of files found
-	fm.execute_file_paths_iteration();
+	fm.executeFileMapping();
 
 }
 
-void Workflow::MapException(string exception) {
+void Workflow::mapException(string exception) {
 
 	BOOST_LOG_TRIVIAL(error) << "Workflow:  " << exception;
 	exit(1);

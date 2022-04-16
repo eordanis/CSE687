@@ -16,67 +16,85 @@
 #include <iostream>
 #include "Workflow.h"
 #include "Executive.h"
-using std::cout;
-using std::cin;
-using std::string;
 
 int main(int argc, char* argv[])
 {
 	// Print the opening message to the user
-	Introduction();
+	introduction();
 
 	Workflow workflow;
 
 	if (argc < 7) {
-		workflow.MapException("There are less than the required arguments for this command. Please update and try again");
+		workflow.mapException("There are less than the required arguments for this command. Please verify arguments and try again");
 	}
-	else if (argc > 7) {
-		workflow.MapException("There are more than the required arguments for this command. Please update and try again");
+	
+	if (argc > 7) {
+		workflow.mapException("There are more than the required arguments for this command. Please verify arguments and try again");
 	}
-	else {
-		for (int counter = 1; counter < argc; counter++)
-		{
-			if (counter + 1 != argc)
-			{
-				if (strcmp(argv[counter], "-input") == 0) {
 
-					workflow.SetInputFilePath(argv[counter + 1]);
-				}
-				else if (strcmp(argv[counter], "-output") == 0)
-				{
-					workflow.SetOutputFilePath(argv[counter + 1]);
-				}
-				else if (strcmp(argv[counter], "-temp") == 0)
-				{
-					workflow.SetTempFilePath(argv[counter + 1]);
-				}
+	//init local vars to hold user provided input
+    std::string in, out, tmp = "";
+
+	for (int counter = 1; counter < argc; counter++)
+	{
+		if (counter + 1 != argc)
+		{
+			if (strcmp(argv[counter], "-input") == 0) {
+
+				in = argv[counter + 1];
+			}
+			else if (strcmp(argv[counter], "-output") == 0)
+			{
+				out = argv[counter + 1];
+			}
+			else if (strcmp(argv[counter], "-temp") == 0)
+			{
+				tmp = argv[counter + 1];
 			}
 		}
 	}
+	if (in == "") {
+		workflow.mapException("Could not determine input directory path. Please verify arguments and try again.");
+	}
+	if (out == "") {
+		workflow.mapException("Could not determine input directory path. Please verify arguments and try again.");
+	}
+	if (tmp == "") {
+		workflow.mapException("Could not determine input directory path. Please verify arguments and try again.");
+	}
+
+	//set input directory path
+	workflow.setInputDirectory(in);
+
+	//set output directory path
+	workflow.setOutputDirectory(out);
+
+	//set temp directory path
+	workflow.setTempDirectory(tmp);
 
 	//start map reduce workflow
 	workflow.execute_workflow();
 
 	// end the program
-	ExitProgram();
+	exitProgram();
 }
 
 // Print Message
-void Introduction()
+void introduction()
 {
-	cout << "**************************************************    Map Reduce   ************************************************" << std::endl;
-	cout << "*******************************************************************************************************************" << std::endl;
-	cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
-	cout << "Arguments Expected:" << std::endl;
-	cout << "\t-input <input path>\t\t: This is the path where the text files reside." << std::endl;
-	cout << "\t-output <output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
-	cout << "\t-temp <temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
-	cout << std::endl;
+	std::cout << "**************************************************    Map Reduce   ************************************************" << std::endl;
+	std::cout << "*******************************************************************************************************************" << std::endl;
+	std::cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
+	std::cout << "Expected Arguments:" << std::endl;
+	std::cout << "\t-input <input path>\t\t: This is the path where the text files reside." << std::endl;
+	std::cout << "\t-output <output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
+	std::cout << "\t-temp <temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
+	std::cout << std::endl;
 }
 
 // Exit the appliaction
-void ExitProgram() {
-	cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
+void exitProgram() {
+	std::cout << "MapReduce program has completed successfully. Now exiting. Goodbye!";
 
 	// EXIT_SUCCESS
 	exit(0);

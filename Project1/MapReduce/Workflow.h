@@ -21,17 +21,44 @@ class Workflow
 {
 public: 
 
+	/*
+	* Default Constructor for Workflow
+	*/
 	Workflow();
 
-	void SetInputFilePath(string);
+	/*
+	* Default Deconstructor for Workflow
+	*/
+	~Workflow();
 
-	void SetOutputFilePath(string);
+	/*
+	* Set the input directory to the passed string path
+	* @param string input directory path
+	*/
+	void setInputDirectory(string);
 
-	void SetTempFilePath(string);
+	/*
+	* Set the output directory to the passed string path
+	* @param string output directory path
+	*/
+	void setOutputDirectory(string);
 
+	/*
+	* Set the temp directory to the passed string path
+	* @param string temp directory path
+	*/
+	void setTempDirectory(string);
+
+	/*
+	* Executes workflow logic for MapReduce
+	*/
 	void execute_workflow();
 
-	void MapException(string);
+	/*
+	* Throws an error for the passed string exception
+	* @param string exception
+	*/
+	void mapException(string);
 };
 
 #endif

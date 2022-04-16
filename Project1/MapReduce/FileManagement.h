@@ -20,31 +20,105 @@ class FileManagement
 {
 private: 
 	
+	/*
+	* Validate the passed string directory path
+	* @param string directory path
+	*/
 	bool validate_dir_path(std::string);
 
+	/*
+	* Input directory path
+	*/
 	std::string _inputDir;
 
+	/*
+	* Output directory path
+	*/
 	std::string _outputDir;
 
+	/*
+	* Temp directory path
+	*/
 	std::string _tempDir;
+
+	/*
+	* Extension supported
+	*/
+	std::string _ext;
+
+	/*
+	* input file paths
+	*/
+	std::vector<boost::filesystem::path> _inputPaths;
+
+	/*
+	* temporary file paths
+	*/
+	std::vector<boost::filesystem::path> _tempPaths;
+
+	/*
+	* Create a temporary file for passed file name
+	* @param string filename
+	*/
+	void createTmpFile(std::string);
 
 public:
 
+	/*
+	* Default Constructor for FileManagement
+	*/
+	FileManagement();   // This is the default constructor declaration
+
+	/*
+	* Default Deconstructor for FileManagement
+	*/
+	~FileManagement();
+
+	/*
+	* Set the input directory to the passed string path
+	* @param string input directory path
+	*/
 	void setInputDirectory(std::string);
 
+	/*
+	* Set the output directory to the passed string path
+	* @param string output directory path
+	*/
 	void setOutputDirectory(std::string);
 
+	/*
+	* Set the temp directory to the passed string path
+	* @param string temp directory path
+	*/
 	void setTempDirectory(std::string);
 
+	/*
+	* Return the input directory path
+	* @return string input directory path
+	*/
 	std::string getInputDirectory();
 
+	/*
+	* Return the output directory path
+	* @return string output directory path
+	*/
 	std::string getOutputDirectory();
 
+	/*
+	* Return the temp directory path
+	* @return string temp directory path
+	*/
 	std::string getTempDirectory();
 
-	void get_all(boost::filesystem::path const&, std::string const&);
+	/*
+	* Retrieve all valid text files for input directory path
+	*/
+	void retrieveInputFiles();
 
-	void execute_file_paths_iteration();
+	/*
+	* Execute MapReduce process on each input file retrieved
+	*/
+	void executeFileMapping();
 };
 
 #endif

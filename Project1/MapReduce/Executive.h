@@ -15,6 +15,19 @@
 
 #pragma once
 
-void GetParameters(), Introduction(), ExitProgram();
+/*
+* Argument retrieval method
+*/
+void getParameters(),
+
+/*
+* Print introduction statement on start
+*/
+void introduction(),
+
+/*
+* Exits the application
+*/
+void exitProgram();
 
 #endif

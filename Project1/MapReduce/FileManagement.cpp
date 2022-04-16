@@ -18,15 +18,27 @@
 #include <vector>
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
-using std::cout;
-using std::cin;
-using std::string;
-using std::vector;
+#include <iterator>
+#include <map>
+#include <fstream>
 
-vector<boost::filesystem::path> paths;
+
+FileManagement::FileManagement()
+{
+    _inputDir;
+    _outputDir;
+    _tempDir;
+    _inputPaths;
+    _tempPaths;
+    _ext = ".txt";
+}
+
+FileManagement::~FileManagement()
+{
+}
 
 // Get + Set Methods for File Management Class
-void FileManagement::setInputDirectory(string inputDir) {
+void FileManagement::setInputDirectory(std::string inputDir) {
     _inputDir = inputDir;
 }
 std::string FileManagement::getInputDirectory() {
@@ -34,7 +46,7 @@ std::string FileManagement::getInputDirectory() {
 
 }
 
-void FileManagement::setOutputDirectory(string outputDir) {
+void FileManagement::setOutputDirectory(std::string outputDir) {
     _outputDir = outputDir;
 }
 std::string FileManagement::getOutputDirectory() {
@@ -42,7 +54,7 @@ std::string FileManagement::getOutputDirectory() {
 
 }
 
-void FileManagement::setTempDirectory(string tempDir) {
+void FileManagement::setTempDirectory(std::string tempDir) {
     _tempDir = tempDir;
 }
 std::string FileManagement::getTempDirectory() {
@@ -51,7 +63,7 @@ std::string FileManagement::getTempDirectory() {
 }
 
 // Files Management Methods
-bool FileManagement::validate_dir_path(string path)
+bool FileManagement::validate_dir_path(std::string path)
 {
     if (path.empty()) {
         BOOST_LOG_TRIVIAL(error) << "Path must not be empty";
@@ -76,24 +88,15 @@ bool FileManagement::validate_dir_path(string path)
     }
 }
 
-void FileManagement::get_all(boost::filesystem::path const& path, string const& ext)
+void FileManagement::retrieveInputFiles()
 {
-    if (path.size() == 0) {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided cannot be empty.";
-        exit(1);
-    }
 
-    if (ext.size() == 0) {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Extension provided cannot be empty.";
-        exit(1);
-    }
-
-    if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path))
+    if (boost::filesystem::exists(_inputDir) && boost::filesystem::is_directory(_inputDir))
     {
-        for (auto const& entry : boost::filesystem::directory_iterator(path))
+        for (auto const& entry : boost::filesystem::directory_iterator(_inputDir))
         {
-            if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == ext && !boost::filesystem::is_empty(entry)) {
-                paths.emplace_back(entry.path());
+            if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == _ext && !boost::filesystem::is_empty(entry)) {
+                _inputPaths.emplace_back(entry.path());
                 BOOST_LOG_TRIVIAL(debug) << entry.path().filename() << std::endl; //debug
             }
 
@@ -101,29 +104,40 @@ void FileManagement::get_all(boost::filesystem::path const& path, string const& 
     }
     else
     {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << path << "\" is not a valid directory.";
+        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << _inputDir << "\" is not a valid directory.";
         exit(1);
     }
-    if (paths.size() == 0) {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << path << "\" has no valid text files to map and reduce with extension.\"" << ext << "\"";
+    if (_inputPaths.size() == 0) {
+        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << _inputDir << "\" has no valid text files to map and reduce with extension.\"" << _ext << "\"";
         exit(1);
     }
 }
 
-void FileManagement::execute_file_paths_iteration()
+void FileManagement::executeFileMapping()
 {
-    if (paths.size() == 0) {
+    if (_inputPaths.size() == 0) {
 
     }
     Map m;
-    for (boost::filesystem::path entry : paths) {
+    for (boost::filesystem::path entry : _inputPaths) {
         boost::filesystem::ifstream fileHandler(entry);
         std::string line;
         BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename() << "\"" << std::endl; //debug
+        //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
+        boost::filesystem::path temp = boost::filesystem::unique_path(_tempDir);
+        const std::string tempstr = temp.filename().string();  // optional
         while (getline(fileHandler, line)) {
             BOOST_LOG_TRIVIAL(debug) << "Line: >>" << line << std::endl; //debug
             //pass file name and line to >> Map.map(filename, line)
             m.map(entry.filename().string(), line);
         }
     }
+}
+
+void FileManagement::createTmpFile(std::string tempFileName)
+{
+    if (tempFileName.size() > 0) {
+        std::fstream tf("mytemp.dat");
+    }
+    
 }
