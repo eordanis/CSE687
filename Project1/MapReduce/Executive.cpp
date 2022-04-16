@@ -35,6 +35,16 @@ int main(int argc, char* argv[])
 	//init local vars to hold user provided input
     std::string in, out, tmp = "";
 
+	if (!CheckFlag("-input", argc, argv)) {
+		workflow.mapException("-input parameter cannot be found. Please verify arguments and try again");
+	}
+	if (!CheckFlag("-output", argc, argv)) {
+		workflow.mapException("-output parameter cannot be found. Please verify arguments and try again");
+	}
+	if (!CheckFlag("-temp", argc, argv)) {
+		workflow.mapException("-temp parameter cannot be found. Please verify arguments and try again");
+	}
+
 	for (int counter = 1; counter < argc; counter++)
 	{
 		if (counter + 1 != argc)
@@ -98,6 +108,22 @@ void exitProgram() {
 
 	// EXIT_SUCCESS
 	exit(0);
+}
+
+bool CheckFlag(std::string flag, int argc, char *argv[]) {
+
+	for (int counter = 1; counter < argc; counter++)
+	{
+		if (counter + 1 != argc)
+		{
+			if (argv[counter] == flag) {
+
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 /*

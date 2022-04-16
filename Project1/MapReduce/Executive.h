@@ -25,4 +25,6 @@ void introduction();
 */
 void exitProgram();
 
+bool CheckFlag(std::string, int, char*[]);
+
 #endif
