@@ -22,6 +22,7 @@
 #include <map>
 #include <fstream>
 
+
 // Get + Set Methods for File Management Class
 void FileManagement::setInputDirectory(std::string inputDir) {
     _inputDir = inputDir;
@@ -104,24 +105,46 @@ void FileManagement::executeFileMapping()
     for (boost::filesystem::path entry : _inputPaths) {
         
         boost::filesystem::ifstream fileHandler(entry);
-        std::string line, fileName;
+        std::string line;
         BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename().string() << "\"" << std::endl; //debug
         //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-        createTmpFile(entry.stem().string());
+        std::string tmpFileName = _tempDir;
+        tmpFileName.append("\\").append(entry.stem().string()).append(".dat");
+        createFile(tmpFileName);
         while (getline(fileHandler, line)) {
             BOOST_LOG_TRIVIAL(debug) << "Line: >>" << line << std::endl; //debug
             //pass file name and line to >> Map.map(filename, line)
-            m.map(entry.filename().string(), line);
+            m.map(entry.stem().string(), line);
         }
     }
 }
 
-void FileManagement::createTmpFile(std::string tempFileName)
+void FileManagement::createFile(std::string filePath)
 {
-    std::string tmpFileName;
-    if (tempFileName.size() > 0) {
-        tmpFileName =  _tempDir.append("\\").append(tempFileName).append(".dat");
-        BOOST_LOG_TRIVIAL(debug) << "Temp file Name: >>" << tmpFileName << std::endl; //debug
+    if(!boost::filesystem::exists(filePath)) {
+        BOOST_LOG_TRIVIAL(debug) << "Creating File: >>" << filePath << std::endl; //debug
+        std::fstream tf(filePath); //create the file and close stream
+        tf.close();
     }
-    
+}
+
+void FileManagement::writeToFile(std::string filePath, std::string text)
+{
+   if (boost::filesystem::exists(filePath)) {
+        BOOST_LOG_TRIVIAL(debug) << "Writting to File: >>" << filePath << std::endl; //debug
+        std::fstream fs;
+        fs.open(filePath, std::fstream::in | std::fstream::out | std::fstream::app);
+        fs << text;
+        fs.close();
+   }
+
+}
+
+void FileManagement::removeFile(std::string filePath)
+{
+    if (boost::filesystem::exists(filePath)) {
+        BOOST_LOG_TRIVIAL(debug) << "Removing File: >>" << filePath << std::endl; //debug
+        boost::filesystem::remove(filePath);
+    }
+
 }
