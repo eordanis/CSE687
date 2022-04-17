@@ -13,6 +13,14 @@
 #pragma once
 #include "Reduce.h"
 
+Reduce::Reduce()
+{
+}
+
+Reduce::~Reduce()
+{
+}
+
 void Reduce::reduce(std::string key, std::vector<int>::iterator counts)
 {
 }

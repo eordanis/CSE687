@@ -18,40 +18,18 @@
 
 class FileManagement
 {
-private: 
-	
-	/*
-	* Validate the passed string directory path
-	* @param string directory path
-	*/
-	bool validate_dir_path(std::string);
-
-	/*
-	* Input directory path
-	*/
-	std::string _inputDir;
-
-	/*
-	* Output directory path
-	*/
-	std::string _outputDir;
-
-	/*
-	* Temp directory path
-	*/
-	std::string _tempDir;
-
-	/*
-	* Extension supported
-	*/
-	std::string _ext=".txt";
-
-	/*
-	* input file paths
-	*/
-	std::vector<boost::filesystem::path> _inputPaths;
 
 public:
+
+	/*
+	* Default Constructor for FileManagement
+	*/
+	FileManagement();
+
+	/*
+	* Default Deconstructor for FileManagement
+	*/
+	~FileManagement();
 
 	/*
 	* Set the input directory to the passed string path
@@ -117,6 +95,44 @@ public:
 	* @param string filename
 	*/
 	void removeFile(std::string tempFileName);
+
+private: 
+	
+	/*
+	* Validate the passed string directory path
+	* @param string directory path
+	*/
+	bool validateDirPath(std::string);
+
+	/*
+	* Input directory path
+	*/
+	std::string _inputDir;
+
+	/*
+	* Output directory path
+	*/
+	std::string _outputDir;
+
+	/*
+	* Temp directory path
+	*/
+	std::string _tempDir;
+
+	/*
+	* Extension supported
+	*/
+	std::string _ext=".txt";
+
+	/*
+	* Extension supported for temporary files
+	*/
+	std::string _tmpExt = ".dat";
+
+	/*
+	* input file paths
+	*/
+	std::vector<boost::filesystem::path> _inputPaths;
 };
 
 #endif

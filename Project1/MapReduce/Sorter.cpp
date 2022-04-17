@@ -12,3 +12,7 @@
 
 #pragma once
 #include "Sorter.h"
+
+Sorter::~Sorter()
+{
+}

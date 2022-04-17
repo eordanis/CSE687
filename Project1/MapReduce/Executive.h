@@ -25,6 +25,11 @@ void introduction();
 */
 void exitProgram();
 
+/*
+* Check user input for expected flags
+* @param string 
+* @param char* []
+*/
 bool CheckFlag(std::string, int, char*[]);
 
 #endif

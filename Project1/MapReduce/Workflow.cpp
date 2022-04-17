@@ -61,6 +61,6 @@ void Workflow::execute_workflow()
 
 void Workflow::mapException(string exception) {
 
-	BOOST_LOG_TRIVIAL(error) << "Workflow:  " << exception;
+	BOOST_LOG_TRIVIAL(error) << "Workflow:mapException:\t  " << exception;
 	exit(1);
 }

@@ -16,6 +16,15 @@
 
 class Sorter
 {
+	/*
+	* Default Constructor for Sorter
+	*/
+	Sorter();
+
+	/*
+	* Default Deconstructor for Sorter
+	*/
+	~Sorter();
 };
 
 #endif

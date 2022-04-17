@@ -89,6 +89,7 @@ void exitProgram() {
 	exit(0);
 }
 
+// Validate user input for expected flag
 bool CheckFlag(std::string flag, int argc, char *argv[]) {
 
 	for (int counter = 1; counter < argc; counter++)

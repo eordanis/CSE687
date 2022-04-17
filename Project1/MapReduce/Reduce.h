@@ -20,8 +20,26 @@
 
 class Reduce
 {
-public: 
+public:
+	/*
+	* Default Constructor for Reduce
+	*/
+	Reduce();
+
+	/*
+	* Default Deconstructor for Reduce
+	*/
+	~Reduce();
+
+	/*
+	* 
+	*/
 	void reduce(std::string key, std::vector<int>::iterator counts);
+
+private:
+	/*
+	* 
+	*/
 	void exportz(std::string key, int count);
 };
 #endif

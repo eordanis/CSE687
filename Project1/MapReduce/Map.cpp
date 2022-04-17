@@ -16,11 +16,26 @@
 #include <regex>
 #include <string>
 #include <vector>
+#include <sstream>
 #include <boost/log/trivial.hpp>
 #include <boost/algorithm/string.hpp>
 #include "FileManagement.h"
 
-void Map::map(std::string key, std::string value, std::string tempFileName)
+Map::Map()
+{
+}
+
+Map::Map(std::string fileName, std::string tempFileName)
+{
+    _fileName = fileName;
+    _tempFileName = tempFileName;
+}
+
+Map::~Map()
+{
+}
+
+void Map::map(std::string key, std::string value)
 {
     //punctuation and special characters to remove
     std::string regex = _punctuationAndSpecials;
@@ -48,8 +63,8 @@ void Map::map(std::string key, std::string value, std::string tempFileName)
             tokenize(value, re);
 
         for (std::string token : tokenized) {
-            BOOST_LOG_TRIVIAL(debug) << "Token: \t\"" << token << "\"" << std::endl; //debug
-            exportz(key, token, tempFileName);
+            //BOOST_LOG_TRIVIAL(debug) << "Token: \t\"" << token << "\"" << std::endl; //debug
+            exportz(key, token);
         }
     }
 }
@@ -72,13 +87,32 @@ std::vector<std::string> Map::tokenize(const std::string str, const std::regex r
     return tokenized;
 }
 
-void Map::exportz(std::string key, std::string token, std::string tempFileName)
+void Map::exportz(std::string key, std::string token)
 {
-    FileManagement fm;
-    std::string value = "(" + token + ",1)\n";
-    BOOST_LOG_TRIVIAL(debug) << "Value to export: \t\"" << value << "\"" << std::endl; //debug
-    //TODO store value in buffer of size and write to file when buffer is full.
-    fm.writeToFile(tempFileName, value);
+    if (!_purgeExportBuffer){
+        std::string value = "(" + token + ",1)\n";
+        //BOOST_LOG_TRIVIAL(debug) << "Value to export: \t\"" << value << "\"" << std::endl; //debug
+        //TODO store value in buffer of size and write to file when buffer is full.
+        _exportBuffer.emplace_back(value);
+    }
+
+    if (_exportBuffer.size() == _exportBufferMaxSize || _purgeExportBuffer) {
+        FileManagement fm;
+        std::stringstream result;
+        copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
+        fm.writeToFile(_tempFileName, result.str());
+        _exportBuffer.clear();
+    }
+}
+
+void Map::setPurgeFlag(bool flag)
+{
+    _purgeExportBuffer = flag;
+}
+
+size_t Map::getExportBufferSize()
+{
+    return _exportBuffer.size();
 }
 
 /* The map class will contain a public method map(), that accepts a key and value.

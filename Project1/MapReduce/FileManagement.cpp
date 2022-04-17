@@ -23,9 +23,19 @@
 #include <fstream>
 
 
+FileManagement::FileManagement()
+{
+}
+
+FileManagement::~FileManagement()
+{
+}
+
 // Get + Set Methods for File Management Class
 void FileManagement::setInputDirectory(std::string inputDir) {
-    _inputDir = inputDir;
+    if (validateDirPath(inputDir)) {
+        _inputDir = inputDir;
+    }
 }
 std::string FileManagement::getInputDirectory() {
     return _inputDir;
@@ -33,7 +43,9 @@ std::string FileManagement::getInputDirectory() {
 }
 
 void FileManagement::setOutputDirectory(std::string outputDir) {
-    _outputDir = outputDir;
+    if (validateDirPath(outputDir)) {
+        _outputDir = outputDir;
+    }
 }
 std::string FileManagement::getOutputDirectory() {
     return _outputDir;
@@ -41,7 +53,9 @@ std::string FileManagement::getOutputDirectory() {
 }
 
 void FileManagement::setTempDirectory(std::string tempDir) {
-    _tempDir = tempDir;
+    if (validateDirPath(tempDir)) {
+        _tempDir = tempDir;
+    }
 }
 std::string FileManagement::getTempDirectory() {
     return _tempDir;
@@ -49,10 +63,10 @@ std::string FileManagement::getTempDirectory() {
 }
 
 // Files Management Methods
-bool FileManagement::validate_dir_path(std::string path)
+bool FileManagement::validateDirPath(std::string path)
 {
     if (path.empty()) {
-        BOOST_LOG_TRIVIAL(error) << "Path must not be empty";
+        BOOST_LOG_TRIVIAL(error) << "FileManagement:validateDirPath:\tPath must not be empty.";
         return true;
     }
 
@@ -65,56 +79,64 @@ bool FileManagement::validate_dir_path(std::string path)
     }
 
     if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {
-        BOOST_LOG_TRIVIAL(info) << "FileManagement:validate_dir_path:Path provided \"" << path << "\" is a valid directory path. Setting value.";
+        BOOST_LOG_TRIVIAL(info) << "Path provided \"" << path << "\" is a valid directory path. Setting value.";
         return true;
     }
     else {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:validate_dir_path:Path provided \"" << path << "\" is not a valid directory path.";
+        BOOST_LOG_TRIVIAL(error) << "FileManagement:\tvalidateDirPath:Path provided \"" << path << "\" is not a valid directory path.";
         exit(1);
     }
 }
 
 void FileManagement::retrieveInputFiles()
 {
-
+    BOOST_LOG_TRIVIAL(info) << "Searching for valid text files at provided input path..." << std::endl;
     if (boost::filesystem::exists(_inputDir) && boost::filesystem::is_directory(_inputDir))
     {
         for (auto const& entry : boost::filesystem::directory_iterator(_inputDir))
         {
             if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == _ext && !boost::filesystem::is_empty(entry)) {
                 _inputPaths.emplace_back(entry.path());
-                BOOST_LOG_TRIVIAL(debug) << entry.path().filename() << std::endl; //debug
+                //BOOST_LOG_TRIVIAL(debug) << entry.path().filename() << std::endl; 
             }
 
         }
     }
     else
     {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << _inputDir << "\" is not a valid directory.";
+        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:\tPath provided \"" << _inputDir << "\" is not a valid directory.";
         exit(1);
     }
     if (_inputPaths.size() == 0) {
-        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:Path provided \"" << _inputDir << "\" has no valid text files to map and reduce with extension.\"" << _ext << "\"";
+        BOOST_LOG_TRIVIAL(error) << "FileManagement:get_all:\tPath provided \"" << _inputDir << "\" has no valid text files to map and reduce with extension.\"" << _ext << "\"";
         exit(1);
     }
 }
 
 void FileManagement::executeFileMapping()
 {
-    Map m;
+    BOOST_LOG_TRIVIAL(info) << "Executing File Mapping..." << std::endl;
     for (boost::filesystem::path entry : _inputPaths) {
-        
         boost::filesystem::ifstream fileHandler(entry);
         std::string line;
-        BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename().string() << "\"" << std::endl; //debug
+        //BOOST_LOG_TRIVIAL(debug) << "Filename: \"" << entry.filename().string() << "\"" << std::endl; 
         //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
+        std::string fileName = entry.stem().string();
         std::string tmpFileName = _tempDir;
-        tmpFileName.append("\\").append(entry.stem().string()).append(".dat");
+        tmpFileName.append("\\").append(fileName).append(_tmpExt);
         createFile(tmpFileName);
+        Map m(fileName,tmpFileName);
+        BOOST_LOG_TRIVIAL(info) << "\tMapping file \"" << entry.filename().string() << "\"" << std::endl;
         while (getline(fileHandler, line)) {
-            BOOST_LOG_TRIVIAL(debug) << "Line: >>" << line << std::endl; //debug
+            //BOOST_LOG_TRIVIAL(debug) << "Line: >>" << line << std::endl;
             //pass file name and line to >> Map.map(filename, line)
-            m.map(entry.stem().string(), line, tmpFileName);
+            m.map(fileName, line);
+
+        }
+        //ensure we check the buffer to make sure it does not still have content
+        if (m.getExportBufferSize() > 0) {
+            m.setPurgeFlag(true);
+            m.exportz(fileName, "");
         }
     }
 }
@@ -122,7 +144,7 @@ void FileManagement::executeFileMapping()
 void FileManagement::createFile(std::string filePath)
 {
     if(!boost::filesystem::exists(filePath)) {
-        BOOST_LOG_TRIVIAL(debug) << "Creating File: >>" << filePath << std::endl; //debug
+        //BOOST_LOG_TRIVIAL(debug) << "Creating File: >>" << filePath << std::endl; 
         std::ofstream output(filePath); //create file and not open?
         
     }
@@ -131,7 +153,7 @@ void FileManagement::createFile(std::string filePath)
 void FileManagement::writeToFile(std::string filePath, std::string text)
 {
    if (boost::filesystem::exists(filePath)) {
-        BOOST_LOG_TRIVIAL(debug) << "Writting to File: >>" << filePath << std::endl; //debug
+        //BOOST_LOG_TRIVIAL(debug) << "Writting to File: >>" << filePath << std::endl; 
         std::fstream fs;
         fs.open(filePath, std::fstream::in | std::fstream::out | std::fstream::app);
         fs << text;
@@ -143,7 +165,7 @@ void FileManagement::writeToFile(std::string filePath, std::string text)
 void FileManagement::removeFile(std::string filePath)
 {
     if (boost::filesystem::exists(filePath)) {
-        BOOST_LOG_TRIVIAL(debug) << "Removing File: >>" << filePath << std::endl; //debug
+        //BOOST_LOG_TRIVIAL(debug) << "Removing File: >>" << filePath << std::endl; 
         boost::filesystem::remove(filePath);
     }
 }
