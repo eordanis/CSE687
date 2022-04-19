@@ -1,5 +1,7 @@
+#ifndef __MAPTEST_H_INCLUDED__
+#define __MAPTEST_H_INCLUDED__
 ///////////////////////////////////////////////////////////////////
-//  pch.cpp    -  pch class	                                     //
+//  MapTest.h    -  header file for MapTest class                //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -11,3 +13,7 @@
 ///////////////////////////////////////////////////////////////////
 #pragma once
 #include "pch.h"
+class MapTest
+{
+};
+#endif

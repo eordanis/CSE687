@@ -15,13 +15,11 @@
 #include "Map.h"
 #include <boost/log/trivial.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <vector>
 #include <boost/filesystem/fstream.hpp>
-#include <iostream>
-#include <iterator>
-#include <map>
-#include <fstream>
-
+#include <iomanip>
+#include <sstream>
+#include <time.h>
+#include <stdio.h>
 
 FileManagement::FileManagement()
 {
@@ -123,9 +121,9 @@ void FileManagement::executeFileMapping()
         //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
         std::string fileName = entry.stem().string();
         std::string tmpFileName = _tempDir;
-        tmpFileName.append("\\").append(fileName).append(_tmpExt);
+        tmpFileName.append("\\").append(fileName).append("_").append(GetCurrentTimeForFileName()).append(_tmpExt);
         createFile(tmpFileName);
-        Map m(fileName,tmpFileName);
+        Map m(fileName, tmpFileName);
         BOOST_LOG_TRIVIAL(info) << "\tMapping file \"" << entry.filename().string() << "\"" << std::endl;
         while (getline(fileHandler, line)) {
             //BOOST_LOG_TRIVIAL(debug) << "Line: >>" << line << std::endl;
@@ -168,4 +166,16 @@ void FileManagement::removeFile(std::string filePath)
         //BOOST_LOG_TRIVIAL(debug) << "Removing File: >>" << filePath << std::endl; 
         boost::filesystem::remove(filePath);
     }
+}
+
+std::string FileManagement::GetCurrentTimeForFileName()
+{
+    const std::string& fmt = "%F_%T";
+    std::tm bt{};
+    std::time_t timer = time(0);
+    localtime_s(&bt, &timer);
+    char buf[64];
+    std::string timestr = { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
+    std::replace(timestr.begin(), timestr.end(), ':', '-');
+    return timestr;
 }

@@ -1,5 +1,8 @@
+#ifndef __FILEMANAGEMENTTEST_H_INCLUDED__
+#define __FILEMANAGEMENTTEST_H_INCLUDED__
 ///////////////////////////////////////////////////////////////////
-//  pch.cpp    -  pch class	                                     //
+//  FileManagementTest.h    -  header file for                   //
+//                             FileManagementTest class          //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -11,3 +14,18 @@
 ///////////////////////////////////////////////////////////////////
 #pragma once
 #include "pch.h"
+
+struct FileManagementTest : testing::Test
+{
+	FileManagement* _fm;
+	FileManagementTest()
+	{
+		_fm = new FileManagement;
+	}
+	~FileManagementTest()
+	{
+		delete _fm;
+	}
+};
+
+#endif

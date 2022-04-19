@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////
-//  pch.cpp    -  pch class	                                     //
+//  MapTest.cpp    -  MapTest class                              //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -11,3 +11,10 @@
 ///////////////////////////////////////////////////////////////////
 #pragma once
 #include "pch.h"
+#include "MapTest.h"
+
+//Demo Tests
+TEST(TemplateTest, TestDemo) {
+	EXPECT_EQ(1, 1);
+	EXPECT_TRUE(true);
+}

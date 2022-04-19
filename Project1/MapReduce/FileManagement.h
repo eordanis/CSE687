@@ -96,6 +96,8 @@ public:
 	*/
 	void removeFile(std::string tempFileName);
 
+	std::string GetCurrentTimeForFileName();
+
 private: 
 	
 	/*
