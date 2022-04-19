@@ -16,7 +16,6 @@
 #include "Workflow.h"
 #include "FileManagement.h"
 #include <boost/log/trivial.hpp>
-using std::string;
 
 FileManagement fm;
 
@@ -30,20 +29,20 @@ Workflow::~Workflow() {
 
 }
 
-void Workflow::setInputDirectory(string inputDirPath)
+void Workflow::setInputDirectory(std::string inputDirPath)
 {
 	//validate & set input directory path
 	fm.setInputDirectory(inputDirPath);
 }
 
-void Workflow::setOutputDirectory(string outputDirPath)
+void Workflow::setOutputDirectory(std::string outputDirPath)
 {
 	//validate & set output directory path
 	fm.setOutputDirectory(outputDirPath);
 
 }
 
-void Workflow::setTempDirectory(string tempDirPath)
+void Workflow::setTempDirectory(std::string tempDirPath)
 {
 	//validate & set temp directory path
 	fm.setTempDirectory(tempDirPath);
@@ -59,7 +58,7 @@ void Workflow::execute_workflow()
 
 }
 
-void Workflow::mapException(string exception) {
+void Workflow::mapException(std::string exception) {
 
 	BOOST_LOG_TRIVIAL(error) << "Workflow:mapException:\t  " << exception;
 	exit(1);

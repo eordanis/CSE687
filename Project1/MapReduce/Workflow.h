@@ -15,7 +15,6 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
-using std::string;
 
 class Workflow
 {
@@ -35,19 +34,19 @@ public:
 	* Set the input directory to the passed string path
 	* @param string input directory path
 	*/
-	void setInputDirectory(string);
+	void setInputDirectory(std::string);
 
 	/*
 	* Set the output directory to the passed string path
 	* @param string output directory path
 	*/
-	void setOutputDirectory(string);
+	void setOutputDirectory(std::string);
 
 	/*
 	* Set the temp directory to the passed string path
 	* @param string temp directory path
 	*/
-	void setTempDirectory(string);
+	void setTempDirectory(std::string);
 
 	/*
 	* Executes workflow logic for MapReduce
@@ -58,7 +57,7 @@ public:
 	* Throws an error for the passed string exception
 	* @param string exception
 	*/
-	void mapException(string);
+	void mapException(std::string);
 };
 
 #endif

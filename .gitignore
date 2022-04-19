@@ -6,3 +6,9 @@ Project1/x64/*
 Project1/x64/**/*
 Project1/MapReduce/MapReduce.vcxproj.filters
 Project1/MapReduce/MapReduce.vcxproj.user
+Project1/MapReduceTest/x64/*
+Project1/MapReduceTest/x64/**/
+Project1/MapReduceTest/MapReduceTest.vcxproj.filters
+Project1/MapReduceTest/MapReduceTest.vcxproj.user
+Project1/packages/*
+
