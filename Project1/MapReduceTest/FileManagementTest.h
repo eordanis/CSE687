@@ -18,13 +18,12 @@
 struct FileManagementTest : testing::Test
 {
 	FileManagement* _fm;
-	FileManagementTest()
+	FileManagementTest::FileManagementTest()
 	{
 		_fm = new FileManagement;
 	}
-	~FileManagementTest()
+	FileManagementTest::~FileManagementTest()
 	{
-		delete _fm;
 	}
 };
 
