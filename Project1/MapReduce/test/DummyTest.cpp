@@ -1,7 +1,5 @@
-#ifndef __MAPTEST_H_INCLUDED__
-#define __MAPTEST_H_INCLUDED__
 ///////////////////////////////////////////////////////////////////
-//  MapTest.h    -  header file for MapTest class                //
+//  DummyTest.cpp -  Dummy Test Class                            //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -9,11 +7,17 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,jwashi05}@syr.edu                    //
+//                sleordan.@syr.edu                              //
+//                jwashi05.@syr.edu                              //
 ///////////////////////////////////////////////////////////////////
+
 #pragma once
-#include "pch.h"
-class MapTest
+#include "Test.h"
+
+//Dummy Test Class
+
+TEST(TestDemo, Demo1)
 {
-};
-#endif
+	ASSERT_EQ(1, 1);
+}
+

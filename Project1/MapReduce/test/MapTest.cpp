@@ -1,8 +1,5 @@
-#ifndef __FILEMANAGEMENTTEST_H_INCLUDED__
-#define __FILEMANAGEMENTTEST_H_INCLUDED__
 ///////////////////////////////////////////////////////////////////
-//  FileManagementTest.h    -  header file for                   //
-//                             FileManagementTest class          //
+//  MapTest.cpp -  Map Test Class                                //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -10,21 +7,16 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                {sleordan,jwashi05}@syr.edu                    //
+//                sleordan.@syr.edu                              //
+//                jwashi05.@syr.edu                              //
 ///////////////////////////////////////////////////////////////////
+
 #pragma once
-#include "pch.h"
+#include "Test.h"
+#include "../Map.h"
 
-struct FileManagementTest : testing::Test
+TEST(MapTest, TestMapping)
 {
-	FileManagement* _fm;
-	FileManagementTest::FileManagementTest()
-	{
-		_fm = new FileManagement;
-	}
-	FileManagementTest::~FileManagementTest()
-	{
-	}
-};
+	ASSERT_EQ(1, 1);
+}
 
-#endif

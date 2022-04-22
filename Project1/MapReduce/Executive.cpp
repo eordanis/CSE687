@@ -16,9 +16,18 @@
 #include <iostream>
 #include "Workflow.h"
 #include "Executive.h"
+#include "gtest/gtest.h"
 
 int main(int argc, char* argv[])
 {
+	//we should add a new arg to determine if we want to run this
+	//if (_RUN_TEST) {
+		printf("Running main() from %s\n", __FILE__);
+		testing::InitGoogleTest(&argc, argv);
+		RUN_ALL_TESTS();
+	//}
+	
+
 	// Print the opening message to the user
 	introduction();
 

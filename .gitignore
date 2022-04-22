@@ -11,4 +11,7 @@ Project1/MapReduceTest/x64/**/
 Project1/MapReduceTest/MapReduceTest.vcxproj.filters
 Project1/MapReduceTest/MapReduceTest.vcxproj.user
 Project1/packages/*
-
+Project1/Debug/*
+Project1/Debug/**/*
+Project1/MapReduce/Debug/*
+Project1/MapReduce/Debug/**/*
