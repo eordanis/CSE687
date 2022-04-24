@@ -15,8 +15,21 @@
 #include "Test.h"
 #include "../Map.h"
 
-TEST(MapTest, TestMapping)
+TEST(MapTest, TestTokenizer)
 {
+	Map m;
+	ASSERT_EQ(1, 1);
+}
+
+TEST(MapTest, TestExportz)
+{
+	Map m;
+	ASSERT_EQ(1, 1);
+}
+
+TEST(MapTest, TestMap)
+{
+	Map m;
 	ASSERT_EQ(1, 1);
 }
 

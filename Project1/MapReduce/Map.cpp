@@ -63,7 +63,6 @@ void Map::map(std::string key, std::string value)
             tokenize(value, re);
 
         for (std::string token : tokenized) {
-            //BOOST_LOG_TRIVIAL(debug) << "Token: \t\"" << token << "\"" << std::endl; //debug
             exportz(key, token);
         }
     }
@@ -91,8 +90,6 @@ void Map::exportz(std::string key, std::string token)
 {
     if (!_purgeExportBuffer){
         std::string value = "(" + token + ",1)\n";
-        //BOOST_LOG_TRIVIAL(debug) << "Value to export: \t\"" << value << "\"" << std::endl; //debug
-        //TODO store value in buffer of size and write to file when buffer is full.
         _exportBuffer.emplace_back(value);
     }
 
