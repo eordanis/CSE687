@@ -63,7 +63,7 @@ void Map::map(std::string key, std::string value)
             tokenize(value, re);
 
         for (std::string token : tokenized) {
-            exportz(key, token);
+            exportz(key, token, false);
         }
     }
 }
@@ -86,14 +86,14 @@ std::vector<std::string> Map::tokenize(const std::string str, const std::regex r
     return tokenized;
 }
 
-void Map::exportz(std::string key, std::string token)
+void Map::exportz(std::string key, std::string token, bool purge)
 {
-    if (!_purgeExportBuffer){
+    if (!purge){
         std::string value = "(" + token + ",1)\n";
         _exportBuffer.emplace_back(value);
     }
 
-    if (_exportBuffer.size() == _exportBufferMaxSize || _purgeExportBuffer) {
+    if (_exportBuffer.size() == _exportBufferMaxSize || purge) {
         FileManagement fm;
         std::stringstream result;
         copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
@@ -103,9 +103,9 @@ void Map::exportz(std::string key, std::string token)
     }
 }
 
-void Map::setPurgeFlag(bool flag)
+void Map::purgeBuffer(std::string fileName)
 {
-    _purgeExportBuffer = flag;
+    exportz(fileName, "", true);
 }
 
 size_t Map::getExportBufferSize()

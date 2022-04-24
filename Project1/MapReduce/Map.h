@@ -53,13 +53,15 @@ public:
 	*
 	* @param key - string key for filename.
 	* @param value - string value for file line of text.
+	* @param purge - bool true if purging buffer
 	*/
-	void exportz(std::string, std::string);
+	void exportz(std::string, std::string, bool);
 
 	/*
-	* Set the purge flag to the passed boolean value
+	* Purge the export buffer of any remaining values
+	* @param fileName to purge buffer for
 	*/
-	void setPurgeFlag(bool);
+	void purgeBuffer(std::string);
 
 	/*
 	* Return the current size of the export buffer
@@ -72,11 +74,6 @@ private:
 	 * Max size of export buffer
 	 */
 	int _exportBufferMaxSize = 50;
-
-	/**
-	 * Boolean indicating if we need to purge export buffer
-	 */
-	bool _purgeExportBuffer = false;
 
 	/**
 	* String special characters and punctations

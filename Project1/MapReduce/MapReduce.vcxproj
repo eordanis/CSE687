@@ -157,7 +157,6 @@
     <ClCompile Include="Executive.cpp" />
     <ClCompile Include="Reduce.cpp" />
     <ClCompile Include="Sorter.cpp" />
-    <ClCompile Include="test\DummyTest.cpp" />
     <ClCompile Include="test\MapTest.cpp" />
     <ClCompile Include="test\ReduceTest.cpp" />
     <ClCompile Include="Workflow.cpp" />

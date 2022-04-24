@@ -132,8 +132,7 @@ void FileManagement::executeFileMapping()
         }
         //ensure we check the buffer to make sure it does not still have content
         if (m.getExportBufferSize() > 0) {
-            m.setPurgeFlag(true);
-            m.exportz(fileName, "");
+            m.purgeBuffer(fileName);
         }
         fileHandler.close();
     }
@@ -142,7 +141,7 @@ void FileManagement::executeFileMapping()
 void FileManagement::createFile(std::string directory, std::string filePath)
 {
     if(boost::filesystem::is_directory(directory) && !boost::filesystem::exists(filePath)) {
-        std::ofstream output(filePath); //create file and not open?
+        std::ofstream output(filePath);
         output.close();
         
     }
