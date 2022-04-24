@@ -1,8 +1,5 @@
-#ifndef __EXECUTIVE_H_INCLUDED__
-#define __EXECUTIVE_H_INCLUDED__
-
 ///////////////////////////////////////////////////////////////////
-//  Executive.h    -  header file for Main Program  //
+//  MapReduceUtils.cpp    -  MapReduceUtils Class                //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -15,30 +12,25 @@
 
 #pragma once
 
-/*
-* Print introduction statement on start
-*/
-void introduction();
+#include "MapReduceUtils.h"
+#include <string>
+#include <boost/log/trivial.hpp>
 
-/*
-* Exits the application
-*/
-void exitProgram();
+MapReduceUtils::MapReduceUtils()
+{
+}
 
-/*
-* Check user input for expected flags and return if we are running unit tests
-* @param int
-* @param char* []
-* @return bool representation if we are to run unit test or not
-*/
-bool validateArgs(int, char* []);
+MapReduceUtils::~MapReduceUtils()
+{
+}
 
-/*
-* Check user input for expected flags
-* @param string
-* @param int
-* @param char* []
-*/
-bool checkFlag(std::string, int, char*[]);
+void MapReduceUtils::throwException(std::string method, std::string exception)
+{
+	BOOST_LOG_TRIVIAL(error) << method << ":\t  " << exception;
+	exit(1);
+}
 
-#endif
+void MapReduceUtils::logMessage(std::string msg)
+{
+	BOOST_LOG_TRIVIAL(info) << msg;
+}

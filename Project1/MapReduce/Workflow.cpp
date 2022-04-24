@@ -12,10 +12,8 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
-#include <iostream>
 #include "Workflow.h"
 #include "FileManagement.h"
-#include <boost/log/trivial.hpp>
 
 FileManagement fm;
 
@@ -56,10 +54,4 @@ void Workflow::execute_workflow()
 	// start mapping of files found
 	fm.executeFileMapping();
 
-}
-
-void Workflow::mapException(std::string exception) {
-
-	BOOST_LOG_TRIVIAL(error) << "Workflow:mapException:\t  " << exception;
-	exit(1);
 }

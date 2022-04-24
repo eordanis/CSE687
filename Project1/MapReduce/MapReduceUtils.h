@@ -1,8 +1,8 @@
-#ifndef __EXECUTIVE_H_INCLUDED__
-#define __EXECUTIVE_H_INCLUDED__
+#ifndef __MAPREDUCEUTILS_H_INCLUDED__
+#define __MAPREDUCEUTILS_H_INCLUDED__
 
 ///////////////////////////////////////////////////////////////////
-//  Executive.h    -  header file for Main Program  //
+//  MapReduceUtils.h    -  header file for MapReduceUtils        //
 //                                                               //
 //  Language:     Visual C++ 2022, ver 17.1.3                    //
 //  Application:  MapReduce Project 1                            //
@@ -14,31 +14,34 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <string>
 
-/*
-* Print introduction statement on start
-*/
-void introduction();
+class MapReduceUtils
+{
+public:
+	/*
+	* Default Constructor for MapReduceUtils
+	*/
+	MapReduceUtils();
 
-/*
-* Exits the application
-*/
-void exitProgram();
+	/*
+	* Default Deconstructor for MapReduceUtils
+	*/
+	~MapReduceUtils();
 
-/*
-* Check user input for expected flags and return if we are running unit tests
-* @param int
-* @param char* []
-* @return bool representation if we are to run unit test or not
-*/
-bool validateArgs(int, char* []);
+	/*
+	* Throws an error for the passed parameters and exits with exit code 1
+	* @param string method - caller class name and method
+	* @param string exception
+	*/
+	void throwException(std::string, std::string);
 
-/*
-* Check user input for expected flags
-* @param string
-* @param int
-* @param char* []
-*/
-bool checkFlag(std::string, int, char*[]);
+	/*
+	* Log passed message
+	* @param string msg - message to log
+	*/
+	void logMessage(std::string msg);
+
+};
 
 #endif

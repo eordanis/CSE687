@@ -96,6 +96,10 @@ public:
 	*/
 	void removeFile(std::string tempFileName);
 
+	/*
+	* Get current timestamp and generate a string representation
+	* @return string with current timestamp
+	*/
 	std::string GetCurrentTimeForFileName();
 
 private: 

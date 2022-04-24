@@ -14,42 +14,35 @@
 
 #pragma once
 #include <iostream>
+#include "MapReduceUtils.h"
 #include "Workflow.h"
 #include "Executive.h"
 #include "gtest/gtest.h"
 
+
 int main(int argc, char* argv[])
 {
+	Workflow workflow;
+
+	//Validate Args
+	bool runUnitTests = validateArgs(argc, argv);
+
 	//we should add a new arg to determine if we want to run this
-	//if (_RUN_TEST) {
-		printf("Running main() from %s\n", __FILE__);
+	if (runUnitTests) {
+
+		
+		std::cout << std::endl << "******************************************    Running Map Reduce Unit Tests  ****************************************" << std::endl;
+		std::cout << "*********************************************************************************************************************" << std::endl;
 		testing::InitGoogleTest(&argc, argv);
 		RUN_ALL_TESTS();
-	//}
-	
+
+		std::cout << "*****************************************    Map Reduce Unit Tests Complete  ****************************************" << std::endl;
+		std::cout << "*********************************************************************************************************************" << std::endl << std::endl;
+
+	}
 
 	// Print the opening message to the user
 	introduction();
-
-	Workflow workflow;
-
-	if (argc < 7) {
-		workflow.mapException("There are less than the required arguments for this command. Please verify arguments and try again");
-	}
-	
-	if (argc > 7) {
-		workflow.mapException("There are more than the required arguments for this command. Please verify arguments and try again");
-	}
-
-	if (!CheckFlag("-input", argc, argv)) {
-		workflow.mapException("-input parameter cannot be found. Please verify arguments and try again");
-	}
-	if (!CheckFlag("-output", argc, argv)) {
-		workflow.mapException("-output parameter cannot be found. Please verify arguments and try again");
-	}
-	if (!CheckFlag("-temp", argc, argv)) {
-		workflow.mapException("-temp parameter cannot be found. Please verify arguments and try again");
-	}
 
 	for (int counter = 1; counter < argc; counter++)
 	{
@@ -77,6 +70,8 @@ int main(int argc, char* argv[])
 	exitProgram();
 }
 
+
+
 // Print Message
 void introduction()
 {
@@ -98,15 +93,49 @@ void exitProgram() {
 	exit(0);
 }
 
+// Validate provided arguments and check to see if we are running tests
+bool validateArgs(int argc, char* argv[]) {
+
+	
+	MapReduceUtils utils;
+	int total = 7;
+	bool runUnitTest = false;
+	if (checkFlag("-rut", argc, argv)){
+		runUnitTest = true;
+		total = total+2;
+	}
+
+	if (argc < total) {
+		utils.throwException("Executive:validateArgs", "There are less than the required arguments for this command.Please verify arguments and try again");
+	}
+
+	if (argc > total) {
+		utils.throwException("Executive:validateArgs", "There are more than the required arguments for this command. Please verify arguments and try again");
+	}
+
+	if (!checkFlag("-input", argc, argv)) {
+		utils.throwException("Executive:validateArgs", "-input parameter cannot be found. Please verify arguments and try again");
+	}
+
+	if (!checkFlag("-output", argc, argv)) {
+		utils.throwException("Executive:validateArgs", "-output parameter cannot be found. Please verify arguments and try again");
+	}
+
+	if (!checkFlag("-temp", argc, argv)) {
+		utils.throwException("Executive:validateArgs", "-temp parameter cannot be found. Please verify arguments and try again");
+	}
+
+	return runUnitTest;
+}
+
 // Validate user input for expected flag
-bool CheckFlag(std::string flag, int argc, char *argv[]) {
+bool checkFlag(std::string flag, int argc, char *argv[]) {
 
 	for (int counter = 1; counter < argc; counter++)
 	{
 		if (counter + 1 != argc)
 		{
 			if (argv[counter] == flag) {
-
 				return true;
 			}
 		}

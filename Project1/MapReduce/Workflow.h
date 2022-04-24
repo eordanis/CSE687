@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <string>
+
 class Workflow
 {
 public: 
@@ -53,11 +55,6 @@ public:
 	*/
 	void execute_workflow();
 
-	/*
-	* Throws an error for the passed string exception
-	* @param string exception
-	*/
-	void mapException(std::string);
 };
 
 #endif

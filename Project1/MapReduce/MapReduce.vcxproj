@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileManagement.cpp" />
+    <ClCompile Include="MapReduceUtils.cpp" />
     <ClCompile Include="test\FileManagementTest.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Executive.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="FileManagement.h" />
     <ClInclude Include="Executive.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapReduceUtils.h" />
     <ClInclude Include="Reduce.h" />
     <ClInclude Include="Sorter.h" />
     <ClInclude Include="test\Test.h" />
