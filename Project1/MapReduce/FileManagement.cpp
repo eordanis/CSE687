@@ -122,7 +122,7 @@ void FileManagement::executeFileMapping()
         std::string fileName = entry.stem().string();
         std::string tmpFileName = _tempDir;
         tmpFileName.append("\\").append(fileName).append("_").append(GetCurrentTimeForFileName()).append(_tmpExt);
-        createFile(tmpFileName);
+        createFile(_tempDir, tmpFileName);
         Map m(fileName, tmpFileName);
         utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
         while (getline(fileHandler, line)) {
@@ -135,13 +135,15 @@ void FileManagement::executeFileMapping()
             m.setPurgeFlag(true);
             m.exportz(fileName, "");
         }
+        fileHandler.close();
     }
 }
 
-void FileManagement::createFile(std::string filePath)
+void FileManagement::createFile(std::string directory, std::string filePath)
 {
-    if(!boost::filesystem::exists(filePath)) {
+    if(boost::filesystem::is_directory(directory) && !boost::filesystem::exists(filePath)) {
         std::ofstream output(filePath); //create file and not open?
+        output.close();
         
     }
 }
@@ -160,7 +162,6 @@ void FileManagement::writeToFile(std::string filePath, std::string text)
 void FileManagement::removeFile(std::string filePath)
 {
     if (boost::filesystem::exists(filePath)) {
-        //BOOST_LOG_TRIVIAL(debug) << "Removing File: >>" << filePath << std::endl; 
         boost::filesystem::remove(filePath);
     }
 }
@@ -175,4 +176,9 @@ std::string FileManagement::GetCurrentTimeForFileName()
     std::string timestr = { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
     std::replace(timestr.begin(), timestr.end(), ':', '-');
     return timestr;
+}
+
+size_t FileManagement::getInputPathsSize()
+{
+    return _inputPaths.size();
 }

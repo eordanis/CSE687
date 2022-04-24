@@ -102,6 +102,7 @@ void Map::exportz(std::string key, std::string token)
         copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
         fm.writeToFile(_tempFileName, result.str());
         _exportBuffer.clear();
+        result.clear();
     }
 }
 

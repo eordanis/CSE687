@@ -79,9 +79,10 @@ public:
 
 	/*
 	* Create a file for passed file name if not already exists
+	* @param string directory name
 	* @param string filename
 	*/
-	void createFile(std::string);
+	void createFile(std::string, std::string);
 
 	/*
 	* Write passed string to file with file name if exists
@@ -101,6 +102,11 @@ public:
 	* @return string with current timestamp
 	*/
 	std::string GetCurrentTimeForFileName();
+
+	/*
+	* Return size of input paths retrived
+	*/
+	size_t getInputPathsSize();
 
 private: 
 	
