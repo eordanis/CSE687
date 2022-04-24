@@ -22,15 +22,19 @@
 
 int main(int argc, char* argv[])
 {
+	//uncomment these two lines to view in test explorer
+	//testing::InitGoogleTest(&argc, argv);
+	//RUN_ALL_TESTS();
+
 	Workflow workflow;
 
 	//Validate Args
 	bool runUnitTests = validateArgs(argc, argv);
 
 	//we should add a new arg to determine if we want to run this
+	
 	if (runUnitTests) {
 
-		
 		std::cout << std::endl << "******************************************    Running Map Reduce Unit Tests  ****************************************" << std::endl;
 		std::cout << "*********************************************************************************************************************" << std::endl;
 		testing::InitGoogleTest(&argc, argv);
