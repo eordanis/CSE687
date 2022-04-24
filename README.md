@@ -21,16 +21,16 @@ This project uses the Boost v1.78.0 library for logging and other various needs.
 This application uses the following version of Google Test to perform unit testings 
 	-	Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn
 	
-This Google Test suite if not already installed can be installed via Tools -> NuGet Package Manager. Ensure the following version is installed: <img src="./img/ref_gg_test_2.png">
+This Google Test suite if not already installed can be installed via Tools -> NuGet Package Manager. Ensure the following version is installed: <img src="https://github.com/eordanis/CSE687/img/ref_gg_test_2.PNG">
 	
 ## Running in Visual Studio
 If desired to run via Visual Studio:
 
 1. Pull down the project and open in Visual Studio and right click on project solution and go to Properties
 2. In Properties pane, navigate to the <i>Configuration Properties -> ... </i>
-	1. <i>Referenced Packages</i> Ensure "Google Test" is shown. <img src="./img/ref_gg_test.png">
-	2. <i>C/C++</i> Ensure you add your boost library directory to the <i>Additional Includes Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="./img/cpp_add_inc_dir.png">
-	3. <i>Linker</i> Ensure you add your boost library directory to the <i>Additional Library Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="./img/cpp_add_inc_dir.png">
+	1. <i>Referenced Packages</i> Ensure "Google Test" is shown. <img src="https://github.com/eordanis/CSE687/blob/main/img/ref_gg_test.PNG">
+	2. <i>C/C++</i> Ensure you add your boost library directory to the <i>Additional Includes Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="https://github.com/eordanis/CSE687/blob/main/img/cpp_add_inc_dir.PNG">
+	3. <i>Linker</i> Ensure you add your boost library directory to the <i>Additional Library Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="https://github.com/eordanis/CSE687/blob/main/img/linker_add_lib_dir.PNG">
 	
 ## Application - MapReduce
 A C++ standalone command-line program that can run a word count MapReduce workflow on text files retrieved from the user provided directory path, and outputs results to user specified output directory path.
