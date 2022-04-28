@@ -16,9 +16,9 @@
 #pragma once
 
 /*
-* Print introduction statement on start
+* Print usage statement on start
 */
-void introduction();
+void usageStatement();
 
 /*
 * Exits the application

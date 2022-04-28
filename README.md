@@ -47,6 +47,8 @@ Expected arguments are as follows:
 Optional Arguments:
 
 	 -rut						    If this flag is present, tests will be run instead of application.
+	 
+	 -help							If this flag is present, usage statement is shown to user and application exits
 	
 	
 ### Phase 1: 

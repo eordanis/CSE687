@@ -25,10 +25,6 @@ int main(int argc, char* argv[])
 	// New class instance that will handle MapReduc
 	Workflow workflow;
 
-	// Print the opening message to the user
-	introduction();
-	exitProgram();
-
 	// Determine if test flag was included and validate args
 	bool runUnitTests = validateArgs(argc, argv);
 
@@ -45,6 +41,8 @@ int main(int argc, char* argv[])
 
 	}
 	else {
+		// Print the usage statement to the user
+		usageStatement();
 
 		for (int counter = 1; counter < argc; counter++)
 		{
@@ -77,17 +75,18 @@ int main(int argc, char* argv[])
 
 
 // Print Message
-void introduction()
+void usageStatement()
 {
 	std::cout << "**************************************************    Map Reduce   ************************************************" << std::endl;
 	std::cout << "*******************************************************************************************************************" << std::endl;
 	std::cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
 	std::cout << "Expected Arguments:" << std::endl;
-	std::cout << "\t-input \t<input path>\t\t: This is the path where the text files reside." << std::endl;
-	std::cout << "\t-output \t<output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
-	std::cout << "\t-temp \t<temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
+	std::cout << "\t-input\t\t<input path>\t\t: This is the path where the text files reside." << std::endl;
+	std::cout << "\t-output\t\t<output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
+	std::cout << "\t-temp\t\t<temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
 	std::cout << "Optional Arguments:" << std::endl;
-	std::cout << "\t-rut           \t\t\t\t: If this flag is present, tests will be run instead of application. \t\t" << std::endl;
+	std::cout << "\t-rut\t\t\t\t\t: If this flag is present, tests will be run instead of application. \t\t" << std::endl;
+	std::cout << "\t-help\t\t\t\t\t: If this flag is present, usage statement will display and program will exit. \t\t" << std::endl;
 	std::cout << std::endl;
 }
 
@@ -106,11 +105,15 @@ bool validateArgs(int argc, char* argv[]) {
 	int total = 7;
 	bool runUnitTest = false;
 
-	if (checkFlag("-rut", argc, argv)){
-		runUnitTest = true;
+	if (checkFlag("-rut", argc, argv)) {
+		return true;
+	}
 
-		//If flag is included, run the test
-		total = total++;
+	if (checkFlag("-help", argc, argv)) {
+		// Print the usage statement to the user
+		usageStatement();
+		// end the program
+		exitProgram();
 	}
 
 	if (argc < total) {
@@ -133,11 +136,11 @@ bool validateArgs(int argc, char* argv[]) {
 		utils.throwException("Executive:validateArgs", "-temp parameter cannot be found. Please verify arguments and try again");
 	}
 
-	return runUnitTest;
+	return false;
 }
 
 // Validate user input for expected flag
-bool checkFlag(std::string flag, int argc, char *argv[]) {
+bool checkFlag(std::string flag, int argc, char* argv[]) {
 
 	for (int counter = 0; counter < argc; counter++)
 	{

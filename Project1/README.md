@@ -46,7 +46,9 @@ Expected arguments are as follows:
 	 
 Optional Arguments:
 
-	 -rut						    If this flag is present, tests will be run instead of application.	
+	 -rut						    If this flag is present, tests will be run instead of application.
+
+	 -help							If this flag is present, usage statement is shown to user and application exits
 	
 ### Phase 1: 
 The program runs as a single process that will take an input directory where text files are stored and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
