@@ -68,7 +68,7 @@ public:
 	/*
 	* 
 	*/
-	void exportz(bool);
+	void exportz(std::string, bool);
 
 	/*
 	*

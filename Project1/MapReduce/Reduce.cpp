@@ -53,13 +53,15 @@ void Reduce::insertKey(std::string key)
         iterate = reduceMap.find(key);
         iterate->second = iterate->second++;
     }
+
+
 }
 
 void Reduce::reduce(std::string key, std::vector<int>::iterator counts)
 {
 }
 
-void Reduce::exportz(bool purge)
+void Reduce::exportz(std::string filename, bool purge)
 {
     std::map<std::string, int>::iterator iterate;
 
@@ -88,7 +90,7 @@ void Reduce::resetMap()
 
 void Reduce::purgeBuffer(std::string fileName)
 {
-   
+    exportz(fileName, true);
 }
 
 size_t Reduce::getExportBufferSize()

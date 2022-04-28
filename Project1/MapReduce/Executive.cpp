@@ -22,17 +22,13 @@
 
 int main(int argc, char* argv[])
 {
-	//uncomment these two lines to view in test explorer
-	//testing::InitGoogleTest(&argc, argv);
-	//RUN_ALL_TESTS();
-
+	// New class instance that will handle MapReduc
 	Workflow workflow;
 
-	//Validate Args
+	// Determine if test flag was included and validate args
 	bool runUnitTests = validateArgs(argc, argv);
 
-	//we should add a new arg to determine if we want to run this
-	
+	// If the flag was added to run the test, proceed with test scripts, otherwise run program
 	if (runUnitTests) {
 
 		std::cout << std::endl << "******************************************    Running Map Reduce Unit Tests  ****************************************" << std::endl;
@@ -44,32 +40,34 @@ int main(int argc, char* argv[])
 		std::cout << "*********************************************************************************************************************" << std::endl << std::endl;
 
 	}
+	else {
 
-	// Print the opening message to the user
-	introduction();
+		// Print the opening message to the user
+		introduction();
 
-	for (int counter = 1; counter < argc; counter++)
-	{
-		if (counter + 1 != argc)
+		for (int counter = 1; counter < argc; counter++)
 		{
-			if (strcmp(argv[counter], "-input") == 0) 
+			if (counter + 1 != argc)
 			{
+				if (strcmp(argv[counter], "-input") == 0)
+				{
 
-				workflow.setInputDirectory(argv[counter + 1]);
-			}
-			else if (strcmp(argv[counter], "-output") == 0)
-			{
-				workflow.setOutputDirectory(argv[counter + 1]);
-			}
-			else if (strcmp(argv[counter], "-temp") == 0)
-			{
-				workflow.setTempDirectory(argv[counter + 1]);
+					workflow.setInputDirectory(argv[counter + 1]);
+				}
+				else if (strcmp(argv[counter], "-output") == 0)
+				{
+					workflow.setOutputDirectory(argv[counter + 1]);
+				}
+				else if (strcmp(argv[counter], "-temp") == 0)
+				{
+					workflow.setTempDirectory(argv[counter + 1]);
+				}
 			}
 		}
-	}
 
-	//start map reduce workflow
-	workflow.execute_workflow();
+		//start map reduce workflow
+		workflow.execute_workflow();
+	}
 
 	// end the program
 	exitProgram();
@@ -101,13 +99,15 @@ void exitProgram() {
 // Validate provided arguments and check to see if we are running tests
 bool validateArgs(int argc, char* argv[]) {
 
-	
 	MapReduceUtils utils;
 	int total = 7;
 	bool runUnitTest = false;
+
 	if (checkFlag("-rut", argc, argv)){
 		runUnitTest = true;
-		total = total+2;
+
+		//If flag is included, run the test
+		total = total++;
 	}
 
 	if (argc < total) {

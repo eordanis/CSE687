@@ -190,8 +190,8 @@ void FileManagement::executeReduce()
                 r.insertKey(key);
             }   
         }
-        
-        r.exportz(false);
+
+        r.exportz(fileName, false);
 
         //ensure we check the buffer to make sure it does not still have content
         if (r.getExportBufferSize() > 0) {
