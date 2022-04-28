@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
 		{
 			if (strcmp(argv[counter], "-input") == 0) 
 			{
+
 				workflow.setInputDirectory(argv[counter + 1]);
 			}
 			else if (strcmp(argv[counter], "-output") == 0)

@@ -54,4 +54,10 @@ void Workflow::execute_workflow()
 	// start mapping of files found
 	fm.executeFileMapping();
 
+	// get all valid files from passed temp directory
+	fm.retrieveTempFiles();
+
+	// start reduce program
+	fm.executeReduce();
+
 }

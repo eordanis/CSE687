@@ -13,6 +13,7 @@
 #pragma once
 #include "FileManagement.h"
 #include "Map.h"
+#include "Reduce.h"
 #include "MapReduceUtils.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -110,6 +111,30 @@ void FileManagement::retrieveInputFiles()
     }
 }
 
+void FileManagement::retrieveTempFiles()
+{
+    MapReduceUtils utils;
+
+    utils.logMessage("Searching for valid text files at provided input path...\n");
+    if (boost::filesystem::exists(_tempDir) && boost::filesystem::is_directory(_tempDir))
+    {
+        for (auto const& entry : boost::filesystem::directory_iterator(_tempDir))
+        {
+            if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == _dat && !boost::filesystem::is_empty(entry)) {
+                _tempPaths.emplace_back(entry.path());
+            }
+
+        }
+    }
+    else
+    {
+        utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" is not a valid directory.");
+    }
+    if (_tempPaths.size() == 0) {
+        utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" has no valid text files to map and reduce with extension.\"" + _dat + "\"");
+    }
+}
+
 void FileManagement::executeFileMapping()
 {
     MapReduceUtils utils;
@@ -134,6 +159,44 @@ void FileManagement::executeFileMapping()
         if (m.getExportBufferSize() > 0) {
             m.purgeBuffer(fileName);
         }
+        fileHandler.close();
+    }
+}
+
+void FileManagement::executeReduce()
+{
+    MapReduceUtils utils;
+
+    utils.logMessage("Executing File Reducing...\n");
+    for (boost::filesystem::path entry : _tempPaths) {
+        boost::filesystem::ifstream fileHandler(entry);
+        std::string line;
+        std::string key;
+
+        //create output file for dat files, Reduce will occur
+        std::string fileName = entry.stem().string();
+        std::string outFileName = _outputDir;
+        outFileName.append("\\").append(fileName).append("_").append(GetCurrentTimeForFileName()).append(_ext);
+        createFile(_outputDir, outFileName);
+
+        Reduce r(fileName, outFileName);
+        utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
+
+        while (getline(fileHandler, line)) {
+            key = r.getReduceData(line);
+
+            if (!key.empty()) {
+                r.insertKey(key);
+            }   
+        }
+        
+        r.exportz(false);
+
+        //ensure we check the buffer to make sure it does not still have content
+        if (r.getExportBufferSize() > 0) {
+            r.purgeBuffer(fileName);
+        }
+
         fileHandler.close();
     }
 }
@@ -180,4 +243,9 @@ std::string FileManagement::GetCurrentTimeForFileName()
 size_t FileManagement::getInputPathsSize()
 {
     return _inputPaths.size();
+}
+
+size_t FileManagement::getTempPathsSize()
+{
+    return _tempPaths.size();
 }

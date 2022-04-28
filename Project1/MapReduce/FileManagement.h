@@ -73,9 +73,19 @@ public:
 	void retrieveInputFiles();
 
 	/*
+	* Retrieve all valid text files for temp directory path
+	*/
+	void retrieveTempFiles();
+
+	/*
 	* Execute MapReduce process on each input file retrieved
 	*/
 	void executeFileMapping();
+
+	/*
+	* Execute Reduce process on each input file retrieved in Temp
+	*/
+	void executeReduce();
 
 	/*
 	* Create a file for passed file name if not already exists
@@ -108,6 +118,11 @@ public:
 	*/
 	size_t getInputPathsSize();
 
+	/*
+	* Return size of temp paths retrived
+	*/
+	size_t getTempPathsSize();
+
 private: 
 	
 	/*
@@ -137,6 +152,11 @@ private:
 	std::string _ext=".txt";
 
 	/*
+	* Extension supported
+	*/
+	std::string _dat = ".dat";
+
+	/*
 	* Extension supported for temporary files
 	*/
 	std::string _tmpExt = ".dat";
@@ -145,6 +165,11 @@ private:
 	* input file paths
 	*/
 	std::vector<boost::filesystem::path> _inputPaths;
+
+	/*
+	* temp file paths
+	*/
+	std::vector<boost::filesystem::path> _tempPaths;
 };
 
 #endif
