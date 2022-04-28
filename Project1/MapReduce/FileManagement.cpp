@@ -180,6 +180,7 @@ void FileManagement::executeReduce()
         createFile(_outputDir, outFileName);
 
         Reduce r(fileName, outFileName);
+        r.resetMap();
         utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
 
         while (getline(fileHandler, line)) {

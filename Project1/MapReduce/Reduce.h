@@ -70,6 +70,11 @@ public:
 	*/
 	void exportz(bool);
 
+	/*
+	*
+	*/
+	void resetMap();
+
 private:
 
 	/**
