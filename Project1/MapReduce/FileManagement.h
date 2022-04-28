@@ -111,7 +111,7 @@ public:
 	* Get current timestamp and generate a string representation
 	* @return string with current timestamp
 	*/
-	std::string GetCurrentTimeForFileName();
+	std::string getCurrentTimeForFileName();
 
 	/*
 	* Return size of input paths retrived

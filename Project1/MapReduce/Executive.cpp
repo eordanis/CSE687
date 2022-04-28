@@ -25,6 +25,10 @@ int main(int argc, char* argv[])
 	// New class instance that will handle MapReduc
 	Workflow workflow;
 
+	// Print the opening message to the user
+	introduction();
+	exitProgram();
+
 	// Determine if test flag was included and validate args
 	bool runUnitTests = validateArgs(argc, argv);
 
@@ -41,9 +45,6 @@ int main(int argc, char* argv[])
 
 	}
 	else {
-
-		// Print the opening message to the user
-		introduction();
 
 		for (int counter = 1; counter < argc; counter++)
 		{
@@ -82,9 +83,11 @@ void introduction()
 	std::cout << "*******************************************************************************************************************" << std::endl;
 	std::cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
 	std::cout << "Expected Arguments:" << std::endl;
-	std::cout << "\t-input <input path>\t\t: This is the path where the text files reside." << std::endl;
-	std::cout << "\t-output <output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
-	std::cout << "\t-temp <temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
+	std::cout << "\t-input \t<input path>\t\t: This is the path where the text files reside." << std::endl;
+	std::cout << "\t-output \t<output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
+	std::cout << "\t-temp \t<temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
+	std::cout << "Optional Arguments:" << std::endl;
+	std::cout << "\t-rut           \t\t\t\t: If this flag is present, tests will be run instead of application. \t\t" << std::endl;
 	std::cout << std::endl;
 }
 

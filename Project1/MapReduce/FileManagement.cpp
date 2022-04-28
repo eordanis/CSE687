@@ -104,10 +104,10 @@ void FileManagement::retrieveInputFiles()
     }
     else
     {
-        utils.throwException("FileManagement:get_all","Path provided \"" + _inputDir + "\" is not a valid directory.");
+        utils.throwException("FileManagement:retrieveInputFiles","Path provided \"" + _inputDir + "\" is not a valid directory.");
     }
     if (_inputPaths.size() == 0) {
-        utils.throwException("FileManagement:get_all", "Path provided \"" + _inputDir + "\" has no valid text files to map and reduce with extension.\"" + _ext + "\"");
+        utils.throwException("FileManagement:retrieveInputFiles", "Path provided \"" + _inputDir + "\" has no valid text files to map and reduce with extension.\"" + _ext + "\"");
     }
 }
 
@@ -128,10 +128,10 @@ void FileManagement::retrieveTempFiles()
     }
     else
     {
-        utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" is not a valid directory.");
+        utils.throwException("FileManagement:retrieveTempFiles", "Path provided \"" + _tempDir + "\" is not a valid directory.");
     }
     if (_tempPaths.size() == 0) {
-        utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" has no valid dat files to map and reduce with extension.\"" + _dat + "\"");
+        utils.throwException("FileManagement:retrieveTempFiles", "Path provided \"" + _tempDir + "\" has no valid dat files to map and reduce with extension.\"" + _dat + "\"");
     }
 }
 
@@ -146,7 +146,7 @@ void FileManagement::executeFileMapping()
         //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
         std::string fileName = entry.stem().string();
         std::string tmpFileName = _tempDir;
-        tmpFileName.append("\\").append(fileName).append("_").append(GetCurrentTimeForFileName()).append(_tmpExt);
+        tmpFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_tmpExt);
         createFile(_tempDir, tmpFileName);
         Map m(fileName, tmpFileName);
         utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
@@ -176,7 +176,7 @@ void FileManagement::executeReduce()
         //create output file for dat files, Reduce will occur
         std::string fileName = entry.stem().string();
         std::string outFileName = _outputDir;
-        outFileName.append("\\").append(fileName).append("_").append(GetCurrentTimeForFileName()).append(_ext);
+        outFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_ext);
         createFile(_outputDir, outFileName);
 
         Reduce r(fileName, outFileName);
@@ -219,7 +219,6 @@ void FileManagement::writeToFile(std::string filePath, std::string text)
         fs << text;
         fs.close();
    }
-
 }
 
 void FileManagement::removeFile(std::string filePath)
@@ -229,7 +228,7 @@ void FileManagement::removeFile(std::string filePath)
     }
 }
 
-std::string FileManagement::GetCurrentTimeForFileName()
+std::string FileManagement::getCurrentTimeForFileName()
 {
     const std::string& fmt = "%F_%T";
     std::tm bt{};

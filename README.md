@@ -46,7 +46,7 @@ Expected arguments are as follows:
 	 
 Optional Arguments:
 
-	 -rut		< value >		    This flag when set will run unit tests prior to application run. Currently value does not matter, will run if flag with any value is present.
+	 -rut						    If this flag is present, tests will be run instead of application.
 	
 	
 ### Phase 1: 
@@ -65,19 +65,23 @@ TBD
 This section describes the application structure.
 
 ### Classes
-	 Workflow			- Executes the main business logic for the MapReduce application.
+	 Workflow           - Executes the main business logic for the MapReduce application.
 	 
-	 Executive			- Contains the main function and any additional utility functions/data required.
+	 Executive          - Contains the main function and any additional utility functions/data required.
 	 
-	 MapReduceUtils		- Util class to store common util functions.
+	 MapReduceUtils     - Util class to store common util functions.
 	 
-	 FileManagement		- Handles all filesystem related functionallity.
+	 FileManagement     - Handles all filesystem related functionallity.
 	 
-	 Map				- Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
-	 
-	 Sorter				- Sorts temporary file data prior to reduce call.
-	 
-	 Reduce				- Is given sorted data from the intermediate file and reduces the results by aggregating the values.
+	 Map                - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
+	 	 
+	 Reduce             - Is given sorted data from the intermediate file and reduces the results by aggregating the values.
 	 
 ### Unit Tests
 	Unit tests are stored under the /test directory and are run on the main class functionallity.
+	
+	FileManagementTest     - Unit tests for FileManagement class.
+	 
+	MapTest                - Unit tests for Map class.
+	 	 
+	ReduceTest             - Unit tests for Reduce class.
