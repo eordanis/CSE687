@@ -57,10 +57,6 @@ void Reduce::insertKey(std::string key)
 
 }
 
-void Reduce::reduce(std::string key, std::vector<int>::iterator counts)
-{
-}
-
 void Reduce::exportz(std::string filename, bool purge)
 {
     std::map<std::string, int>::iterator iterate;

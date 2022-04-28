@@ -131,7 +131,7 @@ void FileManagement::retrieveTempFiles()
         utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" is not a valid directory.");
     }
     if (_tempPaths.size() == 0) {
-        utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" has no valid text files to map and reduce with extension.\"" + _dat + "\"");
+        utils.throwException("FileManagement:get_all", "Path provided \"" + _tempDir + "\" has no valid dat files to map and reduce with extension.\"" + _dat + "\"");
     }
 }
 

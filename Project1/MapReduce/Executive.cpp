@@ -136,13 +136,10 @@ bool validateArgs(int argc, char* argv[]) {
 // Validate user input for expected flag
 bool checkFlag(std::string flag, int argc, char *argv[]) {
 
-	for (int counter = 1; counter < argc; counter++)
+	for (int counter = 0; counter < argc; counter++)
 	{
-		if (counter + 1 != argc)
-		{
-			if (argv[counter] == flag) {
-				return true;
-			}
+		if (argv[counter] == flag) {
+			return true;
 		}
 	}
 
