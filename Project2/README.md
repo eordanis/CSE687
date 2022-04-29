@@ -33,39 +33,27 @@ If desired to run via Visual Studio:
 	3. <i>Linker</i> Ensure you add your boost library directory to the <i>Additional Library Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="https://github.com/eordanis/CSE687/blob/main/img/linker_add_lib_dir.PNG">
 	
 ## Application - MapReduce
-A C++ standalone command-line program that can run a word count MapReduce workflow on text files retrieved from the user provided directory path, and outputs results to user specified output directory path.
+A C++ standalone command-line program that can run a word count MapReduce workflow on text files retrieved from the user provided directory path, and outputs results to user specified output directory path. This phase of the application takes in the map and reduce dll files and utilizes their functions.
 
 ### Arguments
 Expected arguments are as follows:
 
-	 -input 	<input path>: 		This is the path where the text files reside.
+	 -input 	  <input path>: 		This is the path where the text files reside.
 	 
-	 -output 	<output path>: 		This is the path where the MapReduced result files will be placed.
+	 -output 	  <output path>: 		This is the path where the MapReduced result files will be placed.
 	 
-	 -temp 		<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
+	 -temp 		  <temp path>: 		    This is the permitted temporary file location for MapReduce to utilize.
+	 
+	 -mapDll	  <map.dll path>        This is the path to the map.dll file
+	 
+	 -reduceDll	  <reduce.dll path>     This is the path to the reduce.dll file
 	 
 Optional Arguments:
 
 	 -rut						    If this flag is present, tests will be run instead of application.
-	 
+
 	 -help							If this flag is present, usage statement is shown to user and application exits
 	
-	
-### Phase 1: 
-The program runs as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
-There are three required arguments: input path, temp path, and output path. 
-Input path is the directory where input text files are stored. 
-The temp path is the path where the intermediary temporary .dat files are stored. These files contain the initial token/key work mapping. These temporary files are date/timestamped. Example behavior: (word,1).
-The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2),  
-
-Example.
-
-Inpu    Text File: <input path>/demo.txt                                            <- I am but a humble developer. I wish to continue striving for success!. Success is important for developers.
-
-Temp    Text File: <temp path>/demo_2022-04-28_18-16-56.dat                         <-(i,1)\n(am,1)\n)(but,1)\n(a,1)\n(humble,1)\n(developer,1)\n(i,1)\n(wish,1)\n(to,1)\n(continue,1)\n(striving,1)\n(for,1)\n(success,1)\n(success,1)\n(is,1)\n(important,1)\n(for,1)\n(developers,1)\n
-
-Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt    <-(a,1)\n(am,1)\n(but,1)\n(continue,1)\n(developer,1)\n(developers,1)\n(for,2)\n(humble,1)\n(i,2)\n(important,1)\n(is,1)\n(for,1)\n(striving,1)\n(success,2)\n(to,1)\n(wish,1)\n
-
 ### Phase 2: 
 The program runs as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files. This phase of the application takes in the map and reduce dll files and utilizes their functions.
 There are five required arguments: input path, temp path, output path, math.dll path and reduce.dll path. 
@@ -82,27 +70,22 @@ Inpu    Text File: <input path>/demo.txt                                        
 Temp    Text File: <temp path>/demo_2022-04-28_18-16-56.dat                         <-(i,1)\n(am,1)\n)(but,1)\n(a,1)\n(humble,1)\n(developer,1)\n(i,1)\n(wish,1)\n(to,1)\n(continue,1)\n(striving,1)\n(for,1)\n(success,1)\n(success,1)\n(is,1)\n(important,1)\n(for,1)\n(developers,1)\n
 
 Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt    <-(a,1)\n(am,1)\n(but,1)\n(continue,1)\n(developer,1)\n(developers,1)\n(for,2)\n(humble,1)\n(i,2)\n(important,1)\n(is,1)\n(for,1)\n(striving,1)\n(success,2)\n(to,1)\n(wish,1)\n
-### Phase 3: 
-TBD
-
-### Phase 4: 
-TBD
 
 ## Application Structure
 This section describes the application structure.
 
 ### Classes
-	 Workflow           - Executes the main business logic for the MapReduce application.
+	 Workflow              - Executes the main business logic for the MapReduce application.
 	 
-	 Executive          - Contains the main function and any additional utility functions/data required.
+	 Executive             - Contains the main function and any additional utility functions/data required.
 	 
-	 MapReduceUtils     - Util class to store common util functions.
+	 MapReduceUtils        - Util class to store common util functions.
 	 
-	 FileManagement     - Handles all filesystem related functionallity.
+	 FileManagement        - Handles all filesystem related functionallity.
 	 
-	 Map                - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
+	 Map                   - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
 	 	 
-	 Reduce             - Is given sorted data from the intermediate file and reduces the results by aggregating the values.
+	 Reduce                - Is given sorted data from the intermediate file and reduces the results by aggregating the values.
 	 
 ### Unit Tests
 	Unit tests are stored under the /test directory and are run on the main class functionallity.
