@@ -12,14 +12,11 @@
 
 #pragma once
 #include "Map.h"
-#include <iostream>
 #include <regex>
 #include <string>
 #include <vector>
 #include <sstream>
-#include <boost/log/trivial.hpp>
-#include <boost/algorithm/string.hpp>
-#include "FileManagement.h"
+#include <fstream>
 
 Map::Map()
 {
@@ -27,8 +24,8 @@ Map::Map()
 
 Map::Map(std::string fileName, std::string tempFileName)
 {
-    _fileName = fileName;
-    _tempFileName = tempFileName;
+	_fileName = fileName;
+	_tempFileName = tempFileName;
 }
 
 Map::~Map()
@@ -37,80 +34,88 @@ Map::~Map()
 
 void Map::map(std::string key, std::string value)
 {
-    //punctuation and special characters to remove
-    std::string regex = _punctuationAndSpecials;
+	//punctuation and special characters to remove
+	std::string regex = _punctuationAndSpecials;
 
-    // trim
-    boost::trim(value);
+	// remove all special characters from value string
+	value.erase(std::remove_if(value.begin(), value.end(),
+		[&regex](const char& c) {
+			return regex.find(c) != std::string::npos;
+		}),
+		value.end());
 
-    // remove all special characters from value string
-    value.erase(std::remove_if(value.begin(), value.end(),
-        [&regex](const char& c) {
-            return regex.find(c) != std::string::npos;
-        }),
-        value.end());
+	// trim beginging/end whitespacing
+	value.erase(value.find_last_not_of(' ') + 1);
+	value.erase(0, value.find_first_not_of(' '));
 
-    //if line is not empty
-    if (value.size() > 0)
-    {
-        //convert to lowercase
-        boost::algorithm::to_lower(value); // modifies str
+	//if line is not empty
+	if (value.size() > 0)
+	{
+		//convert to lowercase and storing the result in destination string
+		std::transform(value.begin(), value.end(), value.begin(),
+			[](unsigned char c) { return std::tolower(c); });
 
-        const std::regex re(R"([\s]+)");
+		const std::regex re(R"([\s]+)");
 
-        // Function Call
-        const std::vector<std::string> tokenized =
-            tokenize(value, re);
+		// Function Call
+		const std::vector<std::string> tokenized =
+			tokenize(value, re);
 
-        for (std::string token : tokenized) {
-            exportz(key, token, false);
-        }
-    }
+		for (std::string token : tokenized) {
+			exportz(key, token, false);
+		}
+	}
 }
 
 std::vector<std::string> Map::tokenize(const std::string str, const std::regex re)
 {
-    std::sregex_token_iterator it{ str.begin(),
-                            str.end(), re, -1 };
-    std::vector<std::string> tokenized{ it, {} };
+	std::sregex_token_iterator it{ str.begin(),
+							str.end(), re, -1 };
+	std::vector<std::string> tokenized{ it, {} };
 
-    // Additional check to remove empty strings
-    tokenized.erase(
-        std::remove_if(tokenized.begin(),
-            tokenized.end(),
-            [](std::string const& s) {
-                return s.size() == 0;
-            }),
-        tokenized.end());
+	// Additional check to remove empty strings
+	tokenized.erase(
+		std::remove_if(tokenized.begin(),
+			tokenized.end(),
+			[](std::string const& s) {
+				return s.size() == 0;
+			}),
+		tokenized.end());
 
-    return tokenized;
+	return tokenized;
 }
 
 void Map::exportz(std::string key, std::string token, bool purge)
 {
-    if (!purge){
-        std::string value = "(" + token + ",1)\n";
-        _exportBuffer.emplace_back(value);
-    }
+	if (!purge) {
+		std::string value = "(" + token + ",1)\n";
+		_exportBuffer.emplace_back(value);
+	}
 
-    if (_exportBuffer.size() == _exportBufferMaxSize || purge) {
-        FileManagement fm;
-        std::stringstream result;
-        copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
-        fm.writeToFile(_tempFileName, result.str());
-        _exportBuffer.clear();
-        result.clear();
-    }
+	if (_exportBuffer.size() == _exportBufferMaxSize || purge) {
+		std::stringstream result;
+		copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
+		std::string resultStr = result.str();
+		//write to temp file
+		std::fstream fs;
+		fs.open(_tempFileName, std::fstream::in | std::fstream::out | std::fstream::app);
+		fs << resultStr;
+		fs.close();
+		//clear buffer
+		_exportBuffer.clear();
+		//clear result string stream
+		result.clear();
+	}
 }
 
 void Map::purgeBuffer(std::string fileName)
 {
-    exportz(fileName, "", true);
+	exportz(fileName, "", true);
 }
 
 size_t Map::getExportBufferSize()
 {
-    return _exportBuffer.size();
+	return _exportBuffer.size();
 }
 
 /* The map class will contain a public method map(), that accepts a key and value.
