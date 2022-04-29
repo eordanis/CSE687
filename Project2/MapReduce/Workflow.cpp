@@ -46,6 +46,12 @@ void Workflow::setTempDirectory(std::string tempDirPath)
 	fm.setTempDirectory(tempDirPath);
 }
 
+void Workflow::setMapDLL(std::string mapDLL)
+{
+	//validate & set map dll from path
+	//fm.setMapDLL(mapDLL);
+}
+
 void Workflow::execute_workflow()
 {
 	// get all valid files from passed input directory

@@ -51,6 +51,12 @@ public:
 	void setTempDirectory(std::string);
 
 	/*
+	* Set the map dll to dll passed
+	* @param string map dll path
+	*/
+	void setMapDLL(std::string);
+
+	/*
 	* Executes workflow logic for MapReduce
 	*/
 	void execute_workflow();

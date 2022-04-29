@@ -61,6 +61,11 @@ int main(int argc, char* argv[])
 				{
 					workflow.setTempDirectory(argv[counter + 1]);
 				}
+				if (strcmp(argv[counter], "-mapDLL") == 0)
+				{
+
+					workflow.setMapDLL(argv[counter + 1]);
+				}
 			}
 		}
 
@@ -84,6 +89,7 @@ void usageStatement()
 	std::cout << "\t-input\t\t<input path>\t\t: This is the path where the text files reside." << std::endl;
 	std::cout << "\t-output\t\t<output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
 	std::cout << "\t-temp\t\t<temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
+	std::cout << "\t-mapDLL\t\t<mapDLL.dll path>\t: This is path to the mapDLL.dll file to use with program." << std::endl;
 	std::cout << "Optional Arguments:" << std::endl;
 	std::cout << "\t-rut\t\t\t\t\t: If this flag is present, tests will be run instead of application. \t\t" << std::endl;
 	std::cout << "\t-help\t\t\t\t\t: If this flag is present, usage statement will display and program will exit. \t\t" << std::endl;
@@ -102,7 +108,7 @@ void exitProgram() {
 bool validateArgs(int argc, char* argv[]) {
 
 	MapReduceUtils utils;
-	int total = 7;
+	int total = 9;
 	bool runUnitTest = false;
 
 	if (checkFlag("-rut", argc, argv)) {
@@ -133,6 +139,10 @@ bool validateArgs(int argc, char* argv[]) {
 	}
 
 	if (!checkFlag("-temp", argc, argv)) {
+		utils.throwException("Executive:validateArgs", "-temp parameter cannot be found. Please verify arguments and try again");
+	}
+
+	if (!checkFlag("-mapDLL", argc, argv)) {
 		utils.throwException("Executive:validateArgs", "-temp parameter cannot be found. Please verify arguments and try again");
 	}
 
