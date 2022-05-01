@@ -18,12 +18,14 @@
 #include "Workflow.h"
 #include "Executive.h"
 #include "gtest/gtest.h"
+#include <windows.h>
 
 
 int main(int argc, char* argv[])
 {
 	// New class instance that will handle MapReduc
 	Workflow workflow;
+	MapReduceUtils utils;
 
 	// Determine if test flag was included and validate args
 	bool runUnitTests = validateArgs(argc, argv);
@@ -50,21 +52,20 @@ int main(int argc, char* argv[])
 			{
 				if (strcmp(argv[counter], "-input") == 0)
 				{
-
-					workflow.setInputDirectory(argv[counter + 1]);
+					workflow.setDirectory(MapReduceUtils::DirectoryType::input, argv[counter + 1]);
 				}
 				else if (strcmp(argv[counter], "-output") == 0)
 				{
-					workflow.setOutputDirectory(argv[counter + 1]);
+					workflow.setDirectory(MapReduceUtils::DirectoryType::output, argv[counter + 1]);
 				}
 				else if (strcmp(argv[counter], "-temp") == 0)
 				{
-					workflow.setTempDirectory(argv[counter + 1]);
+					workflow.setDirectory(MapReduceUtils::DirectoryType::temp, argv[counter + 1]);
 				}
 				if (strcmp(argv[counter], "-mapDLL") == 0)
 				{
 
-					workflow.setMapDLL(argv[counter + 1]);
+					//TODO
 				}
 			}
 		}

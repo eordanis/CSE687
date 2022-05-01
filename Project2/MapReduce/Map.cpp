@@ -22,14 +22,9 @@ Map::Map()
 {
 }
 
-Map::Map(std::string fileName, std::string tempFileName)
-{
-	_fileName = fileName;
-	_tempFileName = tempFileName;
-}
-
 Map::~Map()
 {
+	flush();
 }
 
 void Map::map(std::string key, std::string value)
@@ -62,7 +57,7 @@ void Map::map(std::string key, std::string value)
 			tokenize(value, re);
 
 		for (std::string token : tokenized) {
-			exportz(key, token, false);
+			exportz(key, token);
 		}
 	}
 }
@@ -85,14 +80,42 @@ std::vector<std::string> Map::tokenize(const std::string str, const std::regex r
 	return tokenized;
 }
 
-void Map::exportz(std::string key, std::string token, bool purge)
+void Map::exportz(std::string key, std::string token)
 {
-	if (!purge) {
+	if (token != "") {
 		std::string value = "(" + token + ",1)\n";
 		_exportBuffer.emplace_back(value);
 	}
 
-	if (_exportBuffer.size() == _exportBufferMaxSize || purge) {
+	if (_exportBuffer.size() == 50) {
+		flush();
+	}
+}
+
+void Map::setInputFileName(std::string inputFileName)
+{
+	_inputFileName = inputFileName;
+}
+
+std::string Map::getInputFileName()
+{
+	return _inputFileName;
+}
+
+void Map::setTempFileName(std::string tempFileName)
+{
+	_tempFileName = tempFileName;
+}
+
+std::string Map::getTempFileName()
+{
+	return _tempFileName;
+
+}
+
+void Map::flush()
+{
+	if (_exportBuffer.size() > 0) {
 		std::stringstream result;
 		copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
 		std::string resultStr = result.str();
@@ -106,16 +129,6 @@ void Map::exportz(std::string key, std::string token, bool purge)
 		//clear result string stream
 		result.clear();
 	}
-}
-
-void Map::purgeBuffer(std::string fileName)
-{
-	exportz(fileName, "", true);
-}
-
-size_t Map::getExportBufferSize()
-{
-	return _exportBuffer.size();
 }
 
 /* The map class will contain a public method map(), that accepts a key and value.

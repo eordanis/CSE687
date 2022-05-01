@@ -29,13 +29,6 @@ public:
 	Map();
 
 	/*
-	* Parameterized Constructor for Map
-	* @param string filename of source file
-	* @param string tempFileName of temporary file created
-	*/
-	Map(std::string, std::string);
-
-	/*
 	* Default Deconstructor for Map
 	*/
 	~Map();
@@ -43,7 +36,7 @@ public:
 	/**
 	* Takes the passed value line of text and tokenizes into distinct words
 	*
-	* @param key - string key for filename.
+	* @param key - string key for input filename.
 	* @param value - string value for file line of text.
 	*/
 	void map(std::string, std::string);
@@ -51,39 +44,46 @@ public:
 	/**
 	* Takes the passed token and key filename and writes to memory buffer, periodically writting to a temporary file.
 	*
-	* @param key - string key for filename.
+	* @param key - string key for input filename.
 	* @param value - string value for file line of text.
-	* @param purge - bool true if purging buffer
 	*/
-	void exportz(std::string, std::string, bool);
+	void exportz(std::string, std::string);
 
 	/*
-	* Purge the export buffer of any remaining values
-	* @param fileName to purge buffer for
+	* Set the input file name for the map object
+	* @param string input file name
 	*/
-	void purgeBuffer(std::string);
+	void setInputFileName(std::string);
 
 	/*
-	* Return the current size of the export buffer
+	* Get the input file name for the map object
+	* @return string input file name
 	*/
-	size_t getExportBufferSize();
+	std::string getInputFileName();
+
+	/*
+	* Set the temp file name for the map object
+	* @param string temp file name
+	*/
+	void setTempFileName(std::string);
+
+	/*
+	* Get the temp file name for the map object
+	* @return string temp file name
+	*/
+	std::string getTempFileName();
 
 private:
 
 	/**
-	 * Max size of export buffer
-	 */
-	int _exportBufferMaxSize = 50;
-
-	/**
 	* String special characters and punctations
 	*/
-	std::string _punctuationAndSpecials = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
+	const std::string _punctuationAndSpecials = "`~!@#$%^&*()-_=+[]{};':\",.<>/?";
 
 	/**
-	* Strings representing the map instance's temporary file name and source text file name
+	* Strings representing the map instance's temporary file name and input file name
 	*/
-	std::string _tempFileName,_fileName;
+	std::string _tempFileName,_inputFileName;
 
 	/**
 	 * Map holding string filename key and vector buffer
@@ -99,6 +99,12 @@ private:
 	 * @return std::vector<std::string> of tokens
 	 */
 	std::vector<std::string> tokenize(const std::string, const std::regex);
+
+	/**
+	 * flush the buffer out and write to temp file
+	 * flush is also called on deconstruct
+	 */
+	void flush();
 
 };
 

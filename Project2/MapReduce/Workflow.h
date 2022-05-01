@@ -17,6 +17,7 @@
 #pragma once
 
 #include <string>
+#include "MapReduceUtils.h"
 
 class Workflow
 {
@@ -33,28 +34,11 @@ public:
 	~Workflow();
 
 	/*
-	* Set the input directory to the passed string path
-	* @param string input directory path
+	* Set the path for the indicated directory type 
+	* @param DirectoryType indicates the type of directory to set path for
+	* @param string directory path
 	*/
-	void setInputDirectory(std::string);
-
-	/*
-	* Set the output directory to the passed string path
-	* @param string output directory path
-	*/
-	void setOutputDirectory(std::string);
-
-	/*
-	* Set the temp directory to the passed string path
-	* @param string temp directory path
-	*/
-	void setTempDirectory(std::string);
-
-	/*
-	* Set the map dll to dll passed
-	* @param string map dll path
-	*/
-	void setMapDLL(std::string);
+	void setDirectory(MapReduceUtils::DirectoryType, const std::string);
 
 	/*
 	* Executes workflow logic for MapReduce

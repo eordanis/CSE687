@@ -14,7 +14,6 @@
 #include "FileManagement.h"
 #include "Map.h"
 #include "Reduce.h"
-#include "MapReduceUtils.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iomanip>
@@ -31,221 +30,220 @@ FileManagement::~FileManagement()
 }
 
 // Get + Set Methods for File Management Class
-void FileManagement::setInputDirectory(std::string inputDir) {
-    if (validateDirPath(inputDir)) {
-        _inputDir = inputDir;
-    }
-}
-std::string FileManagement::getInputDirectory() {
-    return _inputDir;
+void FileManagement::setDirectory(MapReduceUtils::DirectoryType directoryType, const std::string dirPath) {
+	if (validateDirPath(dirPath)) {
+		switch (directoryType)
+		{
+		case MapReduceUtils::DirectoryType::input:
+			_inputDir = dirPath; break;
+		case MapReduceUtils::DirectoryType::output:
+			_outputDir = dirPath; break;
+		case MapReduceUtils::DirectoryType::temp:
+			_tempDir = dirPath; break;
+		default: MapReduceUtils utils;  utils.throwException("FileManagement:setDirectory", "Directory path undetermined."); break;
+		}
 
-}
-
-void FileManagement::setOutputDirectory(std::string outputDir) {
-    if (validateDirPath(outputDir)) {
-        _outputDir = outputDir;
-    }
-}
-std::string FileManagement::getOutputDirectory() {
-    return _outputDir;
-
+	}
 }
 
-void FileManagement::setTempDirectory(std::string tempDir) {
-    if (validateDirPath(tempDir)) {
-        _tempDir = tempDir;
-    }
-}
-std::string FileManagement::getTempDirectory() {
-    return _tempDir;
-
+std::string FileManagement::getDirectory(MapReduceUtils::DirectoryType directoryType) {
+	switch (directoryType)
+	{
+	case MapReduceUtils::DirectoryType::input:
+		return _inputDir; break;
+	case MapReduceUtils::DirectoryType::output:
+		return _outputDir; break;
+	case MapReduceUtils::DirectoryType::temp:
+		return _tempDir; break;
+	default:  MapReduceUtils utils;  utils.throwException("FileManagement:getDirectory", "Directory path undetermined."); break;
+	}
 }
 
 // Files Management Methods
 bool FileManagement::validateDirPath(std::string path)
 {
-    MapReduceUtils utils;
-    if (path.empty()) {
-        utils.throwException("FileManagement:validateDirPath", "Path must not be empty.");
-    }
+	MapReduceUtils utils;
+	if (path.empty()) {
+		utils.throwException("FileManagement:validateDirPath", "Path must not be empty.");
+	}
 
-    if (boost::starts_with(path, "\"")) {
-        path.erase(path.begin());
-    }
+	if (boost::starts_with(path, "\"")) {
+		path.erase(path.begin());
+	}
 
-    if (boost::ends_with(path, "\"")) {
-        path.erase(path.end() - 1);
-    }
+	if (boost::ends_with(path, "\"")) {
+		path.erase(path.end() - 1);
+	}
 
-    if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {
-        utils.logMessage("Path provided \"" + path + "\" is a valid directory path. Setting value.");
-        return true;
-    }
-    else {
-        utils.throwException("FileManagement:validateDirPath", "Path provided \"" + path + "\" is not a valid directory path.");
-    }
-    return false;
+	if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {
+		utils.logMessage("Path provided \"" + path + "\" is a valid directory path. Setting value.");
+		return true;
+	}
+	else {
+		utils.throwException("FileManagement:validateDirPath", "Path provided \"" + path + "\" is not a valid directory path.");
+	}
+	return false;
 }
 
-void FileManagement::retrieveInputFiles()
+size_t FileManagement::getDirectoryPathsSize(MapReduceUtils::DirectoryType directoryType)
 {
-    MapReduceUtils utils;
+	if (MapReduceUtils::DirectoryType::input == directoryType) {
+		return _inputPaths.size();
 
-    utils.logMessage("Searching for valid text files at provided input path...\n");
-    if (boost::filesystem::exists(_inputDir) && boost::filesystem::is_directory(_inputDir))
-    {
-        for (auto const& entry : boost::filesystem::directory_iterator(_inputDir))
-        {
-            if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == _ext && !boost::filesystem::is_empty(entry)) {
-                _inputPaths.emplace_back(entry.path());
-            }
-
-        }
-    }
-    else
-    {
-        utils.throwException("FileManagement:retrieveInputFiles","Path provided \"" + _inputDir + "\" is not a valid directory.");
-    }
-    if (_inputPaths.size() == 0) {
-        utils.throwException("FileManagement:retrieveInputFiles", "Path provided \"" + _inputDir + "\" has no valid text files to map and reduce with extension.\"" + _ext + "\"");
-    }
+	}
+	else if (MapReduceUtils::DirectoryType::temp == directoryType) {
+		return _tempPaths.size();
+	}
+	else {
+		MapReduceUtils utils;
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
+	}
 }
 
-void FileManagement::retrieveTempFiles()
+void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType directoryType)
 {
-    MapReduceUtils utils;
+	MapReduceUtils utils;
 
-    utils.logMessage("Searching for valid text files at provided input path...\n");
-    if (boost::filesystem::exists(_tempDir) && boost::filesystem::is_directory(_tempDir))
-    {
-        for (auto const& entry : boost::filesystem::directory_iterator(_tempDir))
-        {
-            if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == _dat && !boost::filesystem::is_empty(entry)) {
-                _tempPaths.emplace_back(entry.path());
-            }
+	std::string ext, type, dir;
+	std::vector<boost::filesystem::path> *dirPath { nullptr };
 
-        }
-    }
-    else
-    {
-        utils.throwException("FileManagement:retrieveTempFiles", "Path provided \"" + _tempDir + "\" is not a valid directory.");
-    }
-    if (_tempPaths.size() == 0) {
-        utils.throwException("FileManagement:retrieveTempFiles", "Path provided \"" + _tempDir + "\" has no valid dat files to map and reduce with extension.\"" + _dat + "\"");
-    }
+	if (MapReduceUtils::DirectoryType::input == directoryType) {
+		ext = _txt;
+		type = "input";
+		dir = _inputDir;
+		dirPath = &_inputPaths;
+
+	}
+	else if (MapReduceUtils::DirectoryType::temp == directoryType) {
+		ext = _dat;
+		type = "temp";
+		dir = _tempDir;
+		dirPath = &_tempPaths;
+	}
+	else {
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
+	}
+	
+	utils.logMessage("Searching for valid files at provided " + type + " path...\n");
+	if (boost::filesystem::exists(dir) && boost::filesystem::is_directory(dir))
+	{
+		for (auto const& entry : boost::filesystem::directory_iterator(dir))
+		{
+			if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == ext && !boost::filesystem::is_empty(entry)) {
+				(*dirPath).emplace_back(entry.path());
+			}
+
+		}
+	}
+	else
+	{
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Path provided \"" + dir + "\" is not a valid directory.");
+	}
+	if ((*dirPath).size() == 0) {
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Path provided \"" + dir + "\" has no valid text files to map and reduce with extension.\"" + ext + "\"");
+	}
 }
 
 void FileManagement::executeFileMapping()
 {
-    MapReduceUtils utils;
+	MapReduceUtils utils;
 
-    utils.logMessage("Executing File Mapping...\n");
-    for (boost::filesystem::path entry : _inputPaths) {
-        boost::filesystem::ifstream fileHandler(entry);
-        std::string line;
-        //create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-        std::string fileName = entry.stem().string();
-        std::string tmpFileName = _tempDir;
-        tmpFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_tmpExt);
-        createFile(_tempDir, tmpFileName);
-        Map m(fileName, tmpFileName);
-        utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
-        while (getline(fileHandler, line)) {
-            //pass file name and line to >> Map.map(filename, line)
-            m.map(fileName, line);
+	utils.logMessage("Executing File Mapping...\n");
+	for (boost::filesystem::path entry : _inputPaths) {
+		boost::filesystem::ifstream fileHandler(entry);
+		std::string line;
+		//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
+		std::string fileName = entry.stem().string();
+		std::string tmpFileName = _tempDir;
+		tmpFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_dat);
+		createFile(_tempDir, tmpFileName);
+		Map m;
+		m.setInputFileName(fileName);
+		m.setTempFileName(tmpFileName);
+		utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
+		while (getline(fileHandler, line)) {
+			//pass file name and line to >> Map.map(filename, line)
+			m.map(fileName, line);
 
-        }
-        //ensure we check the buffer to make sure it does not still have content
-        if (m.getExportBufferSize() > 0) {
-            m.purgeBuffer(fileName);
-        }
-        fileHandler.close();
-    }
+		}
+		fileHandler.close();
+		m.~Map();
+	}
 }
 
 void FileManagement::executeReduce()
 {
-    MapReduceUtils utils;
+	MapReduceUtils utils;
 
-    utils.logMessage("Executing File Reducing...\n");
-    for (boost::filesystem::path entry : _tempPaths) {
-        boost::filesystem::ifstream fileHandler(entry);
-        std::string line;
-        std::string key;
+	utils.logMessage("Executing File Reducing...\n");
+	for (boost::filesystem::path entry : _tempPaths) {
+		boost::filesystem::ifstream fileHandler(entry);
+		std::string line;
+		std::string key;
 
-        //create output file for dat files, Reduce will occur
-        std::string fileName = entry.stem().string();
-        std::string outFileName = _outputDir;
-        outFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_ext);
-        createFile(_outputDir, outFileName);
+		//create output file for dat files, Reduce will occur
+		std::string fileName = entry.stem().string();
+		std::string outFileName = _outputDir;
+		outFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_txt);
+		createFile(_outputDir, outFileName);
 
-        Reduce r(fileName, outFileName);
-        r.resetMap();
-        utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
+		Reduce r(fileName, outFileName);
+		r.resetMap();
+		utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
 
-        while (getline(fileHandler, line)) {
-            key = r.getReduceData(line);
+		while (getline(fileHandler, line)) {
+			key = r.getReduceData(line);
 
-            if (!key.empty()) {
-                r.insertKey(key);
-            }   
-        }
+			if (!key.empty()) {
+				r.insertKey(key);
+			}
+		}
 
-        r.exportz(fileName, false);
+		r.exportz(fileName, false);
 
-        //ensure we check the buffer to make sure it does not still have content
-        if (r.getExportBufferSize() > 0) {
-            r.purgeBuffer(fileName);
-        }
+		//ensure we check the buffer to make sure it does not still have content
+		if (r.getExportBufferSize() > 0) {
+			r.purgeBuffer(fileName);
+		}
 
-        fileHandler.close();
-    }
+		fileHandler.close();
+	}
 }
 
 void FileManagement::createFile(std::string directory, std::string filePath)
 {
-    if(boost::filesystem::is_directory(directory) && !boost::filesystem::exists(filePath)) {
-        std::ofstream output(filePath);
-        output.close();
-        
-    }
+	if (boost::filesystem::is_directory(directory) && !boost::filesystem::exists(filePath)) {
+		std::ofstream output(filePath);
+		output.close();
+
+	}
 }
 
 void FileManagement::writeToFile(std::string filePath, std::string text)
 {
-   if (boost::filesystem::exists(filePath)) {
-        std::fstream fs;
-        fs.open(filePath, std::fstream::in | std::fstream::out | std::fstream::app);
-        fs << text;
-        fs.close();
-   }
+	if (boost::filesystem::exists(filePath)) {
+		std::fstream fs;
+		fs.open(filePath, std::fstream::in | std::fstream::out | std::fstream::app);
+		fs << text;
+		fs.close();
+	}
 }
 
 void FileManagement::removeFile(std::string filePath)
 {
-    if (boost::filesystem::exists(filePath)) {
-        boost::filesystem::remove(filePath);
-    }
+	if (boost::filesystem::exists(filePath)) {
+		boost::filesystem::remove(filePath);
+	}
 }
 
 std::string FileManagement::getCurrentTimeForFileName()
 {
-    const std::string& fmt = "%F_%T";
-    std::tm bt{};
-    std::time_t timer = time(0);
-    localtime_s(&bt, &timer);
-    char buf[64];
-    std::string timestr = { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
-    std::replace(timestr.begin(), timestr.end(), ':', '-');
-    return timestr;
-}
-
-size_t FileManagement::getInputPathsSize()
-{
-    return _inputPaths.size();
-}
-
-size_t FileManagement::getTempPathsSize()
-{
-    return _tempPaths.size();
+	const std::string& fmt = "%F_%T";
+	std::tm bt{};
+	std::time_t timer = time(0);
+	localtime_s(&bt, &timer);
+	char buf[64];
+	std::string timestr = { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
+	std::replace(timestr.begin(), timestr.end(), ':', '-');
+	return timestr;
 }

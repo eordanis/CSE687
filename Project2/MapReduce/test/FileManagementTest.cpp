@@ -14,6 +14,7 @@
 #pragma once
 #include "Test.h"
 #include "../FileManagement.h"
+#include "../MapReduceUtils.h"
 
 TEST(FileManagementTest, TestSetGetDirectory)
 {
@@ -22,26 +23,26 @@ TEST(FileManagementTest, TestSetGetDirectory)
 	std::string _unitTestTmpDir = "./unitTestTempDir";
 
 	//Test Setters Failure - empty path
-	ASSERT_DEATH(fm.setInputDirectory(""), "");
-	ASSERT_DEATH(fm.setOutputDirectory(""), "");
-	ASSERT_DEATH(fm.setTempDirectory(""), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::input,""), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::output,""), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::temp,""), "");
 
 	//Test Setters Failure - invalid path
-	ASSERT_DEATH(fm.setInputDirectory("invalidDir"), "");
-	ASSERT_DEATH(fm.setOutputDirectory("invalidDir"), "");
-	ASSERT_DEATH(fm.setTempDirectory("invalidDir"), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::input,"invalidDir"), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::output, "invalidDir"), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::temp, "invalidDir"), "");
 	
 	boost::filesystem::create_directory(_unitTestTmpDir);
 
 	//Test Setter/Getter Success
-	fm.setInputDirectory(_unitTestTmpDir);
-	ASSERT_EQ(_unitTestTmpDir, fm.getInputDirectory());
+	fm.setDirectory(MapReduceUtils::DirectoryType::input, _unitTestTmpDir);
+	ASSERT_EQ(_unitTestTmpDir, fm.getDirectory(MapReduceUtils::DirectoryType::input));
 
-	fm.setOutputDirectory(_unitTestTmpDir);
-	ASSERT_EQ(_unitTestTmpDir, fm.getOutputDirectory());
+	fm.setDirectory(MapReduceUtils::DirectoryType::output, _unitTestTmpDir);
+	ASSERT_EQ(_unitTestTmpDir, fm.getDirectory(MapReduceUtils::DirectoryType::output));
 
-	fm.setTempDirectory(_unitTestTmpDir);
-	ASSERT_EQ(_unitTestTmpDir, fm.getTempDirectory());
+	fm.setDirectory(MapReduceUtils::DirectoryType::temp, _unitTestTmpDir);
+	ASSERT_EQ(_unitTestTmpDir, fm.getDirectory(MapReduceUtils::DirectoryType::temp));
 
 	boost::filesystem::remove_all(_unitTestTmpDir);
 }
@@ -115,22 +116,22 @@ TEST(FileManagementTest, TestRetrieveInputFiles)
 
 	boost::filesystem::create_directory(_unitTestTmpDir);
 	std::string tmpFileName = _unitTestTmpDir;
-	fm.setInputDirectory(_unitTestTmpDir);
+	fm.setDirectory(MapReduceUtils::DirectoryType::input, _unitTestTmpDir);
 
 	std::string tmpFileName1 = _unitTestTmpDir + "/testInputFileRetrieval1.dat";
 	fm.createFile(_unitTestTmpDir, tmpFileName1);
 	ASSERT_TRUE(boost::filesystem::exists(tmpFileName1));
-	ASSERT_DEATH(fm.retrieveInputFiles(), "");
+	ASSERT_DEATH(fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input), "");
 
 	std::string tmpFileName2 = _unitTestTmpDir + "/testInputFileRetrieval2.txt";
 	fm.createFile(_unitTestTmpDir, tmpFileName2);
 	ASSERT_TRUE(boost::filesystem::exists(tmpFileName2));
-	ASSERT_DEATH(fm.retrieveInputFiles(), "");
+	ASSERT_DEATH(fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input), "");
 
 	std::string fileContentsWrite = "I am but a humble developer. I wish to continue striving for success!. Success is important for developers.";
 	fm.writeToFile(tmpFileName2, fileContentsWrite);
-	fm.retrieveInputFiles();
-	ASSERT_EQ(1, fm.getInputPathsSize());
+	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
+	ASSERT_EQ(1, fm.getDirectoryPathsSize(MapReduceUtils::DirectoryType::input));
 
 	boost::filesystem::remove_all(_unitTestTmpDir);
 }
@@ -148,9 +149,9 @@ TEST(FileManagementTest, TestExecuteFileMapping)
 
 	//set directories
 	std::string inputDirPath = _unitTestTmpDir + "/input";
-	fm.setInputDirectory(inputDirPath);
-	fm.setOutputDirectory(_unitTestTmpDir + "/output");
-	fm.setTempDirectory(_unitTestTmpDir + "/temp");
+	fm.setDirectory(MapReduceUtils::DirectoryType::input, inputDirPath);
+	fm.setDirectory(MapReduceUtils::DirectoryType::output, _unitTestTmpDir + "/output");
+	fm.setDirectory(MapReduceUtils::DirectoryType::temp, _unitTestTmpDir + "/temp");
 
 
 	//create a text files with content under input
@@ -172,7 +173,7 @@ TEST(FileManagementTest, TestExecuteFileMapping)
 	fm.writeToFile(tmpFileName1, fileContentsWrite);
 	
 	//run input retriveal
-	fm.retrieveInputFiles();
+	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
 
 	//execute mapping
 	fm.executeFileMapping();

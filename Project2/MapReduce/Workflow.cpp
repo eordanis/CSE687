@@ -16,6 +16,7 @@
 #include "FileManagement.h"
 
 FileManagement fm;
+MapReduceUtils utils;
 
 //default Constructor
 Workflow::Workflow() {
@@ -27,41 +28,21 @@ Workflow::~Workflow() {
 
 }
 
-void Workflow::setInputDirectory(std::string inputDirPath)
+void Workflow::setDirectory(MapReduceUtils::DirectoryType directorytype, const std::string directoryPath)
 {
-	//validate & set input directory path
-	fm.setInputDirectory(inputDirPath);
-}
-
-void Workflow::setOutputDirectory(std::string outputDirPath)
-{
-	//validate & set output directory path
-	fm.setOutputDirectory(outputDirPath);
-
-}
-
-void Workflow::setTempDirectory(std::string tempDirPath)
-{
-	//validate & set temp directory path
-	fm.setTempDirectory(tempDirPath);
-}
-
-void Workflow::setMapDLL(std::string mapDLL)
-{
-	//validate & set map dll from path
-	//fm.setMapDLL(mapDLL);
+	fm.setDirectory(directorytype, directoryPath);
 }
 
 void Workflow::execute_workflow()
 {
-	// get all valid files from passed input directory
-	fm.retrieveInputFiles();
+	// get all valid files from input directory
+	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
 
 	// start mapping of files found
 	fm.executeFileMapping();
 
-	// get all valid files from passed temp directory
-	fm.retrieveTempFiles();
+	// get all valid files from temp directory
+	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::temp);
 
 	// start reduce program
 	fm.executeReduce();

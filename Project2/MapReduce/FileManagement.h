@@ -15,6 +15,7 @@
 
 #pragma once
 #include <boost/filesystem.hpp>
+#include "MapReduceUtils.h"
 
 class FileManagement
 {
@@ -32,50 +33,30 @@ public:
 	~FileManagement();
 
 	/*
-	* Set the input directory to the passed string path
-	* @param string input directory path
+	* Set the path for the indicated directory type 
+	* @param DirectoryType indicates the type of directory to set path for
+	* @param string directory path
 	*/
-	void setInputDirectory(std::string);
+	void setDirectory(MapReduceUtils::DirectoryType, const std::string);
 
 	/*
-	* Set the output directory to the passed string path
-	* @param string output directory path
+	* Return the indicated directory type path
+	* @param DirectoryType indicates the type of directory to retrieve path for
+	* @return string directory path
 	*/
-	void setOutputDirectory(std::string);
+	std::string getDirectory(MapReduceUtils::DirectoryType);
 
 	/*
-	* Set the temp directory to the passed string path
-	* @param string temp directory path
+	* Return the indicated directory type paths size
+	* @param DirectoryType indicates the type of directory to retrieve path for
+	* @return size_t size of directory path
 	*/
-	void setTempDirectory(std::string);
+	size_t getDirectoryPathsSize(MapReduceUtils::DirectoryType);
 
 	/*
-	* Return the input directory path
-	* @return string input directory path
+	* Retrieve all valid text files from indicated directory type's path
 	*/
-	std::string getInputDirectory();
-
-	/*
-	* Return the output directory path
-	* @return string output directory path
-	*/
-	std::string getOutputDirectory();
-
-	/*
-	* Return the temp directory path
-	* @return string temp directory path
-	*/
-	std::string getTempDirectory();
-
-	/*
-	* Retrieve all valid text files for input directory path
-	*/
-	void retrieveInputFiles();
-
-	/*
-	* Retrieve all valid text files for temp directory path
-	*/
-	void retrieveTempFiles();
+	void retrieveDirectoryFiles(MapReduceUtils::DirectoryType);
 
 	/*
 	* Execute MapReduce process on each input file retrieved
@@ -113,16 +94,6 @@ public:
 	*/
 	std::string getCurrentTimeForFileName();
 
-	/*
-	* Return size of input paths retrived
-	*/
-	size_t getInputPathsSize();
-
-	/*
-	* Return size of temp paths retrived
-	*/
-	size_t getTempPathsSize();
-
 private: 
 	
 	/*
@@ -132,24 +103,14 @@ private:
 	bool validateDirPath(std::string);
 
 	/*
-	* Input directory path
+	* Input, output, and temp directory path
 	*/
-	std::string _inputDir;
-
-	/*
-	* Output directory path
-	*/
-	std::string _outputDir;
-
-	/*
-	* Temp directory path
-	*/
-	std::string _tempDir;
+	std::string _inputDir, _outputDir, _tempDir;
 
 	/*
 	* Extension supported
 	*/
-	std::string _ext=".txt";
+	std::string _txt=".txt";
 
 	/*
 	* Extension supported
@@ -157,19 +118,9 @@ private:
 	std::string _dat = ".dat";
 
 	/*
-	* Extension supported for temporary files
+	* input & temp file paths
 	*/
-	std::string _tmpExt = ".dat";
-
-	/*
-	* input file paths
-	*/
-	std::vector<boost::filesystem::path> _inputPaths;
-
-	/*
-	* temp file paths
-	*/
-	std::vector<boost::filesystem::path> _tempPaths;
+	std::vector<boost::filesystem::path> _inputPaths, _tempPaths;
 };
 
 #endif

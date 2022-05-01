@@ -14,37 +14,6 @@
 #pragma once
 #include "Test.h"
 #include "../Map.h"
-#include "../FileManagement.h"
-
-TEST(MapTest, TestBufferPurgeAndExport)
-{
-	std::string _unitTestTmpDir = "./unitTestTempDir";
-	//Test Exportz
-	boost::filesystem::create_directory(_unitTestTmpDir);
-
-	FileManagement fm;
-
-	std::string tmpFileName1 = _unitTestTmpDir + "/testExportFile1.txt";
-	fm.createFile(_unitTestTmpDir, tmpFileName1);
-
-	std::string tmpFileName2 = _unitTestTmpDir + "/testExportFile2.dat";
-	fm.createFile(_unitTestTmpDir, tmpFileName2);
-
-	std::string fileContentsWrite = "I am but a humble developer. I wish to continue striving for success!. Success is important for developers.";
-	fm.writeToFile(tmpFileName1, fileContentsWrite);
-
-	Map m("testExportFile1.txt", tmpFileName2);
-	m.exportz("testExportFile1.txt", fileContentsWrite, false);
-
-	ASSERT_TRUE(m.getExportBufferSize() != 0);
-	ASSERT_TRUE(boost::filesystem::file_size(tmpFileName2) == 0);
-
-	m.purgeBuffer("testExportFile2.dat");
-	ASSERT_TRUE(m.getExportBufferSize() == 0);
-	ASSERT_TRUE(boost::filesystem::file_size(tmpFileName2) != 0);
-
-	boost::filesystem::remove_all(_unitTestTmpDir);
-}
 
 TEST(MapTest, TestMap)
 {
@@ -52,20 +21,25 @@ TEST(MapTest, TestMap)
 	//Test Exportz
 	boost::filesystem::create_directory(_unitTestTmpDir);
 
-	FileManagement fm;
-
 	std::string tmpFileName1 = _unitTestTmpDir + "/testMapFile1.txt";
-	fm.createFile(_unitTestTmpDir, tmpFileName1);
+	std::ofstream output1(tmpFileName1);
+	output1.close();
 
 	std::string tmpFileName2 = _unitTestTmpDir + "/testMapFile2.dat";
-	fm.createFile(_unitTestTmpDir, tmpFileName2);
+	std::ofstream output2(tmpFileName2);
+	output2.close();
 
 	std::string fileContentsWrite = "I am but a humble developer. I wish to continue striving for success!. Success is important for developers.";
-	fm.writeToFile(tmpFileName1, fileContentsWrite);
+	std::fstream fs;
+	fs.open(tmpFileName1, std::fstream::in | std::fstream::out | std::fstream::app);
+	fs << fileContentsWrite;
+	fs.close();
 
-	Map m("testMapFile1.txt", tmpFileName2);
+	Map m;
+	m.setInputFileName("testMapFile1.txt");
+	m.setTempFileName(tmpFileName2);
 	m.map("testMapFile1.txt", fileContentsWrite);
-	m.purgeBuffer("testMapFile2.dat");
+	m.~Map();
 
 	std::string expectedTempResults = "";
 	expectedTempResults.append("(i,1)\n");
