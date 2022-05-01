@@ -16,7 +16,6 @@
 #include "FileManagement.h"
 
 FileManagement fm;
-MapReduceUtils utils;
 
 //default Constructor
 Workflow::Workflow() {
@@ -25,7 +24,7 @@ Workflow::Workflow() {
 
 //default Deconstructor
 Workflow::~Workflow() {
-
+	fm.~FileManagement();
 }
 
 void Workflow::setDirectory(MapReduceUtils::DirectoryType directorytype, const std::string directoryPath)

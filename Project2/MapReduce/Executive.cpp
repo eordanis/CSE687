@@ -25,7 +25,6 @@ int main(int argc, char* argv[])
 {
 	// New class instance that will handle MapReduc
 	Workflow workflow;
-	MapReduceUtils utils;
 
 	// Determine if test flag was included and validate args
 	bool runUnitTests = validateArgs(argc, argv);
