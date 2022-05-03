@@ -155,7 +155,7 @@ void FileManagement::executeFileMapping()
 		//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
 		std::string fileName = entry.stem().string();
 		std::string tmpFileName = _tempDir;
-		tmpFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_dat);
+		tmpFileName.append("\\").append(fileName).append(_dat);
 		createFile(_tempDir, tmpFileName);
 		Map m;
 		m.setInputFileName(fileName);
@@ -184,7 +184,7 @@ void FileManagement::executeReduce()
 		//create output file for dat files, Reduce will occur
 		std::string fileName = entry.stem().string();
 		std::string outFileName = _outputDir;
-		outFileName.append("\\").append(fileName).append("_").append(getCurrentTimeForFileName()).append(_txt);
+		outFileName.append("\\").append(fileName).append(_txt);
 		createFile(_outputDir, outFileName);
 
 		Reduce r(fileName, outFileName);
@@ -212,10 +212,10 @@ void FileManagement::executeReduce()
 
 void FileManagement::createFile(std::string directory, std::string filePath)
 {
-	if (boost::filesystem::is_directory(directory) && !boost::filesystem::exists(filePath)) {
+	if (boost::filesystem::is_directory(directory)) {
+		removeFile(filePath);
 		std::ofstream output(filePath);
 		output.close();
-
 	}
 }
 
@@ -234,16 +234,4 @@ void FileManagement::removeFile(std::string filePath)
 	if (boost::filesystem::exists(filePath)) {
 		boost::filesystem::remove(filePath);
 	}
-}
-
-std::string FileManagement::getCurrentTimeForFileName()
-{
-	const std::string& fmt = "%F_%T";
-	std::tm bt{};
-	std::time_t timer = time(0);
-	localtime_s(&bt, &timer);
-	char buf[64];
-	std::string timestr = { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
-	std::replace(timestr.begin(), timestr.end(), ':', '-');
-	return timestr;
 }

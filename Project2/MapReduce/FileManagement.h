@@ -69,7 +69,7 @@ public:
 	void executeReduce();
 
 	/*
-	* Create a file for passed file name if not already exists
+	* Create a file for passed file name if not already exists, if exists remove file then create fresh
 	* @param string directory name
 	* @param string filename
 	*/
@@ -87,12 +87,6 @@ public:
 	* @param string filename
 	*/
 	void removeFile(std::string tempFileName);
-
-	/*
-	* Get current timestamp and generate a string representation
-	* @return string with current timestamp
-	*/
-	std::string getCurrentTimeForFileName();
 
 private: 
 	

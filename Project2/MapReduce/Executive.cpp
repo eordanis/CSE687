@@ -85,14 +85,15 @@ void usageStatement()
 	std::cout << "**************************************************    Map Reduce   ************************************************" << std::endl;
 	std::cout << "*******************************************************************************************************************" << std::endl;
 	std::cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
+	std::cout << "\t*** NOTE: Files in temp & output path will be overwritten if files with like name are found. ***" << std::endl;
 	std::cout << "Expected Arguments:" << std::endl;
 	std::cout << "\t-input\t\t<input path>\t\t: This is the path where the text files reside." << std::endl;
 	std::cout << "\t-output\t\t<output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
 	std::cout << "\t-temp\t\t<temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
 	std::cout << "\t-mapDLL\t\t<mapDLL.dll path>\t: This is path to the mapDLL.dll file to use with program." << std::endl;
 	std::cout << "Optional Arguments:" << std::endl;
-	std::cout << "\t-rut\t\t\t\t\t: If this flag is present, tests will be run instead of application. \t\t" << std::endl;
-	std::cout << "\t-help\t\t\t\t\t: If this flag is present, usage statement will display and program will exit. \t\t" << std::endl;
+	std::cout << "\t-rut\t\t\t\t\t: If this flag is present, tests will be run instead of application." << std::endl;
+	std::cout << "\t-help\t\t\t\t\t: If this flag is present, usage statement will display and program will exit." << std::endl;
 	std::cout << std::endl;
 }
 
