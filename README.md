@@ -75,7 +75,6 @@ Input path is the directory where input text files are stored.
 The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
 The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
 The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
-The reduceDll path is the path where the reduce.dll file can be found.
 
 Example.
 
