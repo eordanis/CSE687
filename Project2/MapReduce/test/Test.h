@@ -16,6 +16,7 @@
 #pragma once
 
 #include "gtest/gtest.h"
+#include <windows.h>
 #include <boost/filesystem.hpp>
 
 #endif

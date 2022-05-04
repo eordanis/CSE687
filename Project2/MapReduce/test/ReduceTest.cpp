@@ -13,8 +13,8 @@
 
 #pragma once
 #include "Test.h"
-#include "../Reduce.h"
-#include "../FileManagement.h"
+#include "../Header/Reduce.h"
+#include "../Header/FileManagement.h"
 
 TEST(ReduceTest, TestReduce)
 {

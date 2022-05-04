@@ -11,13 +11,13 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "Reduce.h"
+#include "./Header/Reduce.h"
 #include <boost/algorithm/string.hpp>
 #include <iterator>
 #include <map>
 #include <sstream>
 #include <boost/mpl/pair.hpp>
-#include "FileManagement.h"
+#include "./Header/FileManagement.h"
 
 Reduce::Reduce()
 {

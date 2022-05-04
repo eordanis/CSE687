@@ -13,9 +13,8 @@
 
 #pragma once
 #include "Test.h"
-#include "../FileManagement.h"
-#include "../MapReduceUtils.h"
-
+#include "../Header/FileManagement.h"
+#include "../Header/MapReduceUtils.h"
 TEST(FileManagementTest, TestSetGetDirectory)
 {
 	FileManagement fm;
@@ -26,11 +25,13 @@ TEST(FileManagementTest, TestSetGetDirectory)
 	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::input,""), "");
 	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::output,""), "");
 	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::temp,""), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::dll, ""), "");
 
 	//Test Setters Failure - invalid path
 	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::input,"invalidDir"), "");
 	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::output, "invalidDir"), "");
 	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::temp, "invalidDir"), "");
+	ASSERT_DEATH(fm.setDirectory(MapReduceUtils::DirectoryType::dll, "invalidDir"), "");
 	
 	boost::filesystem::create_directory(_unitTestTmpDir);
 
@@ -43,6 +44,9 @@ TEST(FileManagementTest, TestSetGetDirectory)
 
 	fm.setDirectory(MapReduceUtils::DirectoryType::temp, _unitTestTmpDir);
 	ASSERT_EQ(_unitTestTmpDir, fm.getDirectory(MapReduceUtils::DirectoryType::temp));
+
+	fm.setDirectory(MapReduceUtils::DirectoryType::temp, "./");
+	ASSERT_EQ("./", fm.getDirectory(MapReduceUtils::DirectoryType::temp));
 
 	boost::filesystem::remove_all(_unitTestTmpDir);
 }
@@ -152,7 +156,7 @@ TEST(FileManagementTest, TestExecuteFileMapping)
 	fm.setDirectory(MapReduceUtils::DirectoryType::input, inputDirPath);
 	fm.setDirectory(MapReduceUtils::DirectoryType::output, _unitTestTmpDir + "/output");
 	fm.setDirectory(MapReduceUtils::DirectoryType::temp, _unitTestTmpDir + "/temp");
-
+	fm.setDirectory(MapReduceUtils::DirectoryType::dll, "./");
 
 	//create a text files with content under input
 	std::string tmpFileName1 = inputDirPath + "/testMapExecution1.txt";

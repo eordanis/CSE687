@@ -1,3 +1,4 @@
+#pragma once
 #ifdef MAPDLL_EXPORTS
 #define MAPLIBRARY_API __declspec(dllexport)
 #else
@@ -17,13 +18,12 @@
 //                {sleordan,jwashi05}@syr.edu                    //
 ///////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "IMap.h"
 #include <string>
 #include <map>
 #include <regex>
 
-class MAPLIBRARY_API Map
-{
+class Map :public IMap {
 
 public:
 
@@ -35,7 +35,7 @@ public:
 	/*
 	* Default Deconstructor for Map
 	*/
-	~Map();
+	virtual ~Map();
 
 	/**
 	* Takes the passed value line of text and tokenizes into distinct words
@@ -112,14 +112,6 @@ private:
 
 };
 
-extern "C" MAPLIBRARY_API Map * CreateObjectofMap()
-{
-	return new Map();
-}
-
-extern "C" MAPLIBRARY_API void DeconstructObjectofMap(Map* map)
-{
-	map->~Map();
-}
-
-extern "C" MAPLIBRARY_API void map(std::string, std::string);
+extern "C" {
+	MAPLIBRARY_API IMap* _cdecl CreateObjectofMap();
+};

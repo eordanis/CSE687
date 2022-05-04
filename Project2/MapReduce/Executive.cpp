@@ -14,11 +14,10 @@
 
 #pragma once
 #include <iostream>
-#include "MapReduceUtils.h"
-#include "Workflow.h"
-#include "Executive.h"
+#include "./Header/MapReduceUtils.h"
+#include "./Header/Workflow.h"
+#include "./Header/Executive.h"
 #include "gtest/gtest.h"
-#include <windows.h>
 
 
 int main(int argc, char* argv[])
@@ -61,47 +60,12 @@ int main(int argc, char* argv[])
 				{
 					workflow.setDirectory(MapReduceUtils::DirectoryType::temp, argv[counter + 1]);
 				}
-				if (strcmp(argv[counter], "-mapDLL") == 0)
+				if (strcmp(argv[counter], "-dll") == 0)
 				{
-
-					//TODO
+					workflow.setDirectory(MapReduceUtils::DirectoryType::dll, argv[counter + 1]);
 				}
 			}
-		}
-		/*
-		* //PROF HELP!!!
-		#ifdef MAPDLL_EXPORTS
-			std::cout << "its defined"
-		#endif
-		HINSTANCE dll_handle = LoadLibrary(L"C:\\Users\\seord_000\\Documents\\GitHub\\CSE687\\Project2\\x64\\Debug\\MapDLL.dll");
-		FARPROC func_addr;
-		if (dll_handle) {
-			std::cout << "Map Library Found" << std::endl;
-			func_addr = GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
-			if (func_addr) {
-				std::cout << "Map Constructor Found" << std::endl;
-				typedef Map* (*PCreateObjectofMap)();
-				PCreateObjectofMap pCreateObjectofMap =(PCreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
-				Map* map = (pCreateObjectofMap)();
-
-				func_addr = GetProcAddress(HMODULE(dll_handle), "map");
-				if (func_addr) {
-					std::cout << "Map Constructor Found" << std::endl;
-					typedef void (Map::* Pmap)(std::string, std::string);
-					PCreateObjectofMap pmap = <PCreateObjectofMap>(GetProcAddress(HMODULE(dll_handle), "map"));
-					map->pmap();
-				}
-			}
-			else {
-				std::cout << "Map Function Not Found" << std::endl;
-			}
-		}
-		else {
-			std::cout << "Map Library Not Found" << std::endl;
-		}
-		FreeLibrary(dll_handle);
-		exitProgram(); //just testing
-		*/
+		}		
 
 		//start map reduce workflow
 		workflow.execute_workflow();
@@ -124,7 +88,7 @@ void usageStatement()
 	std::cout << "\t-input\t\t<input path>\t\t: This is the path where the text files reside." << std::endl;
 	std::cout << "\t-output\t\t<output path>\t\t: This is the path where the MapReduced result files will be placed." << std::endl;
 	std::cout << "\t-temp\t\t<temp path>\t\t: This is the permitted temporary file location for MapReduce to utilize." << std::endl;
-	std::cout << "\t-mapDLL\t\t<mapDLL.dll path>\t: This is path to the mapDLL.dll file to use with program." << std::endl;
+	std::cout << "\t-dll\t\t<dll path>\t\t: This is path to the mapDLL.dll and reduceDLL file to use with program." << std::endl << std::endl;
 	std::cout << "Optional Arguments:" << std::endl;
 	std::cout << "\t-rut\t\t\t\t\t: If this flag is present, tests will be run instead of application." << std::endl;
 	std::cout << "\t-help\t\t\t\t\t: If this flag is present, usage statement will display and program will exit." << std::endl;
@@ -177,8 +141,8 @@ bool validateArgs(int argc, char* argv[]) {
 		utils.throwException("Executive:validateArgs", "-temp parameter cannot be found. Please verify arguments and try again");
 	}
 
-	if (!checkFlag("-mapDLL", argc, argv)) {
-		utils.throwException("Executive:validateArgs", "-temp parameter cannot be found. Please verify arguments and try again");
+	if (!checkFlag("-dll", argc, argv)) {
+		utils.throwException("Executive:validateArgs", "-dll parameter cannot be found. Please verify arguments and try again");
 	}
 
 	return false;

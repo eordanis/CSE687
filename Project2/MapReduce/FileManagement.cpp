@@ -11,15 +11,17 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "FileManagement.h"
-#include "Map.h"
-#include "Reduce.h"
+#include "./Header/FileManagement.h"
+#include "./Header/Reduce.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iomanip>
 #include <sstream>
 #include <time.h>
 #include <stdio.h>
+#include <windows.h>
+
+typedef IMap* (*CreateObjectofMap)();
 
 FileManagement::FileManagement()
 {
@@ -31,7 +33,7 @@ FileManagement::~FileManagement()
 
 // Get + Set Methods for File Management Class
 void FileManagement::setDirectory(MapReduceUtils::DirectoryType directoryType, const std::string dirPath) {
-	if (validateDirPath(dirPath)) {
+	if (validateDirPath(directoryType, dirPath)) {
 		switch (directoryType)
 		{
 		case MapReduceUtils::DirectoryType::input:
@@ -40,7 +42,9 @@ void FileManagement::setDirectory(MapReduceUtils::DirectoryType directoryType, c
 			_outputDir = dirPath; break;
 		case MapReduceUtils::DirectoryType::temp:
 			_tempDir = dirPath; break;
-		default: MapReduceUtils utils;  utils.throwException("FileManagement:setDirectory", "Directory path undetermined."); break;
+		case MapReduceUtils::DirectoryType::dll:
+			_dllDir = dirPath; break;
+		default: MapReduceUtils utils;  utils.throwException("FileManagement:setDirectory", "Directory path undetermined."); return;
 		}
 
 	}
@@ -55,12 +59,14 @@ std::string FileManagement::getDirectory(MapReduceUtils::DirectoryType directory
 		return _outputDir; break;
 	case MapReduceUtils::DirectoryType::temp:
 		return _tempDir; break;
-	default:  MapReduceUtils utils;  utils.throwException("FileManagement:getDirectory", "Directory path undetermined."); break;
+	case MapReduceUtils::DirectoryType::dll:
+		return _dllDir; break;
+	default:  MapReduceUtils utils;  utils.throwException("FileManagement:getDirectory", "Directory path undetermined."); return "";
 	}
 }
 
 // Files Management Methods
-bool FileManagement::validateDirPath(std::string path)
+bool FileManagement::validateDirPath(MapReduceUtils::DirectoryType directoryType, std::string path)
 {
 	MapReduceUtils utils;
 	if (path.empty()) {
@@ -76,6 +82,21 @@ bool FileManagement::validateDirPath(std::string path)
 	}
 
 	if (boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {
+
+		//if dll directory, make sure MapDLL.dll and Reduce.dll exist
+		if (MapReduceUtils::DirectoryType::dll == directoryType) {
+			std::string missingDLL = "";
+			if (!boost::filesystem::exists(path + "\\MapDLL.dll")) {
+				missingDLL.append(" MapDLL.dll ");
+			}
+			//if (!boost::filesystem::exists(path + "\\ReduceDLL.dll")) {
+			//	missingDLL.append(" ReduceDLL.dll ");
+			//}
+			if (missingDLL != "") {
+				utils.throwException("FileManagement:validateDirPath", "Path provided \"" + path + "\" does not contain required dll:" + missingDLL);
+			}
+		}
+
 		utils.logMessage("Path provided \"" + path + "\" is a valid directory path. Setting value.");
 		return true;
 	}
@@ -97,6 +118,7 @@ size_t FileManagement::getDirectoryPathsSize(MapReduceUtils::DirectoryType direc
 	else {
 		MapReduceUtils utils;
 		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
+		return 0;
 	}
 }
 
@@ -105,7 +127,7 @@ void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType direct
 	MapReduceUtils utils;
 
 	std::string ext, type, dir;
-	std::vector<boost::filesystem::path> *dirPath { nullptr };
+	std::vector<boost::filesystem::path>* dirPath{ nullptr };
 
 	if (MapReduceUtils::DirectoryType::input == directoryType) {
 		ext = _txt;
@@ -123,7 +145,7 @@ void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType direct
 	else {
 		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
 	}
-	
+
 	utils.logMessage("Searching for valid files at provided " + type + " path...\n");
 	if (boost::filesystem::exists(dir) && boost::filesystem::is_directory(dir))
 	{
@@ -147,27 +169,64 @@ void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType direct
 void FileManagement::executeFileMapping()
 {
 	MapReduceUtils utils;
+	std::string mapDllPath(_dllDir);
+	mapDllPath.append("\\MapDLL.dll");
+	std::wstring stemp = std::wstring(mapDllPath.begin(), mapDllPath.end());
+	LPCWSTR sw = stemp.c_str();
+	HINSTANCE dll_handle = LoadLibrary(stemp.c_str());
+	if (dll_handle) {
+		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
+		if (pCreateObjectofMapPtr) {
+			/*
+			* //we should probably verify these functions exist. issue is, even though the function exists these checks fail
+			FARPROC func_addr;
+			func_addr = GetProcAddress(HMODULE(dll_handle), "map");
+			if (!func_addr) {
+				utils.throwException("FileManagement:executeFileMapping", "the map function not found in MapDLL.dll");
+				FreeLibrary(dll_handle);
+			}
+			func_addr = GetProcAddress(HMODULE(dll_handle), "setInputFileName");
+			if (!func_addr) {
+				utils.throwException("FileManagement:executeFileMapping", "The setInputFileName function not found in MapDLL.dll");
+				FreeLibrary(dll_handle);
+			}
+			func_addr = GetProcAddress(HMODULE(dll_handle), "setTempFileName");
+			if (!func_addr) {
+				utils.throwException("FileManagement:executeFileMapping", "The setTempFileName function not found in MapDLL.dll");
+				FreeLibrary(dll_handle);
+			}
+			*/
+			utils.logMessage("Executing File Mapping...\n");
+			for (boost::filesystem::path entry : _inputPaths) {
+				boost::filesystem::ifstream fileHandler(entry);
+				std::string line;
+				//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
+				std::string fileName = entry.stem().string();
+				std::string tmpFileName = _tempDir;
+				tmpFileName.append("\\").append(fileName).append(_dat);
+				createFile(_tempDir, tmpFileName);
+				IMap* map = pCreateObjectofMapPtr();
+				map->setInputFileName(fileName);
+				map->setTempFileName(tmpFileName);
+				utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
+				while (getline(fileHandler, line)) {
+					//pass file name and line to >> Map.map(filename, line)
+					map->map(fileName, line);
 
-	utils.logMessage("Executing File Mapping...\n");
-	for (boost::filesystem::path entry : _inputPaths) {
-		boost::filesystem::ifstream fileHandler(entry);
-		std::string line;
-		//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-		std::string fileName = entry.stem().string();
-		std::string tmpFileName = _tempDir;
-		tmpFileName.append("\\").append(fileName).append(_dat);
-		createFile(_tempDir, tmpFileName);
-		Map m;
-		m.setInputFileName(fileName);
-		m.setTempFileName(tmpFileName);
-		utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
-		while (getline(fileHandler, line)) {
-			//pass file name and line to >> Map.map(filename, line)
-			m.map(fileName, line);
+				}
+				fileHandler.close();
+				delete map;
+			}
 
 		}
-		fileHandler.close();
-		m.~Map();
+		else {
+			FreeLibrary(dll_handle);
+			utils.throwException("FileManagement:executeFileMapping", "Map constructor not found in MapDLL.dll");
+		}
+		FreeLibrary(dll_handle);
+	}
+	else {
+		utils.throwException("FileManagement:executeFileMapping", "Cannot load MapDLL.dll");
 	}
 }
 

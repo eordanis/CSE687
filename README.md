@@ -44,6 +44,8 @@ Expected arguments are as follows:
 	 
 	 -temp 		<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
 	 
+	 -dll       <dll path>:         This is the directory path in which both MapDLL.dll & ReduceDLL.dll are located.    
+	 
 Optional Arguments:
 
 	 -rut						    If this flag is present, tests will be run instead of application.
@@ -68,16 +70,16 @@ Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt
 
 ### Phase 2: 
 The program runs as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files. This phase of the application takes in the map and reduce dll files and utilizes their functions.
-There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduce.dll path. 
+There are five required arguments: input path, temp path, output path, dll path
 Input path is the directory where input text files are stored. 
 The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
 The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
-The mapDLL path is the path where the mapDLL.dll file can be found.
+The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
 The reduceDll path is the path where the reduce.dll file can be found.
 
 Example.
 
-Input    Text File: <input path>/demo.txt                                            <- I am but a humble developer. I wish to continue striving for success!. Success is important for developers.
+Input   Text File: <input path>/demo.txt                                            <- I am but a humble developer. I wish to continue striving for success!. Success is important for developers.
 
 Temp    Text File: <temp path>/demo_2022-04-28_18-16-56.dat                         <-(i,1)\n(am,1)\n)(but,1)\n(a,1)\n(humble,1)\n(developer,1)\n(i,1)\n(wish,1)\n(to,1)\n(continue,1)\n(striving,1)\n(for,1)\n(success,1)\n(success,1)\n(is,1)\n(important,1)\n(for,1)\n(developers,1)\n
 
@@ -99,6 +101,8 @@ This section describes the application structure.
 	 MapReduceUtils     - Util class to store common util functions.
 	 
 	 FileManagement     - Handles all filesystem related functionallity.
+	 
+### DLLs
 	 
 	 Map                - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
 	 	 

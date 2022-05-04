@@ -152,22 +152,21 @@
   <ItemGroup>
     <ClCompile Include="FileManagement.cpp" />
     <ClCompile Include="MapReduceUtils.cpp" />
-    <ClCompile Include="test\FileManagementTest.cpp" />
-    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Test\FileManagementTest.cpp" />
     <ClCompile Include="Executive.cpp" />
     <ClCompile Include="Reduce.cpp" />
-    <ClCompile Include="test\MapTest.cpp" />
-    <ClCompile Include="test\ReduceTest.cpp" />
+    <ClCompile Include="Test\MapTest.cpp" />
+    <ClCompile Include="Test\ReduceTest.cpp" />
     <ClCompile Include="Workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileManagement.h" />
-    <ClInclude Include="Executive.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="MapReduceUtils.h" />
-    <ClInclude Include="Reduce.h" />
-    <ClInclude Include="test\Test.h" />
-    <ClInclude Include="Workflow.h" />
+    <ClInclude Include="Header\Executive.h" />
+    <ClInclude Include="Header\FileManagement.h" />
+    <ClInclude Include="Header\IMap.h" />
+    <ClInclude Include="Header\MapReduceUtils.h" />
+    <ClInclude Include="Header\Reduce.h" />
+    <ClInclude Include="Header\Workflow.h" />
+    <ClInclude Include="Test\Test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -16,6 +16,7 @@
 #pragma once
 #include <boost/filesystem.hpp>
 #include "MapReduceUtils.h"
+#include "./IMap.h"
 
 class FileManagement
 {
@@ -92,14 +93,15 @@ private:
 	
 	/*
 	* Validate the passed string directory path
+	* @param DirectoryType indicates the type of directory to validate
 	* @param string directory path
 	*/
-	bool validateDirPath(std::string);
+	bool validateDirPath(MapReduceUtils::DirectoryType, std::string);
 
 	/*
 	* Input, output, and temp directory path
 	*/
-	std::string _inputDir, _outputDir, _tempDir;
+	std::string _inputDir, _outputDir, _tempDir, _dllDir;
 
 	/*
 	* Extension supported

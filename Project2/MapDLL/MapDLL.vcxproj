@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IMap.h" />
     <ClInclude Include="Map.h" />
   </ItemGroup>
   <ItemGroup>

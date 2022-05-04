@@ -12,8 +12,8 @@
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "Workflow.h"
-#include "FileManagement.h"
+#include "./Header/Workflow.h"
+#include "./Header/FileManagement.h"
 
 FileManagement fm;
 

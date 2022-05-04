@@ -18,7 +18,7 @@
 #include <sstream>
 #include <fstream>
 
-Map::Map()
+Map::Map():IMap()
 {
 }
 
@@ -27,7 +27,7 @@ Map::~Map()
 	flush();
 }
 
-MAPLIBRARY_API void Map::map(std::string key, std::string value)
+void Map::map(std::string key, std::string value)
 {
 	//punctuation and special characters to remove
 	std::string regex = _punctuationAndSpecials;
@@ -137,3 +137,8 @@ The map() function will tokenize the value into distinct words (remove punctuati
 The map() function will call a second function export that takes a key and value as two parameters.
 The export function will buffer output in memory and periodically write the data out to disk (periodicity can be based on the size of the buffer).
 The intermediate data will be written to the temporary directory (specified via command line). */
+
+MAPLIBRARY_API IMap* _cdecl CreateObjectofMap()
+{
+	return new Map();
+}
