@@ -55,10 +55,13 @@ Optional Arguments:
 	
 ### Phase 1: 
 The program runs as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files.
+
 There are three required arguments: input path, temp path, and output path. 
-Input path is the directory where input text files are stored. 
-The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
-The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2),  
+* Input path is the directory where input text files are stored.
+
+* The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
+
+* The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2),  
 
 Example.
 
@@ -70,11 +73,16 @@ Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt
 
 ### Phase 2: 
 The program runs as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files. This phase of the application takes in the map and reduce dll files and utilizes their functions.
-There are five required arguments: input path, temp path, output path, dll path
-Input path is the directory where input text files are stored. 
-The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
-The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
-The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
+
+There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduce.dll path.
+ 
+* Input path is the directory where input text files are stored.
+
+* The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
+
+* The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
+
+* The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
 
 Example.
 

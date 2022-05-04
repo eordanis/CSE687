@@ -54,11 +54,16 @@ Optional Arguments:
 	
 ### Phase 2: 
 The program runs as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files. This phase of the application takes in the map and reduce dll files and utilizes their functions.
-There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduce.dll path. 
-Input path is the directory where input text files are stored. 
-The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
-The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
-The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
+
+There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduce.dll path.
+ 
+* Input path is the directory where input text files are stored.
+
+* The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
+
+* The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
+
+* The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
 
 Example.
 
@@ -72,17 +77,19 @@ Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt
 This section describes the application structure.
 
 ### Classes
-	 Workflow              - Executes the main business logic for the MapReduce application.
+	 Workflow           - Executes the main business logic for the MapReduce application.
 	 
-	 Executive             - Contains the main function and any additional utility functions/data required.
+	 Executive          - Contains the main function and any additional utility functions/data required.
 	 
-	 MapReduceUtils        - Util class to store common util functions.
+	 MapReduceUtils     - Util class to store common util functions.
 	 
-	 FileManagement        - Handles all filesystem related functionallity.
+	 FileManagement     - Handles all filesystem related functionallity.
 	 
-	 Map                   - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
+### DLLs
+	 
+	 Map                - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
 	 	 
-	 Reduce                - Is given sorted data from the intermediate file and reduces the results by aggregating the values.
+	 Reduce             - Is given sorted data from the intermediate file and reduces the results by aggregating the values.
 	 
 ### Unit Tests
 	Unit tests are stored under the /test directory and are run on the main class functionallity.
