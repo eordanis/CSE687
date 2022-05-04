@@ -1,5 +1,9 @@
-#ifndef __MAP_DDL_FUNC_H_INCLUDED__
-#define __MAP_DDL_FUNC_H_INCLUDED__
+#ifdef MAPDLL_EXPORTS
+#define MAPLIBRARY_API __declspec(dllexport)
+#else
+#define MAPLIBRARY_API __declspec(dllimport)
+#endif
+
 
 ///////////////////////////////////////////////////////////////////
 //  Map.h    -  header file for Map class					     //
@@ -18,8 +22,9 @@
 #include <map>
 #include <regex>
 
-class __declspec(dllexport) Map
+class MAPLIBRARY_API Map
 {
+
 public:
 
 	/*
@@ -106,4 +111,15 @@ private:
 	void flush();
 
 };
-#endif
+
+extern "C" MAPLIBRARY_API Map * CreateObjectofMap()
+{
+	return new Map();
+}
+
+extern "C" MAPLIBRARY_API void DeconstructObjectofMap(Map* map)
+{
+	map->~Map();
+}
+
+extern "C" MAPLIBRARY_API void map(std::string, std::string);

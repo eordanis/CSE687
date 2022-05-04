@@ -68,6 +68,40 @@ int main(int argc, char* argv[])
 				}
 			}
 		}
+		/*
+		* //PROF HELP!!!
+		#ifdef MAPDLL_EXPORTS
+			std::cout << "its defined"
+		#endif
+		HINSTANCE dll_handle = LoadLibrary(L"C:\\Users\\seord_000\\Documents\\GitHub\\CSE687\\Project2\\x64\\Debug\\MapDLL.dll");
+		FARPROC func_addr;
+		if (dll_handle) {
+			std::cout << "Map Library Found" << std::endl;
+			func_addr = GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
+			if (func_addr) {
+				std::cout << "Map Constructor Found" << std::endl;
+				typedef Map* (*PCreateObjectofMap)();
+				PCreateObjectofMap pCreateObjectofMap =(PCreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
+				Map* map = (pCreateObjectofMap)();
+
+				func_addr = GetProcAddress(HMODULE(dll_handle), "map");
+				if (func_addr) {
+					std::cout << "Map Constructor Found" << std::endl;
+					typedef void (Map::* Pmap)(std::string, std::string);
+					PCreateObjectofMap pmap = <PCreateObjectofMap>(GetProcAddress(HMODULE(dll_handle), "map"));
+					map->pmap();
+				}
+			}
+			else {
+				std::cout << "Map Function Not Found" << std::endl;
+			}
+		}
+		else {
+			std::cout << "Map Library Not Found" << std::endl;
+		}
+		FreeLibrary(dll_handle);
+		exitProgram(); //just testing
+		*/
 
 		//start map reduce workflow
 		workflow.execute_workflow();

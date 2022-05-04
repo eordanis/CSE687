@@ -27,7 +27,7 @@ Map::~Map()
 	flush();
 }
 
-void Map::map(std::string key, std::string value)
+MAPLIBRARY_API void Map::map(std::string key, std::string value)
 {
 	//punctuation and special characters to remove
 	std::string regex = _punctuationAndSpecials;
@@ -130,6 +130,7 @@ void Map::flush()
 		result.clear();
 	}
 }
+
 /* The map class will contain a public method map(), that accepts a key and value.
 The key will be the file name and the value will be a single line of raw data from the file.
 The map() function will tokenize the value into distinct words (remove punctuation, whitespace and capitalization).
