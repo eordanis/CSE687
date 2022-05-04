@@ -38,20 +38,18 @@ A C++ standalone command-line program that can run a word count MapReduce workfl
 ### Arguments
 Expected arguments are as follows:
 
-	 -input 	  <input path>: 		This is the path where the text files reside.
+	 -input 	<input path>: 		This is the path where the text files reside.
 	 
-	 -output 	  <output path>: 		This is the path where the MapReduced result files will be placed.
+	 -output 	<output path>: 		This is the path where the MapReduced result files will be placed.
 	 
-	 -temp 		  <temp path>: 		    This is the permitted temporary file location for MapReduce to utilize.
+	 -temp 		<temp path>: 		This is the permitted temporary file location for MapReduce to utilize.
 	 
-	 -mapDLL	  <mapDLL.dll path>     This is the path to the mapDLL.dll file
-	 
-	 -reduceDll	  <reduce.dll path>     This is the path to the reduce.dll file
+	 -dll       <dll path>:         This is the directory path in which both MapDLL.dll & ReduceDLL.dll are located.    
 	 
 Optional Arguments:
 
 	 -rut						    If this flag is present, tests will be run instead of application.
-
+	 
 	 -help							If this flag is present, usage statement is shown to user and application exits
 	
 ### Phase 2: 
@@ -60,8 +58,8 @@ There are five required arguments: input path, temp path, output path, mapDLL.dl
 Input path is the directory where input text files are stored. 
 The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
 The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
-The mapDLL path is the path where the mapDLL.dll file can be found.
-The reduceDll path is the path where the reduce.dll file can be found.
+The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
+
 
 Example.
 
