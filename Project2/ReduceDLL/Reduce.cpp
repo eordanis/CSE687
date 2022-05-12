@@ -86,7 +86,12 @@ size_t Reduce::getExportBufferSize()
     return _exportBuffer.size();
 }
 
-void Reduce::setInputFileName(std::string inputFileName)
+void Reduce::setTempFileName(std::string inputFileName)
+{
+    //_inputFileName1 = inputFileName;
+}
+
+void Reduce::setOutputFileName(std::string outputFileName)
 {
     //_inputFileName1 = inputFileName;
 }

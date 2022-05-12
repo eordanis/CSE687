@@ -238,10 +238,10 @@ void FileManagement::executeReduce()
 				outFileName.append("\\").append(fileName).append(_txt);
 				createFile(_outputDir, outFileName);
 
-				//IReduce* reduce = pCreateObjectofReducePtr();
-				/*reduce->setTempFileName(fileName);
-				reduce->setInputFileName(outFileName);
-
+				IReduce* reduce = pCreateObjectofReducePtr();
+				reduce->setTempFileName(fileName);
+				reduce->setOutputFileName(outFileName);
+				
 				utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
 
 				while (getline(fileHandler, line)) {
@@ -251,7 +251,7 @@ void FileManagement::executeReduce()
 						reduce->insertKey(key);
 					}
 				}
-
+				
 				reduce->exportz(fileName, false);
 
 				//ensure we check the buffer to make sure it does not still have content
@@ -259,7 +259,7 @@ void FileManagement::executeReduce()
 					reduce->purgeBuffer(fileName);
 				}
 
-				fileHandler.close();*/
+				fileHandler.close();
 
 			}
 		}

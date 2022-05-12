@@ -41,7 +41,9 @@ public:
 
 	void exportz(std::string, bool);
 
-	void setInputFileName(std::string);
+	void setTempFileName(std::string);
+
+	void setOutputFileName(std::string);
 
 private:
 
