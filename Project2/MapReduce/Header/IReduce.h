@@ -26,6 +26,7 @@ public:
     virtual void exportz(std::string, bool) = 0;
     virtual size_t getExportBufferSize() = 0;
     virtual void purgeBuffer(std::string) = 0;
+    virtual void resetMap() = 0;
 };
 
 #endif

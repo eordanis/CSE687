@@ -71,10 +71,10 @@ void Reduce::exportz(std::string filename, bool purge)
     }
 }
 
-/*void Reduce::resetMap()
+void Reduce::resetMap()
 {
     reduceMap.clear();
-}*/
+}
 
 void Reduce::purgeBuffer(std::string fileName)
 {

@@ -236,6 +236,8 @@ void FileManagement::executeReduce()
 				
 				utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
 
+				reduce->resetMap();
+
 				while (getline(fileHandler, line)) {
 					key = reduce->getReduceData(line);
 

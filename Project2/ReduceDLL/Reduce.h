@@ -45,6 +45,8 @@ public:
 
 	void setOutputFileName(std::string);
 
+	void resetMap();
+
 private:
 
 	/**
