@@ -1,5 +1,5 @@
 #pragma once
-#ifdef MAPDLL_EXPORTS
+#ifdef REDUCEDLL_EXPORTS
 #define REDUCELIBRARY_API __declspec(dllexport)
 #else
 #define REDUCELIBRARY_API __declspec(dllimport)
