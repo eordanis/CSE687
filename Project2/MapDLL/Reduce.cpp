@@ -64,7 +64,7 @@ void Reduce::exportz(std::string filename, bool purge)
         if (_exportBuffer.size() == _exportBufferMaxSize || purge) {
             std::stringstream result;
             copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
-            fm.writeToFile(_outFileName, result.str());
+            //fm.writeToFile(_outFileName, result.str());
             _exportBuffer.clear();
             result.clear();
         }

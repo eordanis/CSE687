@@ -5,6 +5,7 @@
 #define REDUCELIBRARY_API __declspec(dllimport)
 #endif
 
+
 ///////////////////////////////////////////////////////////////////
 //  Reduce.h    -  header file for Reduce class					 //
 //                                                               //
@@ -25,6 +26,7 @@
 class Reduce : public IReduce
 {
 public:
+
 	/*
 	* Default Constructor for Reduce
 	*/
@@ -33,19 +35,7 @@ public:
 	/*
 	* Default Deconstructor for Reduce
 	*/
-	~Reduce();
-
-	/*
-	* Parameterized Constructor for Reduce
-	* @param string filename of source file
-	* @param string outFileName of temporary file created
-	*/
-	Reduce(std::string, std::string);
-
-	/*
-	*
-	*/
-	void reduce(std::string key, std::vector<int>::iterator counts);
+	virtual ~Reduce();
 
 	/*
 	*
