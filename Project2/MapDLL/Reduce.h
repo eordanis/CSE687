@@ -1,5 +1,5 @@
 #pragma once
-#ifdef REDUCEDLL_EXPORTS
+#ifdef MAPDLL_EXPORTS
 #define REDUCELIBRARY_API __declspec(dllexport)
 #else
 #define REDUCELIBRARY_API __declspec(dllimport)
@@ -93,5 +93,5 @@ private:
 };
 
 extern "C" {
-	REDUCELIBRARY_API IReduce* _cdecl CreateObjectofMap();
+	REDUCELIBRARY_API IReduce* _cdecl CreateObjectofReduce();
 };

@@ -86,7 +86,7 @@ size_t Reduce::getExportBufferSize()
     return _exportBuffer.size();
 }
 
-REDUCELIBRARY_API IReduce* _cdecl CreateObjectofMap()
+REDUCELIBRARY_API IReduce* _cdecl CreateObjectofReduce()
 {
     return new Reduce();
 }
