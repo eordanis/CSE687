@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;MAPDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,10 +145,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IMap.h" />
+    <ClInclude Include="IReduce.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Reduce.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Reduce.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
