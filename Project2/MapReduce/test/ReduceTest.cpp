@@ -7,84 +7,102 @@
 //  Authors:      Stephanie Eordanidis                           //
 //                JT Washington                                  //
 //                Syracuse University                            //
-//                sleordan.@syr.edu                              //
-//                jwashi05.@syr.edu                              //
+//                sleordan.@syreduce->edu                              //
+//                jwashi05.@syreduce->edu                              //
 ///////////////////////////////////////////////////////////////////
 
 #pragma once
 #include "Test.h"
+#include "../Header/IReduce.h"
 #include "../Header/FileManagement.h"
+
+typedef IReduce* (*CreateObjectofReduce)();
 
 TEST(ReduceTest, TestReduce)
 {
-	std::string _unitTestOutDir = "./unitTestOutDir";
+	std::string reduceDllPath("./ReduceDLL.dll");
+	std::wstring stemp = std::wstring(reduceDllPath.begin(), reduceDllPath.end());
 
-	//Test Exportz
-	boost::filesystem::create_directory(_unitTestOutDir);
+	LPCWSTR sw = stemp.c_str();
+	HINSTANCE dll_handle = LoadLibrary(stemp.c_str());
 
-	FileManagement fm;
+	if (dll_handle) {
+		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
+		if (pCreateObjectofReducePtr) {
 
-	std::string tmpFileName1 = _unitTestOutDir + "/testReduceFile1.txt";
-	fm.createFile(_unitTestOutDir, tmpFileName1);
+			std::string _unitTestOutDir = "./unitTestOutDir";
 
-	/* Inserted the keys into the map data type*/
-	/*Reduce r("testReduceFile1.txt", tmpFileName1);
-	r.insertKey("i");
-	r.insertKey("am");
-	r.insertKey("but");
-	r.insertKey("a");
-	r.insertKey("humble");
-	r.insertKey("developer");
-	r.insertKey("i");
-	r.insertKey("wish");
-	r.insertKey("to");
-	r.insertKey("continue");
-	r.insertKey("striving");
-	r.insertKey("for");
-	r.insertKey("success");
-	r.insertKey("success");
-	r.insertKey("is");
-	r.insertKey("important");
-	r.insertKey("for");
-	r.insertKey("developers");*/
+			//Test Exportz
+			boost::filesystem::create_directory(_unitTestOutDir);
 
-	/* Insert Data into testing file */
-	std::string fileContentsWrite = "";
-	fileContentsWrite.append("(a,1)\n");
-	fileContentsWrite.append("(am,1)\n");
-	fileContentsWrite.append("(but,1)\n");
-	fileContentsWrite.append("(continue,1)\n");
-	fileContentsWrite.append("(developer,1)\n");
-	fileContentsWrite.append("(developers,1)\n");
-	fileContentsWrite.append("(for,2)\n");
-	fileContentsWrite.append("(humble,1)\n");
-	fileContentsWrite.append("(i,2)\n");
-	fileContentsWrite.append("(important,1)\n");
-	fileContentsWrite.append("(is,1)\n");
-	fileContentsWrite.append("(for,1)\n");
-	fileContentsWrite.append("(striving,1)\n");
-	fileContentsWrite.append("(success,2)\n");
-	fileContentsWrite.append("(to,1)\n");
-	fileContentsWrite.append("(wish,1)\n");
+			FileManagement fm;
 
-	/* Write to file */
-	fm.writeToFile(tmpFileName1, fileContentsWrite);
+			std::string tmpFileName1 = _unitTestOutDir + "/testReduceFile1.txt";
+			fm.createFile(_unitTestOutDir, tmpFileName1);
 
-	//r.exportz(tmpFileName1, true);
+			/* Inserted the keys into the map data type*/
+			IReduce* reduce = pCreateObjectofReducePtr();
+			reduce->setOutputFileName("testReduceFile1.txt");
+			reduce->setTempFileName(tmpFileName1);
 
-	//r.purgeBuffer("testReduceFile1.dat");
+			reduce->insertKey("i");
+			reduce->insertKey("am");
+			reduce->insertKey("but");
+			reduce->insertKey("a");
+			reduce->insertKey("humble");
+			reduce->insertKey("developer");
+			reduce->insertKey("i");
+			reduce->insertKey("wish");
+			reduce->insertKey("to");
+			reduce->insertKey("continue");
+			reduce->insertKey("striving");
+			reduce->insertKey("for");
+			reduce->insertKey("success");
+			reduce->insertKey("success");
+			reduce->insertKey("is");
+			reduce->insertKey("important");
+			reduce->insertKey("for");
+			reduce->insertKey("developers");
 
-	std::string fileContentsRead = "";
-	std::ifstream input(tmpFileName1);
-	std::stringstream fileContentsReadStream;
+			/* Insert Data into testing file */
+			std::string fileContentsWrite = "";
+			fileContentsWrite.append("(a,1)\n");
+			fileContentsWrite.append("(am,1)\n");
+			fileContentsWrite.append("(but,1)\n");
+			fileContentsWrite.append("(continue,1)\n");
+			fileContentsWrite.append("(developer,1)\n");
+			fileContentsWrite.append("(developers,1)\n");
+			fileContentsWrite.append("(for,2)\n");
+			fileContentsWrite.append("(humble,1)\n");
+			fileContentsWrite.append("(i,2)\n");
+			fileContentsWrite.append("(important,1)\n");
+			fileContentsWrite.append("(is,1)\n");
+			fileContentsWrite.append("(for,1)\n");
+			fileContentsWrite.append("(striving,1)\n");
+			fileContentsWrite.append("(success,2)\n");
+			fileContentsWrite.append("(to,1)\n");
+			fileContentsWrite.append("(wish,1)\n");
 
-	while (input >> fileContentsReadStream.rdbuf()) {
-		fileContentsRead.append(fileContentsReadStream.str());
+			/* Write to file */
+			fm.writeToFile(tmpFileName1, fileContentsWrite);
+
+			reduce->exportz(tmpFileName1, true);
+
+			reduce->purgeBuffer("testReduceFile1.dat");
+
+			std::string fileContentsRead = "";
+			std::ifstream input(tmpFileName1);
+			std::stringstream fileContentsReadStream;
+
+			while (input >> fileContentsReadStream.rdbuf()) {
+				fileContentsRead.append(fileContentsReadStream.str());
+			}
+			fileContentsReadStream.clear();
+			input.close();
+
+			ASSERT_EQ(fileContentsWrite, fileContentsRead);
+
+			boost::filesystem::remove_all(_unitTestOutDir);
+		}
 	}
-	fileContentsReadStream.clear();
-	input.close();
-
-	ASSERT_EQ(fileContentsWrite, fileContentsRead);
-
-	boost::filesystem::remove_all(_unitTestOutDir);
 }
