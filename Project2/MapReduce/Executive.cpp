@@ -22,7 +22,7 @@
 
 int main(int argc, char* argv[])
 {
-	// New class instance that will handle MapReduc
+	// New class instance that will handle MapReduce
 	Workflow workflow;
 
 	// Determine if test flag was included and validate args

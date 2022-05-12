@@ -1,0 +1,26 @@
+#ifndef __IREDUCE_DLL_H_INCLUDED__
+#define __IREDUCE_DLL_H_INCLUDED__
+
+///////////////////////////////////////////////////////////////////
+//  IReduce.h    -    header file for IReduce                    //
+//                                                               //
+//  Language:     Visual C++ 2022, ver 17.1.3                    //
+//  Application:  MapReduce Project 2                            //
+//  Course:		  CSE687 SP22 - Object Oriented Design           //
+//  Authors:      Stephanie Eordanidis                           //
+//                JT Washington                                  //
+//                Syracuse University                            //
+//                {sleordan,jwashi05}@syr.edu                    //
+///////////////////////////////////////////////////////////////////
+
+#pragma once
+#include <string>
+class IReduce
+{
+public:
+    virtual ~IReduce() { ; }
+    virtual void setInputFileName(std::string) = 0;
+    virtual void setTempFileName(std::string) = 0;
+};
+
+#endif

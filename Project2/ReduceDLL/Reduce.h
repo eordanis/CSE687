@@ -27,46 +27,21 @@ class Reduce : public IReduce
 {
 public:
 
-	/*
-	* Default Constructor for Reduce
-	*/
 	Reduce();
 
-	/*
-	* Default Deconstructor for Reduce
-	*/
 	virtual ~Reduce();
 
-	/*
-	*
-	*/
 	std::string getReduceData(std::string);
 
-	/*
-	*
-	*/
 	void insertKey(std::string);
 
-	/*
-	* Purge the export buffer of any remaining values
-	* @param fileName to purge buffer for
-	*/
 	void purgeBuffer(std::string);
 
-	/*
-	* Return the current size of the export buffer
-	*/
 	size_t getExportBufferSize();
 
-	/*
-	*
-	*/
 	void exportz(std::string, bool);
 
-	/*
-	*
-	*/
-	void resetMap();
+	void setInputFileName(std::string);
 
 private:
 

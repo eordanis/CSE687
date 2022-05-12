@@ -71,10 +71,10 @@ void Reduce::exportz(std::string filename, bool purge)
     }
 }
 
-void Reduce::resetMap()
+/*void Reduce::resetMap()
 {
     reduceMap.clear();
-}
+}*/
 
 void Reduce::purgeBuffer(std::string fileName)
 {
@@ -84,6 +84,11 @@ void Reduce::purgeBuffer(std::string fileName)
 size_t Reduce::getExportBufferSize()
 {
     return _exportBuffer.size();
+}
+
+void Reduce::setInputFileName(std::string inputFileName)
+{
+    //_inputFileName1 = inputFileName;
 }
 
 REDUCELIBRARY_API IReduce* _cdecl CreateObjectofReduce()

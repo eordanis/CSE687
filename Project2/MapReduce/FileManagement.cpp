@@ -12,7 +12,6 @@
 
 #pragma once
 #include "./Header/FileManagement.h"
-#include "./Header/Reduce.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iomanip>
@@ -22,6 +21,7 @@
 #include <windows.h>
 
 typedef IMap* (*CreateObjectofMap)();
+typedef IReduce* (*CreateObjectofReduce)();
 
 FileManagement::FileManagement()
 {
@@ -177,25 +177,7 @@ void FileManagement::executeFileMapping()
 	if (dll_handle) {
 		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
 		if (pCreateObjectofMapPtr) {
-			/*
-			* //we should probably verify these functions exist. issue is, even though the function exists these checks fail
-			FARPROC func_addr;
-			func_addr = GetProcAddress(HMODULE(dll_handle), "map");
-			if (!func_addr) {
-				utils.throwException("FileManagement:executeFileMapping", "the map function not found in MapDLL.dll");
-				FreeLibrary(dll_handle);
-			}
-			func_addr = GetProcAddress(HMODULE(dll_handle), "setInputFileName");
-			if (!func_addr) {
-				utils.throwException("FileManagement:executeFileMapping", "The setInputFileName function not found in MapDLL.dll");
-				FreeLibrary(dll_handle);
-			}
-			func_addr = GetProcAddress(HMODULE(dll_handle), "setTempFileName");
-			if (!func_addr) {
-				utils.throwException("FileManagement:executeFileMapping", "The setTempFileName function not found in MapDLL.dll");
-				FreeLibrary(dll_handle);
-			}
-			*/
+
 			utils.logMessage("Executing File Mapping...\n");
 			for (boost::filesystem::path entry : _inputPaths) {
 				boost::filesystem::ifstream fileHandler(entry);
@@ -233,39 +215,54 @@ void FileManagement::executeFileMapping()
 void FileManagement::executeReduce()
 {
 	MapReduceUtils utils;
+	std::string reduceDllPath(_dllDir);
+	reduceDllPath.append("\\ReduceDLL.dll");
+	std::wstring soutput = std::wstring(reduceDllPath.begin(), reduceDllPath.end());
 
-	utils.logMessage("Executing File Reducing...\n");
-	for (boost::filesystem::path entry : _tempPaths) {
-		boost::filesystem::ifstream fileHandler(entry);
-		std::string line;
-		std::string key;
+	LPCWSTR sw = soutput.c_str();
+	HINSTANCE dll_handle = LoadLibrary(soutput.c_str());
 
-		//create output file for dat files, Reduce will occur
-		std::string fileName = entry.stem().string();
-		std::string outFileName = _outputDir;
-		outFileName.append("\\").append(fileName).append(_txt);
-		createFile(_outputDir, outFileName);
+	if (dll_handle) {
+		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
+		if (pCreateObjectofReducePtr) {
 
-		Reduce r(fileName, outFileName);
-		r.resetMap();
-		utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
+			utils.logMessage("Executing File Reducing...\n");
+			for (boost::filesystem::path entry : _tempPaths) {
+				boost::filesystem::ifstream fileHandler(entry);
+				std::string line;
+				std::string key;
 
-		while (getline(fileHandler, line)) {
-			key = r.getReduceData(line);
+				//create output file for dat files, Reduce will occur
+				std::string fileName = entry.stem().string();
+				std::string outFileName = _outputDir;
+				outFileName.append("\\").append(fileName).append(_txt);
+				createFile(_outputDir, outFileName);
 
-			if (!key.empty()) {
-				r.insertKey(key);
+				//IReduce* reduce = pCreateObjectofReducePtr();
+				/*reduce->setTempFileName(fileName);
+				reduce->setInputFileName(outFileName);
+
+				utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
+
+				while (getline(fileHandler, line)) {
+					key = reduce->getReduceData(line);
+
+					if (!key.empty()) {
+						reduce->insertKey(key);
+					}
+				}
+
+				reduce->exportz(fileName, false);
+
+				//ensure we check the buffer to make sure it does not still have content
+				if (reduce->getExportBufferSize() > 0) {
+					reduce->purgeBuffer(fileName);
+				}
+
+				fileHandler.close();*/
+
 			}
 		}
-
-		r.exportz(fileName, false);
-
-		//ensure we check the buffer to make sure it does not still have content
-		if (r.getExportBufferSize() > 0) {
-			r.purgeBuffer(fileName);
-		}
-
-		fileHandler.close();
 	}
 }
 

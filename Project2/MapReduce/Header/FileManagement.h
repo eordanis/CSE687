@@ -17,6 +17,7 @@
 #include <boost/filesystem.hpp>
 #include "MapReduceUtils.h"
 #include "./IMap.h"
+#include "./IReduce.h"
 
 class FileManagement
 {

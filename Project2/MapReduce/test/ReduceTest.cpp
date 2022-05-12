@@ -13,7 +13,6 @@
 
 #pragma once
 #include "Test.h"
-#include "../Header/Reduce.h"
 #include "../Header/FileManagement.h"
 
 TEST(ReduceTest, TestReduce)
@@ -29,7 +28,7 @@ TEST(ReduceTest, TestReduce)
 	fm.createFile(_unitTestOutDir, tmpFileName1);
 
 	/* Inserted the keys into the map data type*/
-	Reduce r("testReduceFile1.txt", tmpFileName1);
+	/*Reduce r("testReduceFile1.txt", tmpFileName1);
 	r.insertKey("i");
 	r.insertKey("am");
 	r.insertKey("but");
@@ -47,7 +46,7 @@ TEST(ReduceTest, TestReduce)
 	r.insertKey("is");
 	r.insertKey("important");
 	r.insertKey("for");
-	r.insertKey("developers");
+	r.insertKey("developers");*/
 
 	/* Insert Data into testing file */
 	std::string fileContentsWrite = "";
@@ -71,9 +70,9 @@ TEST(ReduceTest, TestReduce)
 	/* Write to file */
 	fm.writeToFile(tmpFileName1, fileContentsWrite);
 
-	r.exportz(tmpFileName1, true);
+	//r.exportz(tmpFileName1, true);
 
-	r.purgeBuffer("testReduceFile1.dat");
+	//r.purgeBuffer("testReduceFile1.dat");
 
 	std::string fileContentsRead = "";
 	std::ifstream input(tmpFileName1);
