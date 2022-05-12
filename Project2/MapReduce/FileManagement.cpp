@@ -169,11 +169,8 @@ void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType direct
 void FileManagement::executeFileMapping()
 {
 	MapReduceUtils utils;
-	std::string mapDllPath(_dllDir);
-	mapDllPath.append("\\MapDLL.dll");
-	std::wstring stemp = std::wstring(mapDllPath.begin(), mapDllPath.end());
-	LPCWSTR sw = stemp.c_str();
-	HINSTANCE dll_handle = LoadLibrary(stemp.c_str());
+	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\MapDLL.dll");
+
 	if (dll_handle) {
 		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
 		if (pCreateObjectofMapPtr) {
@@ -214,13 +211,8 @@ void FileManagement::executeFileMapping()
 
 void FileManagement::executeReduce()
 {
+	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\ReduceDLL.dll");
 	MapReduceUtils utils;
-	std::string reduceDllPath(_dllDir);
-	reduceDllPath.append("\\ReduceDLL.dll");
-	std::wstring soutput = std::wstring(reduceDllPath.begin(), reduceDllPath.end());
-
-	LPCWSTR sw = soutput.c_str();
-	HINSTANCE dll_handle = LoadLibrary(soutput.c_str());
 
 	if (dll_handle) {
 		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
@@ -290,4 +282,14 @@ void FileManagement::removeFile(std::string filePath)
 	if (boost::filesystem::exists(filePath)) {
 		boost::filesystem::remove(filePath);
 	}
+}
+
+HINSTANCE FileManagement::getDLLInformation(std::string _dllDir, std::string dllName) {
+
+	std::string dllPath(_dllDir);
+	dllPath.append(dllName);
+	std::wstring soutput = std::wstring(dllPath.begin(), dllPath.end());
+
+	LPCWSTR sw = soutput.c_str();
+	return LoadLibrary(soutput.c_str());
 }

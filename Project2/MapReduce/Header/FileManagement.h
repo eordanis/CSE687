@@ -71,6 +71,11 @@ public:
 	void executeReduce();
 
 	/*
+	*
+	*/
+	HINSTANCE getDLLInformation(std::string, std::string);
+
+	/*
 	* Create a file for passed file name if not already exists, if exists remove file then create fresh
 	* @param string directory name
 	* @param string filename
