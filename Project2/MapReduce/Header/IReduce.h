@@ -27,6 +27,9 @@ public:
     virtual size_t getExportBufferSize() = 0;
     virtual void purgeBuffer(std::string) = 0;
     virtual void resetMap() = 0;
+
+    std::string _tempFileName = "";
+    std::string _outputFileName = "";
 };
 
 #endif

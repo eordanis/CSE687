@@ -30,7 +30,8 @@ std::string Reduce::getReduceData(std::string entry)
 {
     entry.erase(remove(entry.begin(), entry.end(), '('), entry.end());
     entry.erase(remove(entry.begin(), entry.end(), ')'), entry.end());
-    entry.erase(remove(entry.begin(), entry.end(), ',1'), entry.end());
+    entry.erase(remove(entry.begin(), entry.end(), ','), entry.end());
+    entry.erase(remove(entry.begin(), entry.end(), '1'), entry.end());
 
     return entry;
 }
@@ -50,7 +51,7 @@ void Reduce::insertKey(std::string key)
 
 }
 
-void Reduce::exportz(std::string filename, bool purge)
+void Reduce::exportz(std::string filepath, bool purge)
 {
     std::map<std::string, int>::iterator iterate;
 
@@ -64,7 +65,13 @@ void Reduce::exportz(std::string filename, bool purge)
         if (_exportBuffer.size() == _exportBufferMaxSize || purge) {
             std::stringstream result;
             copy(_exportBuffer.begin(), _exportBuffer.end(), std::ostream_iterator<std::string>(result, ""));
-            //fm.writeToFile(_outFileName, result.str());
+            std::string resultStr = result.str();
+
+            std::fstream fs;
+            fs.open(filepath + ".txt", std::fstream::in | std::fstream::out | std::fstream::app);
+            fs << resultStr;
+            fs.close();
+
             _exportBuffer.clear();
             result.clear();
         }

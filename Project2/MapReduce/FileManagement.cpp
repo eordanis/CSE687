@@ -218,42 +218,48 @@ void FileManagement::executeReduce()
 		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
 		if (pCreateObjectofReducePtr) {
 
-			utils.logMessage("Executing File Reducing...\n");
-			for (boost::filesystem::path entry : _tempPaths) {
-				boost::filesystem::ifstream fileHandler(entry);
-				std::string line;
-				std::string key;
+			try {
+				utils.logMessage("Executing File Reducing...\n");
+				for (boost::filesystem::path entry : _tempPaths) {
+					boost::filesystem::ifstream fileHandler(entry);
+					std::string line;
+					std::string key;
 
-				//create output file for dat files, Reduce will occur
-				std::string fileName = entry.stem().string();
-				std::string outFileName = _outputDir;
-				outFileName.append("\\").append(fileName).append(_txt);
-				createFile(_outputDir, outFileName);
+					//create output file for dat files, Reduce will occur
+					std::string fileName = entry.stem().string();
+					std::string outFileName = _outputDir;
+					outFileName.append("\\").append(fileName).append(_txt);
+					createFile(_outputDir, outFileName);
 
-				IReduce* reduce = pCreateObjectofReducePtr();
-				reduce->setTempFileName(fileName);
-				reduce->setOutputFileName(outFileName);
-				
-				utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
+					IReduce* reduce = pCreateObjectofReducePtr();
+					reduce->setTempFileName(fileName);
+					reduce->setOutputFileName(outFileName);
 
-				reduce->resetMap();
+					utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
 
-				while (getline(fileHandler, line)) {
-					key = reduce->getReduceData(line);
+					reduce->resetMap();
 
-					if (!key.empty()) {
-						reduce->insertKey(key);
+					while (getline(fileHandler, line)) {
+						key = reduce->getReduceData(line);
+
+						if (!key.empty()) {
+							reduce->insertKey(key);
+						}
 					}
-				}
-				
-				reduce->exportz(fileName, false);
 
-				//ensure we check the buffer to make sure it does not still have content
-				if (reduce->getExportBufferSize() > 0) {
-					reduce->purgeBuffer(fileName);
+					reduce->exportz(_outputDir + "/" + fileName, false);
+
+					//ensure we check the buffer to make sure it does not still have content
+					if (reduce->getExportBufferSize() > 0) {
+						reduce->purgeBuffer(_outputDir + "/" + fileName);
+					}
+
+					fileHandler.close();
+
 				}
 
-				fileHandler.close();
+			}
+			catch (std::string ex) {
 
 			}
 		}
