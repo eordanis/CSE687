@@ -40,6 +40,12 @@ public:
 	* @param string directory path
 	*/
 	void setDirectory(MapReduceUtils::DirectoryType, const std::string);
+	
+	/*
+	* Set thread count to inidcated value if valid, else keep default of 1
+	* @param string representing thread count between 1 & 6
+	*/
+	void setThreadCount(const std::string);
 
 	/*
 	* Return the indicated directory type path
@@ -54,6 +60,11 @@ public:
 	* @return size_t size of directory path
 	*/
 	size_t getDirectoryPathsSize(MapReduceUtils::DirectoryType);
+
+	/*
+	* Partition files into even splits per thread count for map/reduce usage
+	*/
+	void partitionFiles(MapReduceUtils::DirectoryType);
 
 	/*
 	* Retrieve all valid text files from indicated directory type's path
@@ -108,6 +119,23 @@ private:
 	* Input, output, and temp directory path
 	*/
 	std::string _inputDir, _outputDir, _tempDir, _dllDir;
+
+	/*
+	* Thread count indicator, defaults to 1
+	*/
+	int _threadCount = 1;
+
+	/*
+	* Partition arrays of input/temp vector file paths
+	*/
+	std::vector<boost::filesystem::path> _inputPartition[1];
+
+	std::vector<boost::filesystem::path> _tempPartition[1];
+
+	/*
+	* Vectors for input/temp file paths
+	*/
+	std::vector<boost::filesystem::path> _inputPaths, _tempPaths;
 
 	/*
 	* Extension supported

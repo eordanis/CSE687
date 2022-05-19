@@ -18,6 +18,7 @@
 #include <sstream>
 #include <time.h>
 #include <stdio.h>
+#include <iostream>
 #include <windows.h>
 
 typedef IMap* (*CreateObjectofMap)();
@@ -48,6 +49,24 @@ void FileManagement::setDirectory(MapReduceUtils::DirectoryType directoryType, c
 		}
 
 	}
+}
+
+void FileManagement::setThreadCount(const std::string threadCount)
+{
+	MapReduceUtils utils;
+	for (char const& c : threadCount) {
+		if (std::isdigit(c) == 0) {
+			utils.logMessage("Thread count provided \"" + threadCount + "\" does not contain all digits. Keeping default of 1 thread.");
+			return;
+		}
+	}
+	int tc = std::stoi(threadCount);
+		if (tc > 1 && tc < 7) {
+			_threadCount = tc;
+		}
+		else {
+			utils.logMessage("Thread count provided \"" + threadCount + "\" must be greater than 1 and less than 7. Keeping default of 1 thread.");
+		}
 }
 
 std::string FileManagement::getDirectory(MapReduceUtils::DirectoryType directoryType) {
@@ -122,6 +141,41 @@ size_t FileManagement::getDirectoryPathsSize(MapReduceUtils::DirectoryType direc
 	}
 }
 
+void FileManagement::partitionFiles(MapReduceUtils::DirectoryType directoryType)
+{
+
+	/*
+	* we need to figure out how we want to partition these.Depending on how this is done determines
+	* how we rework the map/reduce calls. in theory we should be to tweak and thread the function calls themselves, 
+	* just passing the thread # as a param and retrievingn files to map/reduce based off that
+	* 
+	* Ex.
+	*  
+		thread t1(executeFileMapping, 1);
+		thread t2(executeFileMapping, 2);
+		thread t3(executeFileMapping, 3);
+
+		t1.join();
+		t2.join();
+		t3.join();
+
+		//when done, can proceed to reduce functionallity
+	*/ 
+	MapReduceUtils utils;
+	size_t pathSize = 0;
+	if (MapReduceUtils::DirectoryType::input == directoryType) {
+		pathSize = _inputPaths.size();
+
+	}
+	else if (MapReduceUtils::DirectoryType::temp == directoryType) {
+		pathSize = _tempPaths.size();
+	}
+	else {
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
+	}
+
+}
+
 void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType directoryType)
 {
 	MapReduceUtils utils;
@@ -174,33 +228,33 @@ void FileManagement::executeFileMapping()
 	if (dll_handle) {
 		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
 		if (pCreateObjectofMapPtr) {
+			try {
+				utils.logMessage("Executing File Mapping...\n");
+				for (boost::filesystem::path entry : _inputPaths) {
+					boost::filesystem::ifstream fileHandler(entry);
+					std::string line;
+					//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
+					std::string fileName = entry.stem().string();
+					std::string tmpFileName = _tempDir;
+					tmpFileName.append("\\").append(fileName).append(_dat);
+					createFile(_tempDir, tmpFileName);
+					IMap* map = pCreateObjectofMapPtr();
+					map->setInputFileName(fileName);
+					map->setTempFileName(tmpFileName);
+					utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
+					while (getline(fileHandler, line)) {
+						//pass file name and line to >> Map.map(filename, line)
+						map->map(fileName, line);
 
-			utils.logMessage("Executing File Mapping...\n");
-			for (boost::filesystem::path entry : _inputPaths) {
-				boost::filesystem::ifstream fileHandler(entry);
-				std::string line;
-				//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-				std::string fileName = entry.stem().string();
-				std::string tmpFileName = _tempDir;
-				tmpFileName.append("\\").append(fileName).append(_dat);
-				createFile(_tempDir, tmpFileName);
-				IMap* map = pCreateObjectofMapPtr();
-				map->setInputFileName(fileName);
-				map->setTempFileName(tmpFileName);
-				utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
-				while (getline(fileHandler, line)) {
-					//pass file name and line to >> Map.map(filename, line)
-					map->map(fileName, line);
-
+					}
+					fileHandler.close();
+					delete map;
 				}
-				fileHandler.close();
-				delete map;
-			}
 
-		}
-		else {
-			FreeLibrary(dll_handle);
-			utils.throwException("FileManagement:executeFileMapping", "Map constructor not found in MapDLL.dll");
+			}
+			catch (std::string ex) {
+				FreeLibrary(dll_handle);
+			}
 		}
 		FreeLibrary(dll_handle);
 	}

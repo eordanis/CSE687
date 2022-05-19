@@ -32,16 +32,27 @@ void Workflow::setDirectory(MapReduceUtils::DirectoryType directorytype, const s
 	fm.setDirectory(directorytype, directoryPath);
 }
 
+void Workflow::setThreadCount(const std::string threadCount)
+{
+	fm.setThreadCount(threadCount);
+}
+
 void Workflow::execute_workflow()
 {
 	// get all valid files from input directory
 	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
+
+	//partition the input files for map usage 
+	fm.partitionFiles(MapReduceUtils::DirectoryType::input);
 
 	// start mapping of files found
 	fm.executeFileMapping();
 
 	// get all valid files from temp directory
 	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::temp);
+
+	//partition the temp files for reduce usage 
+	fm.partitionFiles(MapReduceUtils::DirectoryType::temp);
 
 	// start reduce program
 	fm.executeReduce();

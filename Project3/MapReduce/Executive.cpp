@@ -64,6 +64,11 @@ int main(int argc, char* argv[])
 				{
 					workflow.setDirectory(MapReduceUtils::DirectoryType::dll, argv[counter + 1]);
 				}
+				if (strcmp(argv[counter], "-threads") == 0)
+				{
+						workflow.setThreadCount(argv[counter + 1]);
+					
+				}
 			}
 		}		
 
@@ -91,6 +96,7 @@ void usageStatement()
 	std::cout << "\t-dll\t\t<dll path>\t\t: This is path to the mapDLL.dll and reduceDLL file to use with program." << std::endl << std::endl;
 	std::cout << "Optional Arguments:" << std::endl;
 	std::cout << "\t-rut\t\t\t\t\t: If this flag is present, tests will be run instead of application." << std::endl;
+	std::cout << "\t-threads\t\t\t\t\t: If this flag is present, if valid value is passed, thread count will be set to indicated value. Else default of 1 thread is set." << std::endl;
 	std::cout << "\t-help\t\t\t\t\t: If this flag is present, usage statement will display and program will exit." << std::endl;
 	std::cout << std::endl;
 }
@@ -119,6 +125,10 @@ bool validateArgs(int argc, char* argv[]) {
 		usageStatement();
 		// end the program
 		exitProgram();
+	}
+
+	if (checkFlag("-thread", argc, argv)) {
+		total = total + 2;
 	}
 
 	if (argc < total) {
