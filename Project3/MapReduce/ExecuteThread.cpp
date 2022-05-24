@@ -12,6 +12,7 @@
 
 #pragma once
 #include "./Header/ExecuteThread.h"
+#include "./Header/Threading.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iomanip>
@@ -25,14 +26,15 @@
 void ExecuteThread::operator()(HINSTANCE dll_handle, std::string _tempDir, std::vector<boost::filesystem::path> _inputPaths)
 {
 	MapReduceUtils utils;
+	Threading thread;
 
 	CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
 	if (pCreateObjectofMapPtr) {
 		try {
 			utils.logMessage("Executing File Mapping...\n");
-			ExecuteThread thread;
 			for (boost::filesystem::path entry : _inputPaths) {
 
+				std::thread createThread(thread);
 				boost::filesystem::ifstream fileHandler(entry);
 				std::string line;
 
@@ -58,6 +60,7 @@ void ExecuteThread::operator()(HINSTANCE dll_handle, std::string _tempDir, std::
 
 		}
 		catch (std::string ex) {
+			utils.logMessage(ex + "\n");
 			FreeLibrary(dll_handle);
 		}
 	}
