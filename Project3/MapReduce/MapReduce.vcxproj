@@ -157,9 +157,11 @@
     <ClCompile Include="Executive.cpp" />
     <ClCompile Include="Test\MapTest.cpp" />
     <ClCompile Include="Test\ReduceTest.cpp" />
+    <ClCompile Include="ExecuteThread.cpp" />
     <ClCompile Include="Workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\ExecuteThread.h" />
     <ClInclude Include="Header\Executive.h" />
     <ClInclude Include="Header\FileManagement.h" />
     <ClInclude Include="Header\IMap.h" />

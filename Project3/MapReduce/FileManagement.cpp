@@ -12,6 +12,7 @@
 
 #pragma once
 #include "./Header/FileManagement.h"
+#include "./Header/ExecuteThread.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iomanip>
@@ -20,6 +21,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <windows.h>
+#include <thread>
 
 typedef IMap* (*CreateObjectofMap)();
 typedef IReduce* (*CreateObjectofReduce)();
@@ -223,40 +225,14 @@ void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType direct
 void FileManagement::executeFileMapping()
 {
 	MapReduceUtils utils;
+	ExecuteThread thread;
+
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\MapDLL.dll");
 
 	if (dll_handle) {
-		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
-		if (pCreateObjectofMapPtr) {
-			try {
-				utils.logMessage("Executing File Mapping...\n");
-				for (boost::filesystem::path entry : _inputPaths) {
-					boost::filesystem::ifstream fileHandler(entry);
-					std::string line;
-					//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-					std::string fileName = entry.stem().string();
-					std::string tmpFileName = _tempDir;
-					tmpFileName.append("\\").append(fileName).append(_dat);
-					createFile(_tempDir, tmpFileName);
-					IMap* map = pCreateObjectofMapPtr();
-					map->setInputFileName(fileName);
-					map->setTempFileName(tmpFileName);
-					utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
-					while (getline(fileHandler, line)) {
-						//pass file name and line to >> Map.map(filename, line)
-						map->map(fileName, line);
 
-					}
-					fileHandler.close();
-					delete map;
-				}
+		std::thread ExecuteThread(thread, dll_handle, _tempDir, _inputPaths);
 
-			}
-			catch (std::string ex) {
-				FreeLibrary(dll_handle);
-			}
-		}
-		FreeLibrary(dll_handle);
 	}
 	else {
 		utils.throwException("FileManagement:executeFileMapping", "Cannot load MapDLL.dll");

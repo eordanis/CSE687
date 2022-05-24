@@ -106,6 +106,12 @@ public:
 	*/
 	void removeFile(std::string tempFileName);
 
+	/*
+	* Create file for passed file name if exists
+	* @param string filename
+	*/
+	void createMapFile(boost::filesystem::path);
+
 private: 
 	
 	/*
@@ -146,11 +152,6 @@ private:
 	* Extension supported
 	*/
 	std::string _dat = ".dat";
-
-	/*
-	* input & temp file paths
-	*/
-	std::vector<boost::filesystem::path> _inputPaths, _tempPaths;
 };
 
 #endif
