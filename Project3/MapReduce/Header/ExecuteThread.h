@@ -19,14 +19,10 @@
 #include "./IMap.h"
 #include "./IReduce.h"
 
-typedef IMap* (*CreateObjectofMap)();
-
 class ExecuteThread {
 
 public:
     void operator()(HINSTANCE, std::string, std::vector<boost::filesystem::path>);
-    void createFile(std::string, std::string);
-    void removeFile(std::string);
 };
 
 #endif
