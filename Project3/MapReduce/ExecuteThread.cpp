@@ -34,7 +34,7 @@ void ExecuteThread::operator()(HINSTANCE dll_handle, std::string _tempDir, std::
 			utils.logMessage("Executing File Mapping...\n");
 			for (boost::filesystem::path entry : _inputPaths) {
 
-				std::thread createThread(thread);
+				//std::thread createThread(thread);
 				boost::filesystem::ifstream fileHandler(entry);
 				std::string line;
 

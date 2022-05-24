@@ -232,6 +232,7 @@ void FileManagement::executeFileMapping()
 	if (dll_handle) {
 
 		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths);
+		mainThread.join();
 
 	}
 	else {
