@@ -54,7 +54,7 @@ Optional Arguments:
 	
 ### Phase 3: 
 The program runs as as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files. This phase of the application takes in the map and reduce dll files and utilizes their functions.
-The map and reduce functionallity however will run on multiple threads.
+The map and reduce functionallity however will run on multiple threads. Two new classes were introduced to handle thread capture/creation/handling.
 
 There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduceDLL.dll path.
  
@@ -85,6 +85,10 @@ This section describes the application structure.
 	 MapReduceUtils     - Util class to store common util functions.
 	 
 	 FileManagement     - Handles all filesystem related functionallity.
+	 
+	 ExecuteThread		- Handles map/reduce thread routing & creation.
+	 
+	 Threading			- Handles map/reduce specific logic per thread.
 	 
 ### DLLs
 	 
