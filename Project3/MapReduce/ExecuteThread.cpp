@@ -23,26 +23,45 @@
 #include <windows.h>
 #include <thread>
 
-void ExecuteThread::operator()(HINSTANCE dll_handle, std::string _tempDir, std::vector<boost::filesystem::path> _inputPaths)
+void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vector<boost::filesystem::path> filePaths, MapReduceUtils::OperationType operationType)
 {
-	MapReduceUtils utils;
-	Threading thread;
-
-	CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
-	if (pCreateObjectofMapPtr) {
-		try {
-			utils.logMessage("Executing File Mapping...\n");
-			for (boost::filesystem::path entry : _inputPaths) {
-
-				std::thread createThread(thread, entry, _tempDir, pCreateObjectofMapPtr);
-				createThread.join();
+	
+	if (MapReduceUtils::OperationType::map == operationType) {
+		Threading thread;
+		MapReduceUtils utils;
+		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
+		if (pCreateObjectofMapPtr) {
+			try {
+				utils.logMessage("Executing File Mapping...\n");
+				for (boost::filesystem::path entry : filePaths) {
+					std::thread createThread(thread, entry, dir, pCreateObjectofMapPtr);
+					createThread.join();
+				}
 			}
-
-		}
-		catch (std::string ex) {
-			utils.logMessage(ex + "\n");
-			FreeLibrary(dll_handle);
+			catch (std::string ex) {
+				utils.logMessage(ex + "\n");
+				FreeLibrary(dll_handle);
+			}
 		}
 	}
+	else if (MapReduceUtils::OperationType::reduce == operationType) {
+		Threading thread;
+		MapReduceUtils utils;
+		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
+		if (pCreateObjectofReducePtr) {
+			try {
+				utils.logMessage("Executing File Reducing...\n");
+				for (boost::filesystem::path entry : filePaths) {
+					std::thread createThread(thread, entry, dir, pCreateObjectofReducePtr);
+					createThread.join();
+				}
+			}
+			catch (std::string ex) {
+				utils.logMessage(ex + "\n");
+				FreeLibrary(dll_handle);
+			}
+		}
+	}
+	
 	FreeLibrary(dll_handle);
 }

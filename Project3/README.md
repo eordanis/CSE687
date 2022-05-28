@@ -50,8 +50,6 @@ Optional Arguments:
 
 	 -rut						    If this flag is present, tests will be run instead of application.
 	 
-	 -threads	<number of threds)  If this flag is present, if valid value is passed, thread count will be set to indicated value. Else default of 1 thread is set.
-	 
 	 -help							If this flag is present, usage statement is shown to user and application exits
 	
 ### Phase 3: 

@@ -62,11 +62,6 @@ public:
 	size_t getDirectoryPathsSize(MapReduceUtils::DirectoryType);
 
 	/*
-	* Partition files into even splits per thread count for map/reduce usage
-	*/
-	void partitionFiles(MapReduceUtils::DirectoryType);
-
-	/*
 	* Retrieve all valid text files from indicated directory type's path
 	*/
 	void retrieveDirectoryFiles(MapReduceUtils::DirectoryType);
@@ -106,12 +101,6 @@ public:
 	*/
 	void removeFile(std::string tempFileName);
 
-	/*
-	* Create file for passed file name if exists
-	* @param string filename
-	*/
-	void createMapFile(boost::filesystem::path);
-
 private: 
 	
 	/*
@@ -132,13 +121,6 @@ private:
 	int _threadCount = 1;
 
 	/*
-	* Partition arrays of input/temp vector file paths
-	*/
-	std::vector<boost::filesystem::path> _inputPartition[1];
-
-	std::vector<boost::filesystem::path> _tempPartition[1];
-
-	/*
 	* Vectors for input/temp file paths
 	*/
 	std::vector<boost::filesystem::path> _inputPaths, _tempPaths;
@@ -146,7 +128,7 @@ private:
 	/*
 	* Extension supported
 	*/
-	std::string _txt=".txt";
+	std::string _txt = ".txt";
 
 	/*
 	* Extension supported

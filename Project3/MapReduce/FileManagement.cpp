@@ -143,41 +143,6 @@ size_t FileManagement::getDirectoryPathsSize(MapReduceUtils::DirectoryType direc
 	}
 }
 
-void FileManagement::partitionFiles(MapReduceUtils::DirectoryType directoryType)
-{
-
-	/*
-	* we need to figure out how we want to partition these.Depending on how this is done determines
-	* how we rework the map/reduce calls. in theory we should be to tweak and thread the function calls themselves, 
-	* just passing the thread # as a param and retrievingn files to map/reduce based off that
-	* 
-	* Ex.
-	*  
-		thread t1(executeFileMapping, 1);
-		thread t2(executeFileMapping, 2);
-		thread t3(executeFileMapping, 3);
-
-		t1.join();
-		t2.join();
-		t3.join();
-
-		//when done, can proceed to reduce functionallity
-	*/ 
-	MapReduceUtils utils;
-	size_t pathSize = 0;
-	if (MapReduceUtils::DirectoryType::input == directoryType) {
-		pathSize = _inputPaths.size();
-
-	}
-	else if (MapReduceUtils::DirectoryType::temp == directoryType) {
-		pathSize = _tempPaths.size();
-	}
-	else {
-		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
-	}
-
-}
-
 void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType directoryType)
 {
 	MapReduceUtils utils;
@@ -230,8 +195,8 @@ void FileManagement::executeFileMapping()
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\MapDLL.dll");
 
 	if (dll_handle) {
-
-		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths);
+		 
+		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::map);
 		mainThread.join();
 
 	}
@@ -242,58 +207,17 @@ void FileManagement::executeFileMapping()
 
 void FileManagement::executeReduce()
 {
-	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\ReduceDLL.dll");
+	
 	MapReduceUtils utils;
+	ExecuteThread thread;
+	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\ReduceDLL.dll");
 
 	if (dll_handle) {
-		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
-		if (pCreateObjectofReducePtr) {
-
-			try {
-				utils.logMessage("Executing File Reducing...\n");
-				for (boost::filesystem::path entry : _tempPaths) {
-					boost::filesystem::ifstream fileHandler(entry);
-					std::string line;
-					std::string key;
-
-					//create output file for dat files, Reduce will occur
-					std::string fileName = entry.stem().string();
-					std::string outFileName = _outputDir;
-					outFileName.append("\\").append(fileName).append(_txt);
-					createFile(_outputDir, outFileName);
-
-					IReduce* reduce = pCreateObjectofReducePtr();
-					reduce->setTempFileName(fileName);
-					reduce->setOutputFileName(outFileName);
-
-					utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
-
-					reduce->resetMap();
-
-					while (getline(fileHandler, line)) {
-						key = reduce->getReduceData(line);
-
-						if (!key.empty()) {
-							reduce->insertKey(key);
-						}
-					}
-
-					reduce->exportz(_outputDir + "/" + fileName, false);
-
-					//ensure we check the buffer to make sure it does not still have content
-					if (reduce->getExportBufferSize() > 0) {
-						reduce->purgeBuffer(_outputDir + "/" + fileName);
-					}
-
-					fileHandler.close();
-
-				}
-
-			}
-			catch (std::string ex) {
-
-			}
-		}
+		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::reduce);
+		mainThread.join();
+	}
+	else {
+		utils.throwException("FileManagement:executeReducec", "Cannot load ReduceDLL.dll");
 	}
 }
 

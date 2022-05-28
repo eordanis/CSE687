@@ -52,6 +52,15 @@ public:
 		temp,
 		dll,
 	};
+
+	/*
+	* Enumeration object to determine operation type to work on
+	*/
+	const enum OperationType
+	{
+		map,
+		reduce
+	};
 };
 
 #endif

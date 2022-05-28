@@ -13,7 +13,7 @@
 #pragma once
 #include "Header/Threading.h"
 
-void Threading::operator()(boost::filesystem::path entry, std::string _tempDir, CreateObjectofMap pCreateObjectofMapPtr)
+void Threading::operator()(boost::filesystem::path entry, std::string tempDir, CreateObjectofMap pCreateObjectofMapPtr)
 {
 	boost::filesystem::ifstream fileHandler(entry);
 	std::string line;
@@ -21,10 +21,10 @@ void Threading::operator()(boost::filesystem::path entry, std::string _tempDir, 
 
 	//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
 	std::string fileName = entry.stem().string();
-	std::string tmpFileName = _tempDir;
+	std::string tmpFileName = tempDir;
 	tmpFileName.append("\\").append(fileName).append(".dat");
 
-	createFile(_tempDir, tmpFileName);
+	createFile(tempDir, tmpFileName);
 
 	IMap* map = pCreateObjectofMapPtr();
 	map->setInputFileName(fileName);
@@ -37,6 +37,45 @@ void Threading::operator()(boost::filesystem::path entry, std::string _tempDir, 
 	}
 	fileHandler.close();
 	delete map;
+}
+
+void Threading::operator()(boost::filesystem::path entry, std::string outDir, CreateObjectofReduce pCreateObjectofReducePtr)
+{
+	MapReduceUtils utils;
+	boost::filesystem::ifstream fileHandler(entry);
+	std::string line;
+	std::string key;
+
+	//create output file for dat files, Reduce will occur
+	std::string fileName = entry.stem().string();
+	std::string outFileName = outDir;
+	outFileName.append("\\").append(fileName).append(".txt");
+	createFile(outDir, outFileName);
+
+	IReduce* reduce = pCreateObjectofReducePtr();
+	reduce->setTempFileName(fileName);
+	reduce->setOutputFileName(outFileName);
+
+	utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
+
+	reduce->resetMap();
+
+	while (getline(fileHandler, line)) {
+		key = reduce->getReduceData(line);
+
+		if (!key.empty()) {
+			reduce->insertKey(key);
+		}
+	}
+
+	reduce->exportz(outDir + "/" + fileName, false);
+
+	//ensure we check the buffer to make sure it does not still have content
+	if (reduce->getExportBufferSize() > 0) {
+		reduce->purgeBuffer(outDir + "/" + fileName);
+	}
+
+	fileHandler.close();
 }
 
 void Threading::createFile(std::string directory, std::string filePath)
