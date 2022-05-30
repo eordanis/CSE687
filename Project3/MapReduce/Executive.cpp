@@ -64,8 +64,15 @@ int main(int argc, char* argv[])
 				{
 					workflow.setDirectory(MapReduceUtils::DirectoryType::dll, argv[counter + 1]);
 				}
+				if (strcmp(argv[counter], "-threads") == 0)
+				{
+					workflow.setDirectory(MapReduceUtils::DirectoryType::threads, argv[counter + 1]);
+				}
 			}
-		}		
+		}	
+
+		//validate thread count
+		workflow.setThreadCount();
 
 		//start map reduce workflow
 		workflow.execute_workflow();
@@ -107,7 +114,7 @@ void exitProgram() {
 bool validateArgs(int argc, char* argv[]) {
 
 	MapReduceUtils utils;
-	int total = 9;
+	int total = 11;
 	bool runUnitTest = false;
 
 	if (checkFlag("-rut", argc, argv)) {
@@ -143,6 +150,10 @@ bool validateArgs(int argc, char* argv[]) {
 
 	if (!checkFlag("-dll", argc, argv)) {
 		utils.throwException("Executive:validateArgs", "-dll parameter cannot be found. Please verify arguments and try again");
+	}
+
+	if (!checkFlag("-threads", argc, argv)) {
+		utils.throwException("Executive:validateArgs", "-threads parameter cannot be found. Please verify arguments and try again");
 	}
 
 	return false;

@@ -32,9 +32,9 @@ void Workflow::setDirectory(MapReduceUtils::DirectoryType directorytype, const s
 	fm.setDirectory(directorytype, directoryPath);
 }
 
-void Workflow::setThreadCount(const std::string threadCount)
+void Workflow::setThreadCount()
 {
-	fm.setThreadCount(threadCount);
+	fm.setThreadCount();
 }
 
 void Workflow::execute_workflow()

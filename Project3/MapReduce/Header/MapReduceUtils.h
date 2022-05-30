@@ -51,6 +51,7 @@ public:
 		output,
 		temp,
 		dll,
+		threads
 	};
 
 	/*

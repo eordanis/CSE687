@@ -45,7 +45,7 @@ public:
 	* Set thread count to inidcated value if valid, else keep default of 1
 	* @param string representing thread count between 1 & 6
 	*/
-	void setThreadCount(const std::string);
+	void setThreadCount();
 
 	/*
 	* Return the indicated directory type path
@@ -113,7 +113,8 @@ private:
 	/*
 	* Input, output, and temp directory path
 	*/
-	std::string _inputDir, _outputDir, _tempDir, _dllDir;
+	std::string _inputDir, _outputDir, _tempDir, _dllDir, _threadsString;
+	int _threads = 0;
 
 	/*
 	* Thread count indicator, defaults to 1

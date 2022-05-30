@@ -44,7 +44,7 @@ public:
 	* Set thread count to inidcated value if valid, else keep default of 1
 	* @param string representing thread count between 1 & 6
 	*/
-	void setThreadCount(const std::string);
+	void setThreadCount();
 
 	/*
 	* Executes workflow logic for MapReduce
