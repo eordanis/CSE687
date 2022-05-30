@@ -19,6 +19,8 @@
 #include "./IMap.h"
 #include "./IReduce.h"
 
+#define alphabet 26
+
 class FileManagement
 {
 
@@ -71,6 +73,8 @@ public:
 	*/
 	void executeFileMapping();
 
+	void stringThreadSearch(char str[], int n);
+
 	/*
 	* Execute Reduce process on each input file retrieved in Temp
 	*/
@@ -114,12 +118,11 @@ private:
 	* Input, output, and temp directory path
 	*/
 	std::string _inputDir, _outputDir, _tempDir, _dllDir, _threadsString;
-	int _threads = 0;
 
 	/*
 	* Thread count indicator, defaults to 1
 	*/
-	int _threadCount = 1;
+	int _threads = 1;
 
 	/*
 	* Vectors for input/temp file paths
@@ -135,6 +138,11 @@ private:
 	* Extension supported
 	*/
 	std::string _dat = ".dat";
+
+	/*
+	* letter for threads
+	*/
+	std::string letters = "abcdefghijklmnopqrstuvwxyz";
 };
 
 #endif

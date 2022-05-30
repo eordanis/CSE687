@@ -195,13 +195,32 @@ void FileManagement::executeFileMapping()
 	if (dll_handle) {
 
 		// Create Number of Threads For Mapping
-		for (int i = 0; i < _threads; i++) {
+		//for (int i = 0; i < _threads; i++) {
 			std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::map);
 			mainThread.join();
-		}
+		//}
 	}
 	else {
 		utils.throwException("FileManagement:executeFileMapping", "Cannot load MapDLL.dll");
+	}
+}
+
+void FileManagement::stringThreadSearch(char str[], int n)
+{
+
+	int str_size = strlen(str);
+	int i;
+	int part_size;
+
+	if (str_size % n != 0) {
+
+	}
+	else {
+		part_size = str_size / n;
+		for (i = 0; i < str_size; i++) {
+			if (i % part_size == 0)
+				std::cout << str[i];
+		}
 	}
 }
 

@@ -67,12 +67,12 @@ int main(int argc, char* argv[])
 				if (strcmp(argv[counter], "-threads") == 0)
 				{
 					workflow.setDirectory(MapReduceUtils::DirectoryType::threads, argv[counter + 1]);
+
+					//validate thread count
+					workflow.setThreadCount();
 				}
 			}
 		}	
-
-		//validate thread count
-		workflow.setThreadCount();
 
 		//start map reduce workflow
 		workflow.execute_workflow();
@@ -114,7 +114,7 @@ void exitProgram() {
 bool validateArgs(int argc, char* argv[]) {
 
 	MapReduceUtils utils;
-	int total = 11;
+	int total = 9;
 	bool runUnitTest = false;
 
 	if (checkFlag("-rut", argc, argv)) {
@@ -132,7 +132,7 @@ bool validateArgs(int argc, char* argv[]) {
 		utils.throwException("Executive:validateArgs", "There are less than the required arguments for this command.Please verify arguments and try again");
 	}
 
-	if (argc > total) {
+	if ((checkFlag("-threads", argc, argv)) && (argc > total + 2)) {
 		utils.throwException("Executive:validateArgs", "There are more than the required arguments for this command. Please verify arguments and try again");
 	}
 
@@ -150,10 +150,6 @@ bool validateArgs(int argc, char* argv[]) {
 
 	if (!checkFlag("-dll", argc, argv)) {
 		utils.throwException("Executive:validateArgs", "-dll parameter cannot be found. Please verify arguments and try again");
-	}
-
-	if (!checkFlag("-threads", argc, argv)) {
-		utils.throwException("Executive:validateArgs", "-threads parameter cannot be found. Please verify arguments and try again");
 	}
 
 	return false;
