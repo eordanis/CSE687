@@ -21,21 +21,41 @@
 #include <stdio.h>
 #include <iostream>
 #include <windows.h>
+#include <math.h>
 #include <thread>
 
-void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vector<boost::filesystem::path> filePaths, MapReduceUtils::OperationType operationType)
+void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vector<boost::filesystem::path> filePaths, MapReduceUtils::OperationType operationType, int threadCount)
 {
-	
 	if (MapReduceUtils::OperationType::map == operationType) {
-		Threading thread;
 		MapReduceUtils utils;
 		CreateObjectofMap pCreateObjectofMapPtr = (CreateObjectofMap)GetProcAddress(HMODULE(dll_handle), "CreateObjectofMap");
 		if (pCreateObjectofMapPtr) {
 			try {
+				Threading thread;
 				utils.logMessage("Executing File Mapping...\n");
-				for (boost::filesystem::path entry : filePaths) {
-					std::thread createThread(thread, entry, dir, pCreateObjectofMapPtr);
-					createThread.join();
+				int threads = threadCount <= filePaths.size() ? threadCount : filePaths.size();
+				int bucketSize = filePaths.size() / threadCount;
+				int currentCount = 0;
+				int currentThread = 1;
+				std::vector<boost::filesystem::path> currentBucket;
+				std::vector<std::thread> vecOfThreads;
+				for (std::vector<boost::filesystem::path>::size_type i = 0; i != filePaths.size(); i++) {
+					currentBucket.emplace_back(filePaths[i]); //fill the current bucket
+					currentCount++;
+					if ((currentThread != threadCount && currentCount > bucketSize) || (currentThread == threadCount && i == filePaths.size() - 1)) {
+						currentCount = 0;
+						currentThread++; //on to next thread
+						vecOfThreads.push_back(std::thread(thread, currentBucket, dir, pCreateObjectofMapPtr)); //create thread and pass bucket over
+						currentBucket.clear();
+					}
+				}
+				// Iterate over the thread vector
+				for (std::thread& th : vecOfThreads)
+				{
+					// If thread Object is Joinable then Join that thread.
+					if (th.joinable()) {
+						th.join();
+					}
 				}
 			}
 			catch (std::string ex) {
@@ -45,15 +65,35 @@ void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vecto
 		}
 	}
 	else if (MapReduceUtils::OperationType::reduce == operationType) {
-		Threading thread;
 		MapReduceUtils utils;
 		CreateObjectofReduce pCreateObjectofReducePtr = (CreateObjectofReduce)GetProcAddress(HMODULE(dll_handle), "CreateObjectofReduce");
 		if (pCreateObjectofReducePtr) {
 			try {
+				Threading thread;
 				utils.logMessage("Executing File Reducing...\n");
-				for (boost::filesystem::path entry : filePaths) {
-					std::thread createThread(thread, entry, dir, pCreateObjectofReducePtr);
-					createThread.join();
+				int threads = threadCount <= filePaths.size() ? threadCount : filePaths.size();
+				int bucketSize = filePaths.size() / threadCount;
+				int currentCount = 0;
+				int currentThread = 1;
+				std::vector<boost::filesystem::path> currentBucket;
+				std::vector<std::thread> vecOfThreads;
+				for (std::vector<boost::filesystem::path>::size_type i = 0; i != filePaths.size(); i++) {
+					currentBucket.emplace_back(filePaths[i]); //fill the current bucket
+					currentCount++;
+					if ((currentThread != threadCount && currentCount > bucketSize) || (currentThread == threadCount &&  i == filePaths.size() - 1)) {
+						currentCount = 0;
+						currentThread++; //on to next thread
+						vecOfThreads.push_back(std::thread(thread, currentBucket, dir, pCreateObjectofReducePtr)); //create thread and pass bucket over
+						currentBucket.clear();
+					}
+				}
+				// Iterate over the thread vector
+				for (std::thread& th : vecOfThreads)
+				{
+					// If thread Object is Joinable then Join that thread.
+					if (th.joinable()) {
+						th.join();
+					}
 				}
 			}
 			catch (std::string ex) {

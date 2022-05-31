@@ -22,7 +22,7 @@
 class ExecuteThread {
 
 public:
-    void operator()(HINSTANCE, std::string, std::vector<boost::filesystem::path>, MapReduceUtils::OperationType);
+    void operator()(HINSTANCE, std::string, std::vector<boost::filesystem::path>, MapReduceUtils::OperationType, int);
 };
 
 #endif

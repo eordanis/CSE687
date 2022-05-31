@@ -48,27 +48,25 @@ void FileManagement::setDirectory(MapReduceUtils::DirectoryType directoryType, c
 			_tempDir = dirPath; break;
 		case MapReduceUtils::DirectoryType::dll:
 			_dllDir = dirPath; break;
-		case MapReduceUtils::DirectoryType::threads:
-			_threadsString = dirPath; break;
 		default: MapReduceUtils utils;  utils.throwException("FileManagement:setDirectory", "Directory path undetermined."); return;
 		}
 	}
 }
 
-void FileManagement::setThreadCount()
+void FileManagement::setThreadCount(const std::string threadCount)
 {
-	for (char const& c : _threadsString) {
+	for (char const& c : threadCount) {
 		if (std::isdigit(c) == 0) {
-			utils.logMessage("Thread count provided \"" + _threadsString + "\" does not contain all digits. Keeping default of 1 thread.");
+			utils.logMessage("Thread count provided \"" + threadCount + "\" does not contain all digits. Keeping default of 1 thread.");
 			return;
 		}
 	}
-	int tc = std::stoi(_threadsString);
+	int tc = std::stoi(threadCount);
 		if (tc > 1 && tc < 7) {
 			_threads = tc;
 		}
 		else {
-			utils.logMessage("Thread count provided \"" + _threadsString + "\" must be greater than 1 and less than 7. Keeping default of 1 thread.");
+			utils.logMessage("Thread count provided \"" + threadCount + "\" must be greater than 1 and less than 7. Keeping default of 1 thread.");
 		}
 }
 
@@ -187,50 +185,24 @@ void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType direct
 
 void FileManagement::executeFileMapping()
 {
-	ExecuteThread thread;
-
 	// Check thread count
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\MapDLL.dll");
-
 	if (dll_handle) {
-
-		// Create Number of Threads For Mapping
-		//for (int i = 0; i < _threads; i++) {
-			std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::map);
-			mainThread.join();
-		//}
+		ExecuteThread thread;
+		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::map, _threads);
+		mainThread.join();
 	}
 	else {
 		utils.throwException("FileManagement:executeFileMapping", "Cannot load MapDLL.dll");
 	}
 }
 
-void FileManagement::stringThreadSearch(char str[], int n)
-{
-
-	int str_size = strlen(str);
-	int i;
-	int part_size;
-
-	if (str_size % n != 0) {
-
-	}
-	else {
-		part_size = str_size / n;
-		for (i = 0; i < str_size; i++) {
-			if (i % part_size == 0)
-				std::cout << str[i];
-		}
-	}
-}
-
 void FileManagement::executeReduce()
 {
-	ExecuteThread thread;
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\ReduceDLL.dll");
-
 	if (dll_handle) {
-		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::reduce);
+		ExecuteThread thread;
+		std::thread mainThread(thread, dll_handle, _outputDir, _tempPaths, MapReduceUtils::OperationType::reduce, _threads);
 		mainThread.join();
 	}
 	else {

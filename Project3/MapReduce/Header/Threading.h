@@ -26,8 +26,8 @@ typedef IReduce* (*CreateObjectofReduce)();
 class Threading {
 
 public:
-    void operator()(boost::filesystem::path, std::string, CreateObjectofMap);
-    void operator()(boost::filesystem::path, std::string, CreateObjectofReduce);
+    void operator()(std::vector<boost::filesystem::path>, std::string, CreateObjectofMap);
+    void operator()(std::vector<boost::filesystem::path>, std::string, CreateObjectofReduce);
     void createFile(std::string, std::string);
     void removeFile(std::string);
 };

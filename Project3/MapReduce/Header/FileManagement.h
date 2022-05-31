@@ -19,8 +19,6 @@
 #include "./IMap.h"
 #include "./IReduce.h"
 
-#define alphabet 26
-
 class FileManagement
 {
 
@@ -47,7 +45,7 @@ public:
 	* Set thread count to inidcated value if valid, else keep default of 1
 	* @param string representing thread count between 1 & 6
 	*/
-	void setThreadCount();
+	void setThreadCount(const std::string);
 
 	/*
 	* Return the indicated directory type path
@@ -72,8 +70,6 @@ public:
 	* Execute MapReduce process on each input file retrieved
 	*/
 	void executeFileMapping();
-
-	void stringThreadSearch(char str[], int n);
 
 	/*
 	* Execute Reduce process on each input file retrieved in Temp
@@ -117,7 +113,7 @@ private:
 	/*
 	* Input, output, and temp directory path
 	*/
-	std::string _inputDir, _outputDir, _tempDir, _dllDir, _threadsString;
+	std::string _inputDir, _outputDir, _tempDir, _dllDir;
 
 	/*
 	* Thread count indicator, defaults to 1
@@ -138,11 +134,6 @@ private:
 	* Extension supported
 	*/
 	std::string _dat = ".dat";
-
-	/*
-	* letter for threads
-	*/
-	std::string letters = "abcdefghijklmnopqrstuvwxyz";
 };
 
 #endif

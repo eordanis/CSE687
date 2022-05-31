@@ -50,8 +50,7 @@ public:
 		input,
 		output,
 		temp,
-		dll,
-		threads
+		dll
 	};
 
 	/*
