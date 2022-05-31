@@ -50,7 +50,7 @@ public:
 		input,
 		output,
 		temp,
-		dll,
+		dll
 	};
 
 	/*

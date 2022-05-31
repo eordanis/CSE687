@@ -118,7 +118,7 @@ private:
 	/*
 	* Thread count indicator, defaults to 1
 	*/
-	int _threadCount = 1;
+	int _threads = 1;
 
 	/*
 	* Vectors for input/temp file paths
