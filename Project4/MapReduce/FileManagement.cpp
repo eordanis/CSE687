@@ -196,7 +196,6 @@ void FileManagement::executeFileMapping()
 
 void FileManagement::executeReduce()
 {
-	//listen for socket message
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\ReduceDLL.dll");
 	if (dll_handle) {
 		ExecuteThread thread;

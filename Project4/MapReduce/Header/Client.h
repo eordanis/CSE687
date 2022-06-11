@@ -15,9 +15,16 @@
 
 #pragma once
 
+#include <winsock2.h>
+
 class Client {
 public:
 	int SendNewMessage(const char*);
+	void ShutDownServer();
+
+private:
+	WSADATA wsaData;
+	SOCKET ConnectSocket = INVALID_SOCKET;
 };
 
 #endif

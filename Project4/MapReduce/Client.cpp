@@ -19,11 +19,7 @@
 
 int Client::SendNewMessage(const char* message)
 {
-    WSADATA wsaData;
-    SOCKET ConnectSocket = INVALID_SOCKET;
-
     struct addrinfo* result = NULL, * ptr = NULL, hints;
-
 
     // Create an object to the Utils class
     MapReduceUtils utils;
@@ -95,13 +91,13 @@ int Client::SendNewMessage(const char* message)
     printf("Bytes Sent: %ld\n", response);
 
     // shutdown the connection since no more data will be sent
-    response = shutdown(ConnectSocket, SD_SEND);
+    /*response = shutdown(ConnectSocket, SD_SEND);
     if (response == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
         closesocket(ConnectSocket);
         WSACleanup();
         return 1;
-    }
+    }*/
 
     // Receive until the peer closes the connection
     do {
@@ -116,9 +112,20 @@ int Client::SendNewMessage(const char* message)
 
     } while (response > 0);
 
+    return 0;
+}
+
+void Client::ShutDownServer() {
+
+    // shutdown the connection since no more data will be sent
+    int response = shutdown(ConnectSocket, SD_SEND);
+    if (response == SOCKET_ERROR) {
+        printf("shutdown failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+    }
+
     // cleanup
     closesocket(ConnectSocket);
     WSACleanup();
-
-    return 0;
 }
