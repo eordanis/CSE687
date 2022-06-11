@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="FileManagement.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="MapReduceUtils.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Header\Client.h" />
     <ClInclude Include="Header\ExecuteThread.h" />
     <ClInclude Include="Header\Executive.h" />
     <ClInclude Include="Header\FileManagement.h" />

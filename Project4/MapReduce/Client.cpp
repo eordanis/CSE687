@@ -5,39 +5,37 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <iostream>
+#include <string.h>
+#include "./Header/MapReduceUtils.h"
+#include "./Header/Client.h"
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "27015"
 
-int __cdecl main(int argc, char** argv)
+int Client::SendMessage(const char* message) 
 {
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
-    struct addrinfo* result = NULL,
-        * ptr = NULL,
-        hints;
 
+    struct addrinfo* result = NULL, * ptr = NULL, hints;
+
+
+    // Create an object to the Utils class
+    MapReduceUtils utils;
+
+    // Create the buffer that will send the message
     char recvbuf[DEFAULT_BUFLEN];
-    int iResult;
     int recvbuflen = DEFAULT_BUFLEN;
 
-    // Validate the parameters
-    if (argc != 2) {
-        printf("usage: %s server-name\n", argv[0]);
-        return 1;
-    }
-
-    // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
+    // Initialize WINSOCK
+    int response = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (response != 0) {
+        utils.logMessage("Client::SendMessage: WSAStartup has an error");
         return 1;
     }
 
@@ -47,9 +45,10 @@ int __cdecl main(int argc, char** argv)
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(argv[1], DEFAULT_PORT, &hints, &result);
-    if (iResult != 0) {
-        printf("getaddrinfo failed with error: %d\n", iResult);
+    response = getaddrinfo("2323", "2323", &hints, &result);
+
+    if (response != 0) {
+        utils.logMessage("Client::SendMessage: Error getting address");
         WSACleanup();
         return 1;
     }
@@ -67,8 +66,8 @@ int __cdecl main(int argc, char** argv)
         }
 
         // Connect to server.
-        iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (iResult == SOCKET_ERROR) {
+        response = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        if (response == SOCKET_ERROR) {
             closesocket(ConnectSocket);
             ConnectSocket = INVALID_SOCKET;
             continue;
@@ -85,19 +84,19 @@ int __cdecl main(int argc, char** argv)
     }
 
     // Send an initial buffer
-    iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
-    if (iResult == SOCKET_ERROR) {
+    response = send(ConnectSocket, message, (int)strlen(message), 0);
+    if (response == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ConnectSocket);
         WSACleanup();
         return 1;
     }
 
-    printf("Bytes Sent: %ld\n", iResult);
+    printf("Bytes Sent: %ld\n", response);
 
     // shutdown the connection since no more data will be sent
-    iResult = shutdown(ConnectSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
+    response = shutdown(ConnectSocket, SD_SEND);
+    if (response == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
         closesocket(ConnectSocket);
         WSACleanup();
@@ -107,15 +106,15 @@ int __cdecl main(int argc, char** argv)
     // Receive until the peer closes the connection
     do {
 
-        iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0)
-            printf("Bytes received: %d\n", iResult);
-        else if (iResult == 0)
+        response = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+        if (response > 0)
+            printf("Bytes received: %d\n", response);
+        else if (response == 0)
             printf("Connection closed\n");
         else
             printf("recv failed with error: %d\n", WSAGetLastError());
 
-    } while (iResult > 0);
+    } while (response > 0);
 
     // cleanup
     closesocket(ConnectSocket);

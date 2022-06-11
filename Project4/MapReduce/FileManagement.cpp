@@ -13,6 +13,8 @@
 #pragma once
 #include "./Header/FileManagement.h"
 #include "./Header/ExecuteThread.h"
+#include "./Header/Socket.h"
+#include "./Header/Client.h"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iomanip>
@@ -175,6 +177,12 @@ void FileManagement::partitionInput()
 	}
 }
 
+void FileManagement::startSocketServer()
+{
+	Socket socket;
+	socket.InitiateSocket(3232);
+}
+
 void FileManagement::executeFileMapping()
 {
 	// Check thread count
@@ -183,6 +191,9 @@ void FileManagement::executeFileMapping()
 		ExecuteThread thread;
 		std::thread mainThread(thread, dll_handle, _tempDir, _partitions, MapReduceUtils::OperationType::map, _threads, _inputDir);
 		mainThread.join();
+
+		Client client;
+		//int response = client.SendMessage('ewsdrfcgb');
 		//send out msg
 	}
 	else {

@@ -42,6 +42,11 @@ void Workflow::execute_workflow()
 	/*
 	* Partition valid input files into buckets per thread
 	*/
+	fm.startSocketServer();
+
+	/*
+	* Partition valid input files into buckets per thread
+	*/
 	fm.partitionInput();
 
 	/*
