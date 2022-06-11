@@ -17,7 +17,7 @@
 class Socket {
 
 public:
-	void InitiateSocket();
+	int InitiateSocket(int);
 };
 
 #endif
