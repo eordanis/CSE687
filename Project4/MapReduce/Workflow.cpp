@@ -39,6 +39,9 @@ void Workflow::setThreadCount(const std::string threadCount)
 
 void Workflow::execute_workflow()
 {
+	//create STUB process
+	
+
 	// get all valid files from input directory
 	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
 

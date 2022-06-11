@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileManagement.cpp" />
+    <ClCompile Include="Socket.cpp" />
     <ClCompile Include="MapReduceUtils.cpp" />
     <ClCompile Include="Test\FileManagementTest.cpp" />
     <ClCompile Include="Executive.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Header\IMap.h" />
     <ClInclude Include="Header\IReduce.h" />
     <ClInclude Include="Header\MapReduceUtils.h" />
+    <ClInclude Include="Header\Socket.h" />
     <ClInclude Include="Header\Threading.h" />
     <ClInclude Include="Header\Workflow.h" />
     <ClInclude Include="Test\Test.h" />
