@@ -17,7 +17,7 @@
 
 class Client {
 public:
-	int SendMessage(const char*);
+	int SendNewMessage(const char*);
 };
 
 #endif

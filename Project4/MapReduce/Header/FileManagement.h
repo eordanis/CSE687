@@ -100,12 +100,6 @@ public:
 	*/
 	void partitionInput();
 
-
-	/*
-	* Method to start the Socket Server
-	*/
-	void startSocketServer();
-
 private: 
 	
 	/*

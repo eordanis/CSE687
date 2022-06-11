@@ -15,10 +15,7 @@
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "2323"
 
-#include "Header/Socket.h"
-#include "./Header/ExecuteThread.h"
-
-int Socket::InitiateSocket(int port) 
+int main()
 {
     WSADATA wsaData;
     int iResult;
@@ -34,12 +31,14 @@ int Socket::InitiateSocket(int port)
     int recvbuflen = DEFAULT_BUFLEN;
 
     // Initialize Winsock
+    printf("Initialize Winsock");
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed with error: %d\n", iResult);
         return 1;
     }
 
+    printf("ZeroMemory");
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -47,7 +46,8 @@ int Socket::InitiateSocket(int port)
     hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+    printf("getaddrinfo");
+    iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
     if (iResult != 0) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -68,7 +68,7 @@ int Socket::InitiateSocket(int port)
     if (iResult == SOCKET_ERROR) {
         printf("bind failed with error: %d\n", WSAGetLastError());
         freeaddrinfo(result);
-        closesocket(ListenSocket);                       
+        closesocket(ListenSocket);
         WSACleanup();
         return 1;
     }
@@ -93,7 +93,7 @@ int Socket::InitiateSocket(int port)
     }
 
     // No longer need server socket
-    closesocket(ListenSocket);
+    //closesocket(ListenSocket);
 
     // Receive until the peer shuts down the connection
     do {
@@ -135,3 +135,14 @@ int Socket::InitiateSocket(int port)
     closesocket(ClientSocket);
     WSACleanup();
 }
+
+// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
+// Debug program: F5 or Debug > Start Debugging menu
+
+// Tips for Getting Started: 
+//   1. Use the Solution Explorer window to add/manage files
+//   2. Use the Team Explorer window to connect to source control
+//   3. Use the Output window to see build output and other messages
+//   4. Use the Error List window to view errors
+//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
+//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

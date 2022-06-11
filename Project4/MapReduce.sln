@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MapDLL", "MapDLL\MapDLL.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReduceDLL", "ReduceDLL\ReduceDLL.vcxproj", "{358C1A30-E1BF-4362-8EF4-A40DB164108B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Socket", "Socket\Socket.vcxproj", "{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{358C1A30-E1BF-4362-8EF4-A40DB164108B}.Release|x64.Build.0 = Release|x64
 		{358C1A30-E1BF-4362-8EF4-A40DB164108B}.Release|x86.ActiveCfg = Release|Win32
 		{358C1A30-E1BF-4362-8EF4-A40DB164108B}.Release|x86.Build.0 = Release|Win32
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Debug|x64.ActiveCfg = Debug|x64
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Debug|x64.Build.0 = Debug|x64
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Debug|x86.ActiveCfg = Debug|Win32
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Debug|x86.Build.0 = Debug|Win32
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Release|x64.ActiveCfg = Release|x64
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Release|x64.Build.0 = Release|x64
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Release|x86.ActiveCfg = Release|Win32
+		{EA3E7C7A-D440-41CB-9ED7-DF36724D944B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

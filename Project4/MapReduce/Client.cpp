@@ -17,7 +17,7 @@
 
 #define DEFAULT_BUFLEN 512
 
-int Client::SendMessage(const char* message) 
+int Client::SendNewMessage(const char* message)
 {
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
@@ -45,7 +45,7 @@ int Client::SendMessage(const char* message)
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    response = getaddrinfo("2323", "2323", &hints, &result);
+    response = getaddrinfo("127.0.0.1", "2323", &hints, &result);
 
     if (response != 0) {
         utils.logMessage("Client::SendMessage: Error getting address");
