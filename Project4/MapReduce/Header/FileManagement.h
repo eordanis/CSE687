@@ -55,16 +55,10 @@ public:
 	std::string getDirectory(MapReduceUtils::DirectoryType);
 
 	/*
-	* Return the indicated directory type paths size
-	* @param DirectoryType indicates the type of directory to retrieve path for
+	* Return the indicated file valid file count size
 	* @return size_t size of directory path
 	*/
-	size_t getDirectoryPathsSize(MapReduceUtils::DirectoryType);
-
-	/*
-	* Retrieve all valid text files from indicated directory type's path
-	*/
-	void retrieveDirectoryFiles(MapReduceUtils::DirectoryType);
+	size_t getDirectoryPathsSize();
 
 	/*
 	* Execute MapReduce process on each input file retrieved
@@ -101,6 +95,11 @@ public:
 	*/
 	void removeFile(std::string tempFileName);
 
+	/*
+	* Partition input files into bucket chunks based off thread count
+	*/
+	void partitionInput();
+
 private: 
 	
 	/*
@@ -121,9 +120,11 @@ private:
 	int _threads = 1;
 
 	/*
-	* Vectors for input/temp file paths
+	* Holds total valid file count
 	*/
-	std::vector<boost::filesystem::path> _inputPaths, _tempPaths;
+	size_t _fileCount = 0;
+
+	std::vector<std::vector<boost::filesystem::path>> _partitions;
 
 	/*
 	* Extension supported

@@ -124,17 +124,14 @@ TEST(FileManagementTest, TestRetrieveInputFiles)
 	std::string tmpFileName1 = _unitTestTmpDir + "/testInputFileRetrieval1.dat";
 	fm.createFile(_unitTestTmpDir, tmpFileName1);
 	ASSERT_TRUE(boost::filesystem::exists(tmpFileName1));
-	ASSERT_DEATH(fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input), "");
 
 	std::string tmpFileName2 = _unitTestTmpDir + "/testInputFileRetrieval2.txt";
 	fm.createFile(_unitTestTmpDir, tmpFileName2);
 	ASSERT_TRUE(boost::filesystem::exists(tmpFileName2));
-	ASSERT_DEATH(fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input), "");
 
 	std::string fileContentsWrite = "I am but a humble developer. I wish to continue striving for success!. Success is important for developers.";
 	fm.writeToFile(tmpFileName2, fileContentsWrite);
-	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
-	ASSERT_EQ(1, fm.getDirectoryPathsSize(MapReduceUtils::DirectoryType::input));
+	ASSERT_EQ(1, fm.getDirectoryPathsSize());
 
 	boost::filesystem::remove_all(_unitTestTmpDir);
 }
@@ -176,7 +173,7 @@ TEST(FileManagementTest, TestExecuteFileMapping)
 	fm.writeToFile(tmpFileName1, fileContentsWrite);
 	
 	//run input retriveal
-	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
+	fm.partitionInput();
 
 	//execute mapping
 	fm.executeFileMapping();

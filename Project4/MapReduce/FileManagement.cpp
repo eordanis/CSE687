@@ -125,61 +125,53 @@ bool FileManagement::validateDirPath(MapReduceUtils::DirectoryType directoryType
 	return false;
 }
 
-size_t FileManagement::getDirectoryPathsSize(MapReduceUtils::DirectoryType directoryType)
+size_t FileManagement::getDirectoryPathsSize()
 {
-	if (MapReduceUtils::DirectoryType::input == directoryType) {
-		return _inputPaths.size();
-
-	}
-	else if (MapReduceUtils::DirectoryType::temp == directoryType) {
-		return _tempPaths.size();
-	}
-	else {
-		MapReduceUtils utils;
-		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
-		return 0;
-	}
+	return _fileCount;
 }
 
-void FileManagement::retrieveDirectoryFiles(MapReduceUtils::DirectoryType directoryType)
+void FileManagement::partitionInput()
 {
-	std::string ext, type, dir;
-	std::vector<boost::filesystem::path>* dirPath{ nullptr };
-
-	if (MapReduceUtils::DirectoryType::input == directoryType) {
-		ext = _txt;
-		type = "input";
-		dir = _inputDir;
-		dirPath = &_inputPaths;
-
-	}
-	else if (MapReduceUtils::DirectoryType::temp == directoryType) {
-		ext = _dat;
-		type = "temp";
-		dir = _tempDir;
-		dirPath = &_tempPaths;
-	}
-	else {
-		utils.throwException("FileManagement:retrieveDirectoryFiles", "Directory type undetermined.");
-	}
-
-	utils.logMessage("Searching for valid files at provided " + type + " path...\n");
-	if (boost::filesystem::exists(dir) && boost::filesystem::is_directory(dir))
+	utils.logMessage("Partitioning Input File Workload...\n");
+	std::vector<boost::filesystem::path> allValidInputs;
+	if (boost::filesystem::exists(_inputDir) && boost::filesystem::is_directory(_inputDir))
 	{
-		for (auto const& entry : boost::filesystem::directory_iterator(dir))
+		for (auto const& entry : boost::filesystem::directory_iterator(_inputDir))
 		{
-			if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == ext && !boost::filesystem::is_empty(entry)) {
-				(*dirPath).emplace_back(entry.path());
+			if (boost::filesystem::is_regular_file(entry) && entry.path().extension() == _txt && !boost::filesystem::is_empty(entry)) {
+				boost::filesystem::path path = entry.path();
+				path.replace_extension("");
+				allValidInputs.emplace_back(path);
 			}
 
 		}
 	}
 	else
 	{
-		utils.throwException("FileManagement:retrieveDirectoryFiles", "Path provided \"" + dir + "\" is not a valid directory.");
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Path provided \"" + _txt + "\" is not a valid directory.");
 	}
-	if ((*dirPath).size() == 0) {
-		utils.throwException("FileManagement:retrieveDirectoryFiles", "Path provided \"" + dir + "\" has no valid text files to map and reduce with extension.\"" + ext + "\"");
+
+	if (allValidInputs.size() == 0) {
+		utils.throwException("FileManagement:retrieveDirectoryFiles", "Path provided \"" + _txt + "\" has no valid text files to map and reduce with extension.\"" + _txt + "\"");
+	}
+	int idealThreads = 3;
+	_fileCount = allValidInputs.size();
+	int threads = _threads <= _fileCount ? _threads : (idealThreads <= _fileCount ? idealThreads : 1);
+	_threads = threads; //set threads to corrected threadCount
+	int bucketSize = _fileCount / threads;
+	int currentCount = 0;
+	int currentThread = 1;
+	std::vector<boost::filesystem::path> currentBucket;
+	for (std::vector<boost::filesystem::path>::size_type i = 0; i != _fileCount; i++) {
+		currentBucket.emplace_back(allValidInputs[i]); //fill the current bucket
+		currentCount++;
+		if ((currentThread != threads && currentCount > bucketSize) || (currentThread == threads && i == _fileCount - 1)) {
+			currentCount = 0;
+			currentThread++; //on to next thread
+			//add bucket to partion holder
+			_partitions.push_back(currentBucket);
+			currentBucket.clear();
+		}
 	}
 }
 
@@ -189,8 +181,9 @@ void FileManagement::executeFileMapping()
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\MapDLL.dll");
 	if (dll_handle) {
 		ExecuteThread thread;
-		std::thread mainThread(thread, dll_handle, _tempDir, _inputPaths, MapReduceUtils::OperationType::map, _threads);
+		std::thread mainThread(thread, dll_handle, _tempDir, _partitions, MapReduceUtils::OperationType::map, _threads, _inputDir);
 		mainThread.join();
+		//send out msg
 	}
 	else {
 		utils.throwException("FileManagement:executeFileMapping", "Cannot load MapDLL.dll");
@@ -199,10 +192,11 @@ void FileManagement::executeFileMapping()
 
 void FileManagement::executeReduce()
 {
+	//listen for socket message
 	HINSTANCE dll_handle = getDLLInformation(_dllDir, "\\ReduceDLL.dll");
 	if (dll_handle) {
 		ExecuteThread thread;
-		std::thread mainThread(thread, dll_handle, _outputDir, _tempPaths, MapReduceUtils::OperationType::reduce, _threads);
+		std::thread mainThread(thread, dll_handle, _outputDir, _partitions, MapReduceUtils::OperationType::reduce, _threads, _tempDir);
 		mainThread.join();
 	}
 	else {
@@ -235,6 +229,7 @@ void FileManagement::removeFile(std::string filePath)
 		boost::filesystem::remove(filePath);
 	}
 }
+
 
 HINSTANCE FileManagement::getDLLInformation(std::string _dllDir, std::string dllName) {
 

@@ -166,6 +166,7 @@
     <ClInclude Include="Header\ExecuteThread.h" />
     <ClInclude Include="Header\Executive.h" />
     <ClInclude Include="Header\FileManagement.h" />
+    <ClInclude Include="Header\stub.h" />
     <ClInclude Include="Header\IMap.h" />
     <ClInclude Include="Header\IReduce.h" />
     <ClInclude Include="Header\MapReduceUtils.h" />

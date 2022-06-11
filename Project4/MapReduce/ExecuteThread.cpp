@@ -24,7 +24,7 @@
 #include <math.h>
 #include <thread>
 
-void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vector<boost::filesystem::path> filePaths, MapReduceUtils::OperationType operationType, int threadCount)
+void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vector<std::vector<boost::filesystem::path>> partitions, MapReduceUtils::OperationType operationType, int threadCount, std::string dirPath)
 {
 	if (MapReduceUtils::OperationType::map == operationType) {
 		MapReduceUtils utils;
@@ -33,21 +33,9 @@ void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vecto
 			try {
 				Threading thread;
 				utils.logMessage("Executing File Mapping...\n");
-				int threads = threadCount <= filePaths.size() ? threadCount : filePaths.size();
-				int bucketSize = filePaths.size() / threadCount;
-				int currentCount = 0;
-				int currentThread = 1;
-				std::vector<boost::filesystem::path> currentBucket;
 				std::vector<std::thread> vecOfThreads;
-				for (std::vector<boost::filesystem::path>::size_type i = 0; i != filePaths.size(); i++) {
-					currentBucket.emplace_back(filePaths[i]); //fill the current bucket
-					currentCount++;
-					if ((currentThread != threadCount && currentCount > bucketSize) || (currentThread == threadCount && i == filePaths.size() - 1)) {
-						currentCount = 0;
-						currentThread++; //on to next thread
-						vecOfThreads.push_back(std::thread(thread, currentBucket, dir, pCreateObjectofMapPtr)); //create thread and pass bucket over
-						currentBucket.clear();
-					}
+				for (int i = 0; i < threadCount; i++) {
+					vecOfThreads.push_back(std::thread(thread, partitions[i], dir, pCreateObjectofMapPtr, dirPath)); //create thread and pass bucket over
 				}
 				// Iterate over the thread vector
 				for (std::thread& th : vecOfThreads)
@@ -71,21 +59,9 @@ void ExecuteThread::operator()(HINSTANCE dll_handle, std::string dir, std::vecto
 			try {
 				Threading thread;
 				utils.logMessage("Executing File Reducing...\n");
-				int threads = threadCount <= filePaths.size() ? threadCount : filePaths.size();
-				int bucketSize = filePaths.size() / threadCount;
-				int currentCount = 0;
-				int currentThread = 1;
-				std::vector<boost::filesystem::path> currentBucket;
 				std::vector<std::thread> vecOfThreads;
-				for (std::vector<boost::filesystem::path>::size_type i = 0; i != filePaths.size(); i++) {
-					currentBucket.emplace_back(filePaths[i]); //fill the current bucket
-					currentCount++;
-					if ((currentThread != threadCount && currentCount > bucketSize) || (currentThread == threadCount &&  i == filePaths.size() - 1)) {
-						currentCount = 0;
-						currentThread++; //on to next thread
-						vecOfThreads.push_back(std::thread(thread, currentBucket, dir, pCreateObjectofReducePtr)); //create thread and pass bucket over
-						currentBucket.clear();
-					}
+				for (int i = 0; i < threadCount; i++) {
+					vecOfThreads.push_back(std::thread(thread, partitions[i], dir, pCreateObjectofReducePtr, dirPath)); //create thread and pass bucket over
 				}
 				// Iterate over the thread vector
 				for (std::thread& th : vecOfThreads)

@@ -13,27 +13,30 @@
 #pragma once
 #include "Header/Threading.h"
 
-void Threading::operator()(std::vector<boost::filesystem::path> bucketPaths, std::string tempDir, CreateObjectofMap pCreateObjectofMapPtr)
+void Threading::operator()(std::vector<boost::filesystem::path> bucketPaths, std::string tempDir, CreateObjectofMap pCreateObjectofMapPtr, std::string dirPath)
 {
 	MapReduceUtils utils;
 	for (boost::filesystem::path entry : bucketPaths) {
-		boost::filesystem::ifstream fileHandler(entry);
+		std::string sourceFileName = entry.stem().string();
+		std::string sourceFilePath = dirPath;
+		sourceFilePath.append("\\").append(sourceFileName).append(".txt");
+		boost::filesystem::ifstream fileHandler(sourceFilePath);
 		std::string line;
 		
 		//create tmp file for fileName, Map/Reduce/Sort will utilize this, with Reduce cleaning up
-		std::string fileName = entry.stem().string();
-		std::string tmpFileName = tempDir;
-		tmpFileName.append("\\").append(fileName).append(".dat");
+		
+		std::string tempFilePath = tempDir;
+		tempFilePath.append("\\").append(sourceFileName).append(".dat");
 
-		createFile(tempDir, tmpFileName);
+		createFile(tempDir, tempFilePath);
 
 		IMap* map = pCreateObjectofMapPtr();
-		map->setInputFileName(fileName);
-		map->setTempFileName(tmpFileName);
+		map->setInputFileName(sourceFileName);
+		map->setTempFileName(tempFilePath);
 		utils.logMessage("\tMapping file \"" + entry.filename().string() + "\"\n");
 		while (getline(fileHandler, line)) {
 			//pass file name and line to >> Map.map(filename, line)
-			map->map(fileName, line);
+			map->map(sourceFileName, line);
 
 		}
 		fileHandler.close();
@@ -41,23 +44,25 @@ void Threading::operator()(std::vector<boost::filesystem::path> bucketPaths, std
 	}
 }
 
-void Threading::operator()(std::vector<boost::filesystem::path> bucketPaths, std::string outDir, CreateObjectofReduce pCreateObjectofReducePtr)
+void Threading::operator()(std::vector<boost::filesystem::path> bucketPaths, std::string outDir, CreateObjectofReduce pCreateObjectofReducePtr, std::string dirPath)
 {
 	MapReduceUtils utils;
 	for (boost::filesystem::path entry : bucketPaths) {
-		boost::filesystem::ifstream fileHandler(entry);
+		std::string sourceFileName = entry.stem().string();
+		std::string sourceFilePath = dirPath;
+		sourceFilePath.append("\\").append(sourceFileName).append(".dat");
+		boost::filesystem::ifstream fileHandler(sourceFilePath);
 		std::string line;
 		std::string key;
 
 		//create output file for dat files, Reduce will occur
-		std::string fileName = entry.stem().string();
-		std::string outFileName = outDir;
-		outFileName.append("\\").append(fileName).append(".txt");
-		createFile(outDir, outFileName);
+		std::string outFilePath = outDir;
+		outFilePath.append("\\").append(sourceFileName).append(".txt");
+		createFile(outDir, outFilePath);
 
 		IReduce* reduce = pCreateObjectofReducePtr();
-		reduce->setTempFileName(fileName);
-		reduce->setOutputFileName(outFileName);
+		reduce->setTempFileName(sourceFileName);
+		reduce->setOutputFileName(outFilePath);
 
 		utils.logMessage("\tReducing file \"" + entry.filename().string() + "\"\n");
 
@@ -71,11 +76,11 @@ void Threading::operator()(std::vector<boost::filesystem::path> bucketPaths, std
 			}
 		}
 
-		reduce->exportz(outDir + "/" + fileName, false);
+		reduce->exportz(outDir + "/" + sourceFileName, false);
 
 		//ensure we check the buffer to make sure it does not still have content
 		if (reduce->getExportBufferSize() > 0) {
-			reduce->purgeBuffer(outDir + "/" + fileName);
+			reduce->purgeBuffer(outDir + "/" + sourceFileName);
 		}
 
 		fileHandler.close();

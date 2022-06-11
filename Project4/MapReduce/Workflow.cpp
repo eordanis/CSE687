@@ -39,19 +39,19 @@ void Workflow::setThreadCount(const std::string threadCount)
 
 void Workflow::execute_workflow()
 {
-	//create STUB process
-	
+	/*
+	* Partition valid input files into buckets per thread
+	*/
+	fm.partitionInput();
 
-	// get all valid files from input directory
-	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::input);
-
-	// start mapping of files found
+	/*
+	* stub process(thread) that runs mapper and when complete, broadcasts socket message indicating completion
+	*/	
 	fm.executeFileMapping();
 
-	// get all valid files from temp directory
-	fm.retrieveDirectoryFiles(MapReduceUtils::DirectoryType::temp);
-
-	// start reduce program
+	/*
+	* stub process(thread) that listens for broadcast indicating mapper has successfully completed, then runs reducer
+	*/
 	fm.executeReduce();
 
 }
