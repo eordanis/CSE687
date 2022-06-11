@@ -1,20 +1,62 @@
-// Client.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+#include "stdafx.h"
 #include <iostream>
+#include <string>
+#include <winsock2.h>
+#include <WS2tcpip.h>
+
+#ifdef _WIN32
+#ifndef _WIN32_WINNT
+    #define _WIN32_WINNT 0x0501
+#endif
+#else
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <netdb.h>
+    #include <unistd.h>
+#endif
+
+#define PORT 2323
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    int sock = 0;
+    int valread = 0;
+    int client_fd = 0;
+
+    struct sockaddr_in serv_addr;
+
+    char buffer[1024] = { 0 };
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+        return -1;
+    }
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+
+    // Convert IPv4 and IPv6 addresses from text to binary
+    // form
+    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)
+        <= 0) {
+        printf(
+            "\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+
+    if ((client_fd
+        = connect(sock, (struct sockaddr*)&serv_addr,
+            sizeof(serv_addr)))
+        < 0) {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+
+    send(sock, hello, strlen(hello), 0);
+    printf("Hello message sent\n");
+    valread = read(sock, buffer, 1024);
+    printf("%s\n", buffer);
+
+    // closing the connected socket
+    close(client_fd);
+    return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
