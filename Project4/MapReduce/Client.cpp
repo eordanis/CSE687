@@ -35,14 +35,17 @@ int Client::SendNewMessage(const char* message)
         return 1;
     }
 
+    // Clearing the memory
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
+    // Using the LocalHost and static port number
     response = getaddrinfo("127.0.0.1", "2323", &hints, &result);
 
+    // Logging error if necesssary
     if (response != 0) {
         utils.logMessage("Client::SendMessage: Error getting address");
         WSACleanup();
@@ -53,16 +56,19 @@ int Client::SendNewMessage(const char* message)
     for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
 
         // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
-            ptr->ai_protocol);
+        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+
+        // Logging error if necessary
         if (ConnectSocket == INVALID_SOCKET) {
-            printf("socket failed with error: %ld\n", WSAGetLastError());
+            utils.logMessage("Client::SendMessage: Socket Creation Error: " + WSAGetLastError());
             WSACleanup();
             return 1;
         }
 
-        // Connect to server.
+        // Connect to the SOCKET Server
         response = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+
+        // Logging error if necessary
         if (response == SOCKET_ERROR) {
             closesocket(ConnectSocket);
             ConnectSocket = INVALID_SOCKET;
@@ -73,35 +79,17 @@ int Client::SendNewMessage(const char* message)
 
     freeaddrinfo(result);
 
-    if (ConnectSocket == INVALID_SOCKET) {
-        printf("Unable to connect to server!\n");
-        WSACleanup();
-        return 1;
-    }
-
-    // Send an initial buffer
+    // Send the message to the SOCKET Server
     response = send(ConnectSocket, message, (int)strlen(message), 0);
     if (response == SOCKET_ERROR) {
-        printf("send failed with error: %d\n", WSAGetLastError());
+        utils.logMessage("Client::SendMessage: Socket Send Error: " + WSAGetLastError());
         closesocket(ConnectSocket);
         WSACleanup();
         return 1;
     }
-
-    printf("Bytes Sent: %ld\n", response);
-
-    // shutdown the connection since no more data will be sent
-    /*response = shutdown(ConnectSocket, SD_SEND);
-    if (response == SOCKET_ERROR) {
-        printf("shutdown failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
-        WSACleanup();
-        return 1;
-    }*/
 
     // Receive until the peer closes the connection
     do {
-
         response = recv(ConnectSocket, recvbuf, recvbuflen, 0);
         if (response > 0)
             printf("Bytes received: %d\n", response);
@@ -117,7 +105,7 @@ int Client::SendNewMessage(const char* message)
 
 void Client::ShutDownServer() {
 
-    // shutdown the connection since no more data will be sent
+    // When the program is complete, close the connection
     int response = shutdown(ConnectSocket, SD_SEND);
     if (response == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
@@ -125,7 +113,7 @@ void Client::ShutDownServer() {
         WSACleanup();
     }
 
-    // cleanup
+    // Close the sockets
     closesocket(ConnectSocket);
     WSACleanup();
 }

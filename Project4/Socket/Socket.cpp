@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
@@ -30,15 +29,13 @@ int main()
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
 
-    // Initialize Winsock
-    printf("Initialize Winsock");
+    // Initialize WINSOCK
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed with error: %d\n", iResult);
         return 1;
     }
 
-    printf("ZeroMemory");
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -46,7 +43,6 @@ int main()
     hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
-    printf("getaddrinfo");
     iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
     if (iResult != 0) {
         printf("getaddrinfo failed with error: %d\n", iResult);
@@ -135,14 +131,3 @@ int main()
     closesocket(ClientSocket);
     WSACleanup();
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
