@@ -15,7 +15,9 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-#define DEFAULT_BUFLEN 512
+#define BUFFERLENGTH 512
+#define PORT "2323"
+#define HOST "127.0.0.1"
 
 int Client::SendNewMessage(const char* message)
 {
@@ -25,8 +27,8 @@ int Client::SendNewMessage(const char* message)
     MapReduceUtils utils;
 
     // Create the buffer that will send the message
-    char recvbuf[DEFAULT_BUFLEN];
-    int recvbuflen = DEFAULT_BUFLEN;
+    char recvbuf[BUFFERLENGTH];
+    int recvbuflen = BUFFERLENGTH;
 
     // Initialize WINSOCK
     int response = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -43,7 +45,7 @@ int Client::SendNewMessage(const char* message)
 
     // Resolve the server address and port
     // Using the LocalHost and static port number
-    response = getaddrinfo("127.0.0.1", "2323", &hints, &result);
+    response = getaddrinfo(HOST, PORT, &hints, &result);
 
     // Logging error if necesssary
     if (response != 0) {

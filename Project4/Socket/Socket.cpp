@@ -12,6 +12,7 @@
 
 #define BUFFERLENGTH 512
 #define PORT "2323"
+#define HOST "127.0.0.1"
 
 // Creating SOCKET variables
 SOCKET ListenSocket = INVALID_SOCKET;
@@ -42,7 +43,7 @@ int main()
         hints.ai_flags = AI_PASSIVE;
 
         // Resolve the server address and port
-        resultResponse = getaddrinfo("127.0.0.1", PORT, &hints, &result);
+        resultResponse = getaddrinfo(HOST, PORT, &hints, &result);
 
         if (resultResponse == 0) {
 
@@ -80,32 +81,36 @@ int main()
             // Accept Client SOCKET
             ClientSocket = accept(ListenSocket, NULL, NULL);
             if (ClientSocket == INVALID_SOCKET) {
-                printf("accept failed with error: %d\n", WSAGetLastError());
+                printf("ACCEPT error: %d\n", WSAGetLastError());
                 closesocket(ListenSocket);
                 WSACleanup();
                 return 1;
             }
 
-            // Continue to listen
+            // Listening
             do {
                 resultResponse = recv(ClientSocket, recvbuf, recvbuflen, 0);
+
+                // RECV Response
                 if (resultResponse > 0) {
-                    printf("Bytes received: %d\n", resultResponse);
+                    printf("Message received: %d\n", resultResponse);
+
 
                     // Echo the buffer back to the sender
                     sendResponse = send(ClientSocket, recvbuf, resultResponse, 0);
                     if (sendResponse == SOCKET_ERROR) {
-                        printf("send failed with error: %d\n", WSAGetLastError());
+                        printf("SEND failed: %d\n", WSAGetLastError());
                         closesocket(ClientSocket);
                         WSACleanup();
                         return 1;
                     }
-                    printf("Bytes sent: %d\n", sendResponse);
+
                 }
-                else if (resultResponse == 0)
-                    printf("Connection closing...\n");
+                else if (resultResponse == 0) {
+                    printf("Closing SOCKET Connection\n");
+                }
                 else {
-                    printf("recv failed with error: %d\n", WSAGetLastError());
+                    printf("RECV Failed: %d\n", WSAGetLastError());
                     closesocket(ClientSocket);
                     WSACleanup();
                     return 1;
@@ -115,20 +120,21 @@ int main()
 
         }
         else {
-            printf("getaddrinfo failed with error: %d\n", resultResponse);
+            printf("getaddrinfo Failed: %d\n", resultResponse);
             WSACleanup();
             return 1;
         }
     }
     else
     {
-        printf("WSAStartup failed with error: %d\n", resultResponse);
+        printf("WSAStartup Failed: %d\n", resultResponse);
         return 1;
     }
 }
 
 void SocketShutdown() {
-    // shutdown the connection since we're done
+
+    // Closing Connection
     int resultResponse = shutdown(ClientSocket, SD_SEND);
     if (resultResponse == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
@@ -136,7 +142,7 @@ void SocketShutdown() {
         WSACleanup();
     }
 
-    // cleanup
+    // Close the sockets
     closesocket(ClientSocket);
     WSACleanup();
 }
