@@ -1,3 +1,14 @@
+///////////////////////////////////////////////////////////////////
+//  Socket.cpp   -  class file for Socket Program				 //
+//                                                               //
+//  Language:     Visual C++ 2022, ver 17.1.3                    //
+//  Application:  MapReduce Project 4                            //
+//  Course:		  CSE687 SP22 - Object Oriented Design           //
+//  Authors:      Stephanie Eordanidis                           //
+//                JT Washington                                  //
+//                Syracuse University                            //
+//                jwashi05@syr.edu                               //
+///////////////////////////////////////////////////////////////////
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN

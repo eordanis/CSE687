@@ -1,3 +1,15 @@
+///////////////////////////////////////////////////////////////////
+//  Client.cpp   -  class file for Client class                  //
+//                                                               //
+//  Language:     Visual C++ 2022, ver 17.1.3                    //
+//  Application:  MapReduce Project 4                            //
+//  Course:		  CSE687 SP22 - Object Oriented Design           //
+//  Authors:      Stephanie Eordanidis                           //
+//                JT Washington                                  //
+//                Syracuse University                            //
+//                {sleordan,jwashi05}@syr.edu                    //
+///////////////////////////////////////////////////////////////////
+#pragma once
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
@@ -20,8 +32,6 @@
 #define BUFFERLENGTH 512
 #define PORT "2323"
 #define HOST "127.0.0.1"
-
-FileManagement _fm;
 
 Client::Client(FileManagement fm) {
     _fm = fm;
@@ -57,8 +67,8 @@ int Client::SendNewMessage(const char* message)
 
     // Logging error if necesssary
     if (response != 0) {
-        utils.logMessage("Client::SendMessage: Error getting address");
         WSACleanup();
+        utils.throwException("Client::SendMessage ", "Error getting address");
         return 1;
     }
 
@@ -70,8 +80,8 @@ int Client::SendNewMessage(const char* message)
 
         // Logging error if necessary
         if (ConnectSocket == INVALID_SOCKET) {
-            utils.logMessage("Client::SendMessage: Socket Creation Error: " + WSAGetLastError());
             WSACleanup();
+            utils.throwException("Client::SendMessage: Socket Creation Error", "" + WSAGetLastError());
             return 1;
         }
 
@@ -92,9 +102,9 @@ int Client::SendNewMessage(const char* message)
     // Send the message to the SOCKET Server
     response = send(ConnectSocket, message, (int)strlen(message), 0);
     if (response == SOCKET_ERROR) {
-        utils.logMessage("Client::SendMessage: Socket Send Error: " + WSAGetLastError());
         closesocket(ConnectSocket);
         WSACleanup();
+        utils.throwException("Client::SendMessage: Socket Send Error", "" + WSAGetLastError());
         return 1;
     }
 
@@ -103,10 +113,8 @@ int Client::SendNewMessage(const char* message)
         response = recv(ConnectSocket, recvbuf, recvbuflen, 0);
 
         if (response > 0) {
-            printf("Message received: %s\n", recvbuf);
-
             std::string s(recvbuf);
-
+            utils.logMessage("Message received: " + s + "\n");
             if (s == "Map") {
                 mapRan = true;
                 StartMap();
@@ -114,9 +122,9 @@ int Client::SendNewMessage(const char* message)
                 message = "0002";
                 int sendResponse = send(ConnectSocket, message, (int)strlen(message), 0);
                 if (sendResponse == SOCKET_ERROR) {
-                    printf("SEND failed: %d\n", WSAGetLastError());
                     closesocket(ConnectSocket);
                     WSACleanup();
+                    utils.throwException("Client::SendMessage: Socket Send Error", "" + WSAGetLastError());
                     return 1;
                 }
             }
@@ -124,15 +132,6 @@ int Client::SendNewMessage(const char* message)
                 reduceRan = true;
                 StartReduce();
                 ShutDownServer();
-
-                /*message = "exit";
-                int sendResponse = send(ConnectSocket, message, (int)strlen(message), 0);
-                if (sendResponse == SOCKET_ERROR) {
-                    printf("SEND failed: %d\n", WSAGetLastError());
-                    closesocket(ConnectSocket);
-                    WSACleanup();
-                    return 1;
-                }*/
             }
             else {
                 std::string response;
@@ -146,17 +145,22 @@ int Client::SendNewMessage(const char* message)
 
                 int sendResponse = send(ConnectSocket, message, (int)strlen(message), 0);
                 if (sendResponse == SOCKET_ERROR) {
-                    printf("SEND failed: %d\n", WSAGetLastError());
                     closesocket(ConnectSocket);
                     WSACleanup();
+                    utils.throwException("Client::SendMessage: Socket Send FAILED", "" + WSAGetLastError());
                     return 1;
                 }
             }
         }
-        else if (response == 0)
-            printf("Closing Connection with Client\n");
-        else
-            printf("RECV failed: %d\n", WSAGetLastError());
+        else if (response == 0) {
+            utils.logMessage("Closing Connection with Client\n");
+        }
+        else {
+            closesocket(ConnectSocket);
+            WSACleanup();
+            utils.throwException("Client::SendMessage: Socket RECV FAILED", "" + WSAGetLastError());
+            return 1;
+        }
 
     } while (response > 0);
 
@@ -167,15 +171,12 @@ void Client::ShutDownServer() {
 
     // When the program is complete, close the connection
     int response = shutdown(ConnectSocket, SD_SEND);
-    if (response == SOCKET_ERROR) {
-        printf("shutdown failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
-        WSACleanup();
-    }
-
-    // Close the sockets
     closesocket(ConnectSocket);
     WSACleanup();
+    if (response == SOCKET_ERROR) {
+        MapReduceUtils utils;
+        utils.throwException("Client::SendMessage: Shutdown failed with error", "" + WSAGetLastError());
+    }
 }
 
 void Client::Workflow() {
