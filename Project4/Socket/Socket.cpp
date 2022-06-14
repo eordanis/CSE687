@@ -1,4 +1,3 @@
-/* The port number is passed as an argument */
 #undef UNICODE
 
 #define WIN32_LEAN_AND_MEAN
@@ -11,117 +10,127 @@
 
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "2323"
+#define BUFFERLENGTH 512
+#define PORT "2323"
+
+// Creating SOCKET variables
+SOCKET ListenSocket = INVALID_SOCKET;
+SOCKET ClientSocket = INVALID_SOCKET;
+
+// Variables to hold the responses
+int resultResponse, sendResponse;
 
 int main()
 {
-    WSADATA wsaData;
-    int iResult;
-
-    SOCKET ListenSocket = INVALID_SOCKET;
-    SOCKET ClientSocket = INVALID_SOCKET;
-
     struct addrinfo* result = NULL;
     struct addrinfo hints;
 
-    int iSendResult;
-    char recvbuf[DEFAULT_BUFLEN];
-    int recvbuflen = DEFAULT_BUFLEN;
+    WSADATA wsaData;
 
-    // Initialize WINSOCK
-    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
-        return 1;
-    }
+    // Creating a buffer for the message
+    char recvbuf[BUFFERLENGTH];
+    int recvbuflen = BUFFERLENGTH;
 
-    ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = AI_PASSIVE;
+    // Initialize WINSOCK. Returns INT
+    resultResponse = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (resultResponse == 0) {
 
-    // Resolve the server address and port
-    iResult = getaddrinfo("127.0.0.1", DEFAULT_PORT, &hints, &result);
-    if (iResult != 0) {
-        printf("getaddrinfo failed with error: %d\n", iResult);
-        WSACleanup();
-        return 1;
-    }
+        ZeroMemory(&hints, sizeof(hints));
+        hints.ai_family = AF_INET;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+        hints.ai_flags = AI_PASSIVE;
 
-    // Create a SOCKET for connecting to server
-    ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-    if (ListenSocket == INVALID_SOCKET) {
-        printf("socket failed with error: %ld\n", WSAGetLastError());
-        freeaddrinfo(result);
-        WSACleanup();
-        return 1;
-    }
+        // Resolve the server address and port
+        resultResponse = getaddrinfo("127.0.0.1", PORT, &hints, &result);
 
-    // Setup the TCP listening socket
-    iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-    if (iResult == SOCKET_ERROR) {
-        printf("bind failed with error: %d\n", WSAGetLastError());
-        freeaddrinfo(result);
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
+        if (resultResponse == 0) {
 
-    freeaddrinfo(result);
+            // Create a SOCKET for connecting to server
+            ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
-    iResult = listen(ListenSocket, SOMAXCONN);
-    if (iResult == SOCKET_ERROR) {
-        printf("listen failed with error: %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
-
-    // Accept a client socket
-    ClientSocket = accept(ListenSocket, NULL, NULL);
-    if (ClientSocket == INVALID_SOCKET) {
-        printf("accept failed with error: %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
-
-    // No longer need server socket
-    //closesocket(ListenSocket);
-
-    // Receive until the peer shuts down the connection
-    do {
-
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
-            printf("Bytes received: %d\n", iResult);
-
-            // Echo the buffer back to the sender
-            iSendResult = send(ClientSocket, recvbuf, iResult, 0);
-            if (iSendResult == SOCKET_ERROR) {
-                printf("send failed with error: %d\n", WSAGetLastError());
-                closesocket(ClientSocket);
+            if (ListenSocket == INVALID_SOCKET) {
+                printf("Creating SOCKET error: %ld\n", WSAGetLastError());
+                freeaddrinfo(result);
                 WSACleanup();
                 return 1;
             }
-            printf("Bytes sent: %d\n", iSendResult);
+
+            // BIND SOCKET
+            resultResponse = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
+            if (resultResponse == SOCKET_ERROR) {
+                printf("TCP SOCKET Error: %d\n", WSAGetLastError());
+                freeaddrinfo(result);
+                closesocket(ListenSocket);
+                WSACleanup();
+                return 1;
+            }
+
+            freeaddrinfo(result);
+
+            // Listen SOCKET
+            resultResponse = listen(ListenSocket, SOMAXCONN);
+            if (resultResponse == SOCKET_ERROR) {
+                printf("LISTEN Error: %d\n", WSAGetLastError());
+                closesocket(ListenSocket);
+                WSACleanup();
+                return 1;
+            }
+
+            // Accept Client SOCKET
+            ClientSocket = accept(ListenSocket, NULL, NULL);
+            if (ClientSocket == INVALID_SOCKET) {
+                printf("accept failed with error: %d\n", WSAGetLastError());
+                closesocket(ListenSocket);
+                WSACleanup();
+                return 1;
+            }
+
+            // Continue to listen
+            do {
+                resultResponse = recv(ClientSocket, recvbuf, recvbuflen, 0);
+                if (resultResponse > 0) {
+                    printf("Bytes received: %d\n", resultResponse);
+
+                    // Echo the buffer back to the sender
+                    sendResponse = send(ClientSocket, recvbuf, resultResponse, 0);
+                    if (sendResponse == SOCKET_ERROR) {
+                        printf("send failed with error: %d\n", WSAGetLastError());
+                        closesocket(ClientSocket);
+                        WSACleanup();
+                        return 1;
+                    }
+                    printf("Bytes sent: %d\n", sendResponse);
+                }
+                else if (resultResponse == 0)
+                    printf("Connection closing...\n");
+                else {
+                    printf("recv failed with error: %d\n", WSAGetLastError());
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return 1;
+                }
+
+            } while (resultResponse > 0);
+
         }
-        else if (iResult == 0)
-            printf("Connection closing...\n");
         else {
-            printf("recv failed with error: %d\n", WSAGetLastError());
-            closesocket(ClientSocket);
+            printf("getaddrinfo failed with error: %d\n", resultResponse);
             WSACleanup();
             return 1;
         }
+    }
+    else
+    {
+        printf("WSAStartup failed with error: %d\n", resultResponse);
+        return 1;
+    }
+}
 
-    } while (iResult > 0);
-
+void SocketShutdown() {
     // shutdown the connection since we're done
-    iResult = shutdown(ClientSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
+    int resultResponse = shutdown(ClientSocket, SD_SEND);
+    if (resultResponse == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
         WSACleanup();
