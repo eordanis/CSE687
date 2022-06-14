@@ -16,8 +16,8 @@
 
 class Socket {
 
-public:
-	int InitiateSocket(int);
+private:
+	void SocketShutdown();
 };
 
 #endif

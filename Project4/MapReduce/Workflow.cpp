@@ -14,6 +14,7 @@
 #pragma once
 #include "./Header/Workflow.h"
 #include "./Header/FileManagement.h"
+#include "Header/Client.h"
 
 FileManagement fm;
 
@@ -40,18 +41,8 @@ void Workflow::setThreadCount(const std::string threadCount)
 void Workflow::execute_workflow()
 {
 	/*
-	* Partition valid input files into buckets per thread
+	* Tell the Communication with the server
 	*/
-	fm.partitionInput();
-
-	/*
-	* stub process(thread) that runs mapper and when complete, broadcasts socket message indicating completion
-	*/	
-	fm.executeFileMapping();
-
-	/*
-	* stub process(thread) that listens for broadcast indicating mapper has successfully completed, then runs reducer
-	*/
-	fm.executeReduce();
-
+	Client client(fm);
+	client.Workflow();
 }

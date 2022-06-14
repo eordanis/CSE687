@@ -45,7 +45,7 @@ public:
 	/*
 	* Enumeration object to determine directory type to work on
 	*/
-	const enum DirectoryType
+	const enum class DirectoryType
 	{
 		input,
 		output,

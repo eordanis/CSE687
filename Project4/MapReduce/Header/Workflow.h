@@ -51,13 +51,6 @@ public:
 	*/
 	void execute_workflow();
 
-	/*
-	* Listen for message from Map process signaling its completion
-	* On receipt, start reduce process
-	*/
-	void listen_for_message();
-	
-
 };
 
 #endif

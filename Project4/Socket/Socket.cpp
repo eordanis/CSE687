@@ -7,6 +7,8 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
+#include <string>
 
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -21,6 +23,8 @@ SOCKET ClientSocket = INVALID_SOCKET;
 // Variables to hold the responses
 int resultResponse, sendResponse;
 
+void SocketShutdown();
+
 int main()
 {
     struct addrinfo* result = NULL;
@@ -29,7 +33,7 @@ int main()
     WSADATA wsaData;
 
     // Creating a buffer for the message
-    char recvbuf[BUFFERLENGTH];
+    char recvbuf[BUFFERLENGTH] = { 0 };
     int recvbuflen = BUFFERLENGTH;
 
     // Initialize WINSOCK. Returns INT
@@ -93,18 +97,62 @@ int main()
 
                 // RECV Response
                 if (resultResponse > 0) {
-                    printf("Message received: %d\n", resultResponse);
+                    printf("Message received: %s\n", recvbuf);
+                    const char* message;
 
+                    std::string s(recvbuf);
 
-                    // Echo the buffer back to the sender
-                    sendResponse = send(ClientSocket, recvbuf, resultResponse, 0);
-                    if (sendResponse == SOCKET_ERROR) {
-                        printf("SEND failed: %d\n", WSAGetLastError());
-                        closesocket(ClientSocket);
-                        WSACleanup();
-                        return 1;
+                    if (s == "0001") {
+                        std::string choice;
+                        std::cout << "Type 'M' to start the Map Function: ";
+                        std::cin >> choice;
+
+                        if (choice == "M" || choice == "m") {
+
+                            // Tell Client to Start Map
+                            message = "Map";
+                        }
+                        else {
+                            // Send the text from the server
+                            message = choice.c_str();
+                        }
+
+                        sendResponse = send(ClientSocket, message, recvbuflen, 0);
+                        if (sendResponse == SOCKET_ERROR) {
+                            printf("SEND failed: %d\n", WSAGetLastError());
+                            closesocket(ClientSocket);
+                            WSACleanup();
+                            return 1;
+                        }
                     }
+                    else if (s == "0002") {
+                        std::string choice;
+                        std::cout << "Type 'R' to start the Map Function: ";
+                        std::cin >> choice;
 
+                        if (choice == "R" || choice == "r") {
+
+                            // Tell Client to Start Map
+                            message = "Reduce";
+                        }
+                        else {
+
+                            // Send the text from the server
+                            message = choice.c_str();
+                        }
+                        
+                        sendResponse = send(ClientSocket, message, recvbuflen, 0);
+                        if (sendResponse == SOCKET_ERROR) {
+                            printf("SEND failed: %d\n", WSAGetLastError());
+                            closesocket(ClientSocket);
+                            WSACleanup();
+                            return 1;
+                        }
+                    }
+                    else if (s == "exit") {
+
+                        SocketShutdown();
+                    }
                 }
                 else if (resultResponse == 0) {
                     printf("Closing SOCKET Connection\n");

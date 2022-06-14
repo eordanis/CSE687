@@ -184,10 +184,6 @@ void FileManagement::executeFileMapping()
 		ExecuteThread thread;
 		std::thread mainThread(thread, dll_handle, _tempDir, _partitions, MapReduceUtils::OperationType::map, _threads, _inputDir);
 		mainThread.join();
-
-		Client client;
-		int response = client.SendNewMessage("wefgawegAW4GERAG");
-		//send out msg
 	}
 	else {
 		utils.throwException("FileManagement:executeFileMapping", "Cannot load MapDLL.dll");

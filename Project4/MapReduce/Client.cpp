@@ -7,8 +7,10 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+
 #include "./Header/MapReduceUtils.h"
 #include "./Header/Client.h"
+#include "./Header/FileManagement.h"
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -19,6 +21,12 @@
 #define PORT "2323"
 #define HOST "127.0.0.1"
 
+FileManagement _fm;
+
+Client::Client(FileManagement fm) {
+    _fm = fm;
+}
+
 int Client::SendNewMessage(const char* message)
 {
     struct addrinfo* result = NULL, * ptr = NULL, hints;
@@ -27,7 +35,7 @@ int Client::SendNewMessage(const char* message)
     MapReduceUtils utils;
 
     // Create the buffer that will send the message
-    char recvbuf[BUFFERLENGTH];
+    char recvbuf[BUFFERLENGTH] = { 0 };
     int recvbuflen = BUFFERLENGTH;
 
     // Initialize WINSOCK
@@ -93,12 +101,62 @@ int Client::SendNewMessage(const char* message)
     // Receive until the peer closes the connection
     do {
         response = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-        if (response > 0)
-            printf("Bytes received: %d\n", response);
+
+        if (response > 0) {
+            printf("Message received: %s\n", recvbuf);
+
+            std::string s(recvbuf);
+
+            if (s == "Map") {
+                mapRan = true;
+                StartMap();
+
+                message = "0002";
+                int sendResponse = send(ConnectSocket, message, (int)strlen(message), 0);
+                if (sendResponse == SOCKET_ERROR) {
+                    printf("SEND failed: %d\n", WSAGetLastError());
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+            }
+            else if (s == "Reduce") {
+                reduceRan = true;
+                StartReduce();
+                ShutDownServer();
+
+                /*message = "exit";
+                int sendResponse = send(ConnectSocket, message, (int)strlen(message), 0);
+                if (sendResponse == SOCKET_ERROR) {
+                    printf("SEND failed: %d\n", WSAGetLastError());
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }*/
+            }
+            else {
+                std::string response;
+
+                if (!mapRan) {
+                    message = "0001";
+                }
+                else if (!reduceRan) {
+                    message = "0002";
+                }
+
+                int sendResponse = send(ConnectSocket, message, (int)strlen(message), 0);
+                if (sendResponse == SOCKET_ERROR) {
+                    printf("SEND failed: %d\n", WSAGetLastError());
+                    closesocket(ConnectSocket);
+                    WSACleanup();
+                    return 1;
+                }
+            }
+        }
         else if (response == 0)
-            printf("Connection closed\n");
+            printf("Closing Connection with Client\n");
         else
-            printf("recv failed with error: %d\n", WSAGetLastError());
+            printf("RECV failed: %d\n", WSAGetLastError());
 
     } while (response > 0);
 
@@ -118,4 +176,33 @@ void Client::ShutDownServer() {
     // Close the sockets
     closesocket(ConnectSocket);
     WSACleanup();
+}
+
+void Client::Workflow() {
+
+    /*
+    * Partition valid input files into buckets per thread
+    */
+    _fm.partitionInput();
+
+    /*
+    * Start the Communication with the server
+    */
+    int response = SendNewMessage("0001");
+}
+
+void Client::StartMap() {
+
+    /*
+    * stub process(thread) that runs mapper and when complete, broadcasts socket message indicating completion
+    */
+    _fm.executeFileMapping();
+}
+
+void Client::StartReduce() {
+
+    /*
+    * stub process(thread) that listens for broadcast indicating mapper has successfully completed, then runs reducer
+    */
+    _fm.executeReduce();
 }

@@ -16,15 +16,22 @@
 #pragma once
 
 #include <winsock2.h>
+#include "./FileManagement.h"
 
 class Client {
 public:
+	Client(FileManagement);
 	int SendNewMessage(const char*);
+	void StartMap();
+	void StartReduce();
+	void Workflow();
 	void ShutDownServer();
 
 private:
 	WSADATA wsaData;
 	SOCKET ConnectSocket = INVALID_SOCKET;
+	bool mapRan = false;
+	bool reduceRan = false;
 };
 
 #endif
