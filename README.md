@@ -124,6 +124,8 @@ The program runs as as a single process that will take input text files and will
 The map and reduce functionallity however will run on multiple threads. Two new classes were introduced to handle thread capture/creation/handling.
 New edition is that for this phase, MapReduce.exe will serve as a client, while a new Socket.exe was created to serve as the server in a socket/messaging exchange. Socket.exe sends out message commands to MapReduce.exe client.
 
+<span style="color:red"><b>Server is expected to be run first! Please be sure to run the Socket.exe found <a href="https://github.com/eordanis/CSE687/tree/main/Executables">here</a> prior to running the MapReduce.exe also found in that directory.</b><s/pan>
+
 There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduceDLL.dll path.
  
 * Input path is the directory where input text files are stored.

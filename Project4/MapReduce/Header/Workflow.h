@@ -45,10 +45,7 @@ public:
 	* @param string representing thread count between 1 & 6
 	*/
 	void setThreadCount(const std::string);
-	/*
-	* Auto start server
-	*/
-	void start_server();
+
 
 	/*
 	* Executes workflow logic for MapReduce
