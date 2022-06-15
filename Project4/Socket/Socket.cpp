@@ -36,8 +36,24 @@ int resultResponse, sendResponse;
 
 void SocketShutdown();
 
+
+// Print Message
+void usageStatement()
+{
+    std::cout << "**************************************************    Map Reduce Server   ************************************************" << std::endl;
+    std::cout << "*******************************************************************************************************************" << std::endl;
+    std::cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
+    std::cout << "To run this application, please run the MapReduce.exe, this serves as the client end of the application." << std::endl;
+    std::cout << "After the server receives communications from the client end, the server will need to initiate the next actionable procedure." << std::endl;
+    std::cout << "This may be done by sending a message to the client from the server, please follow relevant prompts provided." << std::endl;
+    std::cout << "The client will handle all actionable processes ie Map & Reduce." << std::endl;
+    std::cout << std::endl;
+}
+
 int main()
 {
+    usageStatement();
+
     struct addrinfo* result = NULL;
     struct addrinfo hints;
 

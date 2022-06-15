@@ -31,7 +31,11 @@ If desired to run via Visual Studio:
 	1. <i>Referenced Packages</i> Ensure "Google Test" is shown. <img src="https://github.com/eordanis/CSE687/blob/main/img/ref_gg_test.PNG">
 	2. <i>C/C++</i> Ensure you add your boost library directory to the <i>Additional Includes Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="https://github.com/eordanis/CSE687/blob/main/img/cpp_add_inc_dir.PNG">
 	3. <i>Linker</i> Ensure you add your boost library directory to the <i>Additional Library Directories</i> path. Note that %(AdditionalIncludeDirectories) is also included. <img src="https://github.com/eordanis/CSE687/blob/main/img/linker_add_lib_dir.PNG">
-	
+
+## Executables & DLLs
+
+The latest executables and dlls may be found <a href="https://github.com/eordanis/CSE687/tree/main/Executables">here</a>
+
 ## Application - MapReduce
 A C++ standalone command-line program that can run a word count MapReduce workflow on text files retrieved from the user provided directory path, and outputs results to user specified output directory path.
 
@@ -116,12 +120,33 @@ Temp    Text File: <temp path>/demo_2022-04-28_18-16-56.dat                     
 Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt    <-(a,1)\n(am,1)\n(but,1)\n(continue,1)\n(developer,1)\n(developers,1)\n(for,2)\n(humble,1)\n(i,2)\n(important,1)\n(is,1)\n(for,1)\n(striving,1)\n(success,2)\n(to,1)\n(wish,1)\n
 
 ### Phase 4: 
-TBD
+The program runs as as a single process that will take input text files and will ultimately produce a single output file that contains a list of words and their associated counts in the originating input files. This phase of the application takes in the map and reduce dll files and utilizes their functions.
+The map and reduce functionallity however will run on multiple threads. Two new classes were introduced to handle thread capture/creation/handling.
+New edition is that for this phase, MapReduce.exe will serve as a client, while a new Socket.exe was created to serve as the server in a socket/messaging exchange. Socket.exe sends out message commands to MapReduce.exe client.
+
+There are five required arguments: input path, temp path, output path, mapDLL.dll path and reduceDLL.dll path.
+ 
+* Input path is the directory where input text files are stored.
+
+* The temp path is the path where the intermediary temporary .dat files are stored. Note, if the temporary file of the same name exists (ie previous run) then these files are overwritten. The temp files contain the initial token/key work mapping. Example behavior: (word,1).
+
+* The output path is the path where the sorted and reduced intermediaary file results are stored. These output files are date/timestamped. Example behavior: (word,1)(second,1)(word,1) ->  (second,1)(word,2)
+
+* The dll path is the path where the MapDLL.dll & ReduceDLL.dll files can be found.
+
+Example.
+
+Input   Text File: <input path>/demo.txt                                            <- I am but a humble developer. I wish to continue striving for success!. Success is important for developers.
+
+Temp    Text File: <temp path>/demo_2022-04-28_18-16-56.dat                         <-(i,1)\n(am,1)\n)(but,1)\n(a,1)\n(humble,1)\n(developer,1)\n(i,1)\n(wish,1)\n(to,1)\n(continue,1)\n(striving,1)\n(for,1)\n(success,1)\n(success,1)\n(is,1)\n(important,1)\n(for,1)\n(developers,1)\n
+
+Output  Text File: <temp path>/demo__2022-04-28_18-16-56_2022-04-28_18-18-13.txt    <-(a,1)\n(am,1)\n(but,1)\n(continue,1)\n(developer,1)\n(developers,1)\n(for,2)\n(humble,1)\n(i,2)\n(important,1)\n(is,1)\n(for,1)\n(striving,1)\n(success,2)\n(to,1)\n(wish,1)\n
 
 ## Application Structure
 This section describes the application structure.
 
 ### Classes
+
 	 Workflow           - Executes the main business logic for the MapReduce application.
 	 
 	 Executive          - Contains the main function and any additional utility functions/data required.
@@ -134,13 +159,21 @@ This section describes the application structure.
 	 
 	 Threading			- Handles map/reduce specific logic per thread.
 	 
+	 Client             - Handles the client socket logic for receiving messages from server.
+	 
 ### DLLs
 	 
 	 Map                - Is given data from a file (does not parse the file itself) and outputs a separate temporary file that holds (word, 1) for each occurrence of every word.
 	 	 
 	 Reduce             - Is given sorted data from the intermediate file and reduces the results by aggregating the values.
-	 
+### Executables
+
+	 MapReduce.exe 		- Main application, serves as the client side of the program. Listens for messaging from Server to indicate how it should proceed.
+
+	 Socket.exe 		- Server side of the application, sends communications to the client program to indicate when to start processing.
+
 ### Unit Tests
+
 	Unit tests are stored under the /test directory and are run on the main class functionallity.
 	
 	FileManagementTest     - Unit tests for FileManagement class.

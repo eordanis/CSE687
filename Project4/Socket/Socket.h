@@ -17,7 +17,9 @@
 class Socket {
 
 private:
+	void usageStatement();
 	void SocketShutdown();
+
 };
 
 #endif

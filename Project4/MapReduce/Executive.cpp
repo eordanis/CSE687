@@ -85,9 +85,12 @@ int main(int argc, char* argv[])
 // Print Message
 void usageStatement()
 {
-	std::cout << "**************************************************    Map Reduce   ************************************************" << std::endl;
+	std::cout << "**************************************************    Map Reduce Client  ************************************************" << std::endl;
 	std::cout << "*******************************************************************************************************************" << std::endl;
 	std::cout << "This application is a standalone tool that will run a word count on text files in the user provided directory path." << std::endl;
+	std::cout << "To run this application, please run the Socket.exe, this serves as the server end of the application." << std::endl;
+	std::cout << "After the server receives communications from the client end, the server will need to initiate the next actionable procedure." << std::endl;
+	std::cout << "This may be done by sending a message to the client from the server, please consult the server prompts for more information." << std::endl;
 	std::cout << "\t*** NOTE: Files in temp & output path will be overwritten if files with like name are found. ***" << std::endl;
 	std::cout << "Expected Arguments:" << std::endl;
 	std::cout << "\t-input\t\t<input path>\t\t: This is the path where the text files reside." << std::endl;
