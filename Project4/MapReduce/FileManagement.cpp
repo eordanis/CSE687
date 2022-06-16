@@ -109,9 +109,7 @@ bool FileManagement::validateDirPath(MapReduceUtils::DirectoryType directoryType
 			if (!boost::filesystem::exists(path + "\\MapDLL.dll")) {
 				missingDLL.append(" MapDLL.dll ");
 			}
-			//if (!boost::filesystem::exists(path + "\\ReduceDLL.dll")) {
-			//	missingDLL.append(" ReduceDLL.dll ");
-			//}
+
 			if (missingDLL != "") {
 				utils.throwException("FileManagement:validateDirPath", "Path provided \"" + path + "\" does not contain required dll:" + missingDLL);
 			}
